@@ -2,18 +2,30 @@
 <script>
   const container = document.getElementById("weeks");
 
-  for (let week = 1; week <= 15; week++) {
+  const labs = [
+    { title: "Week 1", url: null },
+    {
+      title: "Weeks 2–4",
+      url: "./Week%202-4/index.html"
+    },
+    ...Array.from({ length: 11 }, (_, i) => ({
+      title: "Week " + (i + 5),
+      url: null
+    }))
+  ];
+
+  labs.forEach(lab => {
     const card = document.createElement("div");
     card.className = "card";
 
     const title = document.createElement("h2");
-    title.textContent = "Week " + week;
+    title.textContent = lab.title;
     card.appendChild(title);
 
-    if (week >= 2 && week <= 4) {
+    if (lab.url) {
       const link = document.createElement("a");
       link.className = "button";
-      link.href = "./Week%202-4/index.html";
+      link.href = lab.url;
       link.textContent = "Open Learning Lab";
       card.appendChild(link);
     } else {
@@ -24,5 +36,5 @@
     }
 
     container.appendChild(card);
-  }
+  });
 </script>
