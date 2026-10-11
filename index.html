@@ -1,40 +1,141 @@
 
-<script>
-  const container = document.getElementById("weeks");
-
-  const labs = [
-    { title: "Week 1", url: null },
-    {
-      title: "Weeks 2–4",
-      url: "./Week%202-4/index.html"
-    },
-    ...Array.from({ length: 11 }, (_, i) => ({
-      title: "Week " + (i + 5),
-      url: null
-    }))
-  ];
-
-  labs.forEach(lab => {
-    const card = document.createElement("div");
-    card.className = "card";
-
-    const title = document.createElement("h2");
-    title.textContent = lab.title;
-    card.appendChild(title);
-
-    if (lab.url) {
-      const link = document.createElement("a");
-      link.className = "button";
-      link.href = lab.url;
-      link.textContent = "Open Learning Lab";
-      card.appendChild(link);
-    } else {
-      const message = document.createElement("p");
-      message.className = "soon";
-      message.textContent = "Coming Soon";
-      card.appendChild(message);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CSCI 300 - Operating Systems</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f2f5fa;
+      color: #142c4c;
     }
+    header {
+      background: #1c3d70;
+      color: white;
+      text-align: center;
+      padding: 45px 20px;
+    }
+    header h1 { margin: 0 0 18px; }
+    main {
+      max-width: 1100px;
+      margin: 35px auto;
+      padding: 0 20px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px #00000012;
+    }
+    .card h2 { margin-top: 0; }
+    .button {
+      display: inline-block;
+      background: #1769aa;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 7px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .soon { color: #777; }
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #667;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CSCI 300 - Operating Systems</h1>
+    <p>Interactive Learning Labs</p>
+    <p>Dr. Maher Alrahhal</p>
+  </header>
 
-    container.appendChild(card);
-  });
-</script>
+  <main>
+    <h2>Weekly Learning Activities</h2>
+    <div class="grid">
+      <div class="card">
+        <h2>Week 1</h2>
+        <p class="soon">Coming Soon</p>
+      </div>
+
+      <div class="card">
+        <h2>Weeks 2-4</h2>
+        <p>Combined Interactive Learning Lab</p>
+        <a class="button"
+           href="./Week%202-4/index.html">
+          Open Learning Lab
+        </a>
+      </div>
+
+      <div class="card">
+        <h2>Week 5</h2>
+        <p class="soon">Coming Soon</p>
+      </div>
+
+      <div class="card">
+        <h2>Week 6</h2>
+        <p class="soon">Coming Soon</p>
+      </div>
+
+      <div class="card">
+        <h2>Week 7</h2>
+        <p class="soon">Coming Soon</p>
+      </div>
+
+      <div class="card">
+        <h2>Week 8</h2>
+        <p class="soon">Coming Soon</p>
+      </div>
+
+      <div class="card">
+        <h2>Week 9</h2>
+        <p class="soon">Coming Soon</p>
+      </div>
+
+      <div class="card">
+        <h2>Week 10</h2>
+        <p class="soon">Coming Soon</p>
+      </div>
+
+      <div class="card">
+        <h2>Week 11</h2>
+        <p class="soon">Coming Soon</p>
+      </div>
+
+      <div class="card">
+        <h2>Week 12</h2>
+        <p class="soon">Coming Soon</p>
+      </div>
+
+      <div class="card">
+        <h2>Week 13</h2>
+        <p class="soon">Coming Soon</p>
+      </div>
+
+      <div class="card">
+        <h2>Week 14</h2>
+        <p class="soon">Coming Soon</p>
+      </div>
+
+      <div class="card">
+        <h2>Week 15</h2>
+        <p class="soon">Coming Soon</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    CSCI 300 | Operating Systems
+  </footer>
+</body>
+</html>
