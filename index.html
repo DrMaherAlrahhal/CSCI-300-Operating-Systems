@@ -5,37 +5,72 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CSCI 300 - Operating Systems</title>
+
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f2f5fa;
       color: #142c4c;
     }
+
     header {
       background: #1c3d70;
       color: white;
       text-align: center;
       padding: 45px 20px;
     }
-    header h1 { margin: 0 0 18px; }
+
+    header h1 {
+      margin: 0 0 18px;
+    }
+
     main {
       max-width: 1100px;
       margin: 35px auto;
       padding: 0 20px;
     }
+
+    .lab-section {
+      background: white;
+      border: 1px solid #dbe5f1;
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 35px;
+      box-shadow: 0 3px 12px #00000012;
+    }
+
+    .lab-section h2 {
+      margin-top: 0;
+    }
+
+    .lab-section p {
+      color: #52647b;
+      line-height: 1.6;
+    }
+
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
       gap: 20px;
     }
+
     .card {
       background: white;
       padding: 25px;
       border-radius: 12px;
       box-shadow: 0 3px 12px #00000012;
     }
-    .card h2 { margin-top: 0; }
+
+    .card h2 {
+      margin-top: 0;
+    }
+
     .button {
       display: inline-block;
       background: #1769aa;
@@ -45,7 +80,19 @@
       text-decoration: none;
       font-weight: bold;
     }
-    .soon { color: #777; }
+
+    .button:hover {
+      background: #125489;
+    }
+
+    .lab-button {
+      background: #087e8b;
+    }
+
+    .lab-button:hover {
+      background: #06636d;
+    }
+
     footer {
       text-align: center;
       padding: 30px;
@@ -53,7 +100,9 @@
     }
   </style>
 </head>
+
 <body>
+
   <header>
     <h1>CSCI 300 - Operating Systems</h1>
     <p>Interactive Learning Labs</p>
@@ -61,134 +110,125 @@
   </header>
 
   <main>
+
+    <!-- Separate OS Laboratory Section -->
+    <section class="lab-section">
+      <h2>OS Laboratory</h2>
+      <p>
+        Explore 14 weeks of practical Operating Systems
+        laboratory activities, including Linux commands,
+        shell programming, C programming, threads,
+        system calls, and CPU scheduling.
+      </p>
+
+      <a class="button lab-button"
+         href="./OS-Lab/index.html">
+        Open OS Laboratory - 14 Weeks
+      </a>
+    </section>
+
+    <!-- Existing Weekly Learning Activities -->
     <h2>Weekly Learning Activities</h2>
-    <div class="grid">
-      <div class="card">
-        <h2>Week 1</h2>
-        <p>Introduction to Operating Systems</p>
-        <a class="button" href="./Week-1/index.html">
-          Open Learning Lab
-        </a>
-      </div>
 
-     
-    <div class="card">
-      <h2>Week 2</h2>
-      <p>Interactive Learning Lab</p>
-      <a class="button" href="./Week-2/index.html">
-        Open Learning Lab
-      </a>
-    </div>
-    
-    <div class="card">
-      <h2>Week 3</h2>
-      <p>Interactive Learning Lab</p>
-      <a class="button" href="./Week-3/index.html">
-        Open Learning Lab
-      </a>
-    </div>
-    
-    <div class="card">
-      <h2>Week 4</h2>
-      <p>Interactive Learning Lab</p>
-      <a class="button" href="./Week-4/index.html">
-        Open Learning Lab
-      </a>
-    </div>
+    <div class="grid" id="weeks"></div>
 
-
-    <div class="card">
-      <h2>Week 5</h2>
-      <p>Interactive Learning Lab</p>
-      <a class="button" href="./Week-5/index.html">
-        Open Learning Lab
-      </a>
-    </div>
-
-    <div class="card">
-      <h2>Week 6</h2>
-      <p>Interactive Learning Lab</p>
-      <a class="button" href="./Week-6/index.html">
-        Open Learning Lab
-      </a>
-    </div>
-
-    <div class="card">
-      <h2>Week 7</h2>
-      <p>Interactive Learning Lab</p>
-      <a class="button" href="./Week-7/index.html">
-        Open Learning Lab
-      </a>
-    </div>
-
-    <div class="card">
-      <h2>Week 8</h2>
-      <p>Interactive Learning Lab</p>
-      <a class="button" href="./Week-8/index.html">
-        Open Learning Lab
-      </a>
-    </div>
-
-    <div class="card">
-      <h2>Week 9</h2>
-      <p>Interactive Learning Lab</p>
-      <a class="button" href="./Week-9/index.html">
-        Open Learning Lab
-      </a>
-    </div>
-
-    <div class="card">
-      <h2>Week 10</h2>
-      <p>Interactive Learning Lab</p>
-      <a class="button" href="./Week-10/index.html">
-        Open Learning Lab
-      </a>
-    </div>
-
-    <div class="card">
-      <h2>Week 11</h2>
-      <p>Interactive Learning Lab</p>
-      <a class="button" href="./Week-11/index.html">
-        Open Learning Lab
-      </a>
-    </div>
-
-    <div class="card">
-      <h2>Week 12</h2>
-      <p>Interactive Learning Lab</p>
-      <a class="button" href="./Week-12/index.html">
-        Open Learning Lab
-      </a>
-    </div>
-
-    <div class="card">
-      <h2>Week 13</h2>
-      <p>Interactive Learning Lab</p>
-      <a class="button" href="./Week-13/index.html">
-        Open Learning Lab
-      </a>
-    </div>
-
-    <div class="card">
-      <h2>Week 14</h2>
-      <p>Interactive Learning Lab</p>
-      <a class="button" href="./Week-14/index.html">
-        Open Learning Lab
-      </a>
-    </div>
-
-    <div class="card">
-      <h2>Week 15</h2>
-      <p>Interactive Learning Lab</p>
-      <a class="button" href="./Week-15/index.html">
-        Open Learning Lab
-      </a>
-    </div>
-    </div>
   </main>
 
   <footer>
     CSCI 300 | Operating Systems
   </footer>
+
+  <script>
+    const weeks = [
+      {
+        title: "Week 1",
+        description: "Introduction to Operating Systems",
+        url: "./Week-1/index.html"
+      },
+      {
+        title: "Week 2",
+        url: "./Week-2/index.html"
+      },
+      {
+        title: "Week 3",
+        url: "./Week-3/index.html"
+      },
+      {
+        title: "Week 4",
+        url: "./Week-4/index.html"
+      },
+      {
+        title: "Week 5",
+        url: "./Week-5/index.html"
+      },
+      {
+        title: "Week 6",
+        url: "./Week-6/index.html"
+      },
+      {
+        title: "Week 7",
+        url: "./Week-7/index.html"
+      },
+      {
+        title: "Week 8",
+        url: "./Week-8/index.html"
+      },
+      {
+        title: "Week 9",
+        url: "./Week-9/index.html"
+      },
+      {
+        title: "Week 10",
+        url: "./Week-10/index.html"
+      },
+      {
+        title: "Week 11",
+        url: "./Week-11/index.html"
+      },
+      {
+        title: "Week 12",
+        url: "./Week-12/index.html"
+      },
+      {
+        title: "Week 13",
+        url: "./Week-13/index.html"
+      },
+      {
+        title: "Week 14",
+        url: "./Week-14/index.html"
+      },
+      {
+        title: "Week 15",
+        url: "./Week-15/index.html"
+      }
+    ];
+
+    const container = document.getElementById("weeks");
+
+    weeks.forEach(week => {
+
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const title = document.createElement("h2");
+      title.textContent = week.title;
+      card.appendChild(title);
+
+      const description = document.createElement("p");
+      description.textContent =
+        week.description || "Interactive Learning Lab";
+      card.appendChild(description);
+
+      const link = document.createElement("a");
+      link.className = "button";
+      link.href = week.url;
+      link.textContent = "Open Learning Lab";
+
+      card.appendChild(link);
+      container.appendChild(card);
+
+    });
+  </script>
+
 </body>
 </html>
