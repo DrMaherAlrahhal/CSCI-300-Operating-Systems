@@ -1,46 +1,209 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>CSCI 300 | Operating Systems Laboratory</title>
+
 <style>
-:root{font-family:Arial,sans-serif;color:#173153;background:#f2f5fa}*{box-sizing:border-box}body{margin:0}header{background:linear-gradient(120deg,#17345f,#116a99);color:white;padding:45px 24px;text-align:center}header h1{font-size:clamp(26px,4vw,40px);margin:12px 0}header p{opacity:.94;line-height:1.5}main{max-width:1120px;margin:32px auto;padding:0 20px}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:25px}.back{color:#155a9c;text-decoration:none;font-weight:bold}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}.card{background:white;padding:23px;border-radius:14px;box-shadow:0 3px 14px #00000012;display:flex;flex-direction:column;gap:12px}.card h2{margin:0;font-size:22px}.card p{line-height:1.5;margin:0;flex:1;color:#445c77}.tag{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:#087e8b;font-weight:bold}.button{background:#1769aa;color:white;border-radius:7px;padding:12px 15px;text-decoration:none;font-weight:bold;display:inline-block;text-align:center}.button:hover{background:#104e80}.disabled{background:#e7edf4;color:#6b7e91;cursor:default}.note{font-size:14px;color:#61718a;margin:18px 0 30px}footer{text-align:center;color:#65758b;padding:30px}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f2f5fa;
+  color: #173153;
+}
+
+header {
+  background: linear-gradient(120deg, #17345f, #116a99);
+  color: white;
+  padding: 45px 24px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: clamp(26px, 4vw, 40px);
+  margin: 12px 0;
+}
+
+header p {
+  line-height: 1.5;
+}
+
+main {
+  max-width: 1120px;
+  margin: 32px auto;
+  padding: 0 20px;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.back {
+  color: #155a9c;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+
+.card {
+  background: white;
+  padding: 23px;
+  border-radius: 14px;
+  box-shadow: 0 3px 14px #00000012;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.card p {
+  line-height: 1.5;
+  margin: 0;
+  flex: 1;
+  color: #445c77;
+}
+
+.tag {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #087e8b;
+  font-weight: bold;
+}
+
+.button {
+  background: #1769aa;
+  color: white;
+  border-radius: 7px;
+  padding: 12px 15px;
+  text-decoration: none;
+  font-weight: bold;
+  display: inline-block;
+  text-align: center;
+}
+
+.button:hover {
+  background: #104e80;
+}
+
+footer {
+  text-align: center;
+  color: #65758b;
+  padding: 30px;
+}
 </style>
 </head>
+
 <body>
-<header><div>CSCI 300 · OPERATING SYSTEMS</div><h1>Operating Systems Laboratory</h1><p>14 weekly practical labs · Linux, shell programming, C, scheduling and file systems</p><p>Dr. Maher Alrahhal</p></header>
-<main><div class="top"><h2>Choose a laboratory week</h2><a class="back" href="../index.html">← Course homepage</a></div><div class="grid" id="labs"></div><p class="note">Lab titles follow the course syllabus. Upload each lab's index.html to its matching folder inside OS-Lab to activate its button.</p></main>
-<footer>CSCI 300 | Operating Systems Laboratory</footer>
+
+<header>
+  <div>CSCI 300 · OPERATING SYSTEMS</div>
+
+  <h1>Operating Systems Laboratory</h1>
+
+  <p>
+    14 Weekly Practical Labs
+  </p>
+
+  <p>
+    Linux · Shell Programming · C Programming ·
+    Threads · Scheduling · File Systems
+  </p>
+
+  <p>Dr. Maher Alrahhal</p>
+</header>
+
+<main>
+
+  <div class="top">
+    <h2>Choose a Laboratory Week</h2>
+
+    <a class="back" href="../index.html">
+      ← Course Homepage
+    </a>
+  </div>
+
+  <div class="grid" id="labs"></div>
+
+</main>
+
+<footer>
+  CSCI 300 | Operating Systems Laboratory
+</footer>
+
 <script>
-const labs=[
-[1,'Virtual Environments'],
-[2,'Basic Linux Commands'],
-[3,'Basic Linux Commands — Practice'],
-[4,'Basics of Shell'],
-[5,'Sample Shell Programming'],
-[6,'Basics of C'],
-[7,'Decision Making and Loop Control in Shell'],
-[8,'Functions Using Shell Programming'],
-[9,'System Calls in C'],
-[10,'Thread Basics in C'],
-[11,'Thread Management in C'],
-[12,'FCFS Scheduling Algorithm'],
-[13,'SJF Scheduling Algorithm'],
-[14,'File System Calls in C']
+
+const labs = [
+  [1, "Virtual Environments"],
+  [2, "Basic Linux Commands"],
+  [3, "Basic Linux Commands — Practice"],
+  [4, "Basics of Shell"],
+  [5, "Sample Shell Programming"],
+  [6, "Basics of C"],
+  [7, "Decision Making and Loop Control in Shell"],
+  [8, "Functions Using Shell Programming"],
+  [9, "System Calls in C"],
+  [10, "Thread Basics in C"],
+  [11, "Thread Management in C"],
+  [12, "FCFS Scheduling Algorithm"],
+  [13, "SJF Scheduling Algorithm"],
+  [14, "File System Calls in C"]
 ];
-const activeLabs=[]; // Example: [1,2] once OS-Lab/Lab-1/index.html and Lab-2/index.html exist
-const root=document.getElementById('labs');
-labs.forEach(([number,title])=>{
- const card=document.createElement('article');card.className='card';
- const tag=document.createElement('div');tag.className='tag';tag.textContent='Practical Activity';
- const heading=document.createElement('h2');heading.textContent=`Lab ${number}`;
- const description=document.createElement('p');description.textContent=title;
- const link=document.createElement('a');link.textContent=activeLabs.includes(number)?'Open Lab':'Coming Soon';
- link.className='button'+(activeLabs.includes(number)?'':' disabled');
- if(activeLabs.includes(number))link.href=`./Lab-${number}/index.html`;
- else link.setAttribute('aria-disabled','true');
- card.append(tag,heading,description,link);root.append(card);
+
+const container = document.getElementById("labs");
+
+labs.forEach(([number, title]) => {
+
+  const card = document.createElement("div");
+  card.className = "card";
+
+  const tag = document.createElement("div");
+  tag.className = "tag";
+  tag.textContent = "Practical Activity";
+
+  const heading = document.createElement("h2");
+  heading.textContent = "Lab " + number;
+
+  const description = document.createElement("p");
+  description.textContent = title;
+
+  const link = document.createElement("a");
+  link.className = "button";
+
+  link.href = "./Lab-" + number + "/index.html";
+  link.textContent = "Open Lab";
+
+  card.appendChild(tag);
+  card.appendChild(heading);
+  card.appendChild(description);
+  card.appendChild(link);
+
+  container.appendChild(card);
+
 });
+
 </script>
+
 </body>
 </html>
