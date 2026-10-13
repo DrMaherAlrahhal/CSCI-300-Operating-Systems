@@ -1,1 +1,549 @@
 
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="light" name="color-scheme"/><title>CSCI 300 – Week 12 Lab | FCFS Scheduling Algorithms</title><style>
+:root{--navy:#102e61;--blue:#1b62c4;--ink:#203653;--muted:#64758a;--bg:#f3f7fc;--line:#dce6f3;--green:#0b9365;--shadow:0 9px 26px #173d7710}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font:15px/1.55 system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+button,input,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid #f6b53d;outline-offset:3px}
+code,pre,textarea.code-editor{font-family:Consolas,Monaco,'Courier New',monospace}code{overflow-wrap:anywhere}
+.top{background:linear-gradient(115deg,#0b2756,#145cbd 72%,#1694c7);color:#fff;padding:24px 22px}.top-inner{max-width:1200px;margin:auto;display:flex;align-items:center;gap:17px}.logo{font-size:40px;border-radius:18px;padding:9px 15px;background:#ffffff22}.top h1{font-size:clamp(24px,3.5vw,35px);margin:0;line-height:1.2}.top p{margin:5px 0;color:#dceaff}.pill{margin-left:auto;background:#ffedab;color:#19325e;border-radius:50px;padding:9px 15px;font-weight:800;white-space:nowrap}
+.nav{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 3px 13px #0b346510}.nav-inner{max-width:1200px;margin:auto;padding:10px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.nav a{border-radius:9px;color:#31547f;text-decoration:none;padding:9px 11px;font-weight:750;font-size:13px}.nav a:hover{background:#e9f2ff}.nav button{margin-left:auto;border:1px solid #bcd0e9;border-radius:10px;padding:9px 13px;background:#f4f8ff;color:#164987;font-weight:750}
+main{max-width:1200px;margin:24px auto 64px;padding:0 18px}.hero,.lesson,.report,.progress{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:20px}
+.hero{padding:28px 32px;background:linear-gradient(125deg,#fff 65%,#eaf4ff)}.eyebrow{font-size:12px;color:#1b63c4;text-transform:uppercase;letter-spacing:.8px;font-weight:850}.hero h2{font-size:clamp(28px,4vw,43px);letter-spacing:-1px;line-height:1.17;margin:8px 0}.hero p{max-width:800px;color:#536985;font-size:16px;margin:0}.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.tags span{border-radius:10px;background:#e9f3ff;color:#1554a3;padding:7px 11px;font-size:12px;font-weight:800}
+.section-title{font-size:23px;letter-spacing:-.5px;margin:28px 0 15px}.roadmap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.roadmap a{text-decoration:none;color:inherit;background:white;border:1px solid var(--line);border-radius:15px;padding:18px;box-shadow:var(--shadow)}.roadmap b{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--accent);color:white;font-size:20px}.roadmap h3{font-size:15px;line-height:1.35;margin:10px 0 5px}.roadmap p{font-size:12px;color:#667b92;margin:0}
+.progress{display:grid;grid-template-columns:1fr auto;gap:15px;padding:18px 22px;margin-top:20px;align-items:center}.progress h3{margin:0 0 2px;font-size:17px}.progress p{margin:0;color:#66788e;font-size:12px}.bar{height:11px;background:#e8eff8;border-radius:50px;overflow:hidden;margin-top:10px}.bar div{height:100%;width:0;background:linear-gradient(90deg,#11a475,#1fc49d);transition:width .2s}.percent{font-size:27px;color:#0d9466;font-weight:900}
+.lesson{margin-top:20px;overflow:hidden;scroll-margin-top:85px}.lesson-head{background:linear-gradient(100deg,var(--soft),#fff);border-bottom:1px solid var(--line);padding:20px 23px;display:flex;align-items:center;gap:14px}.lesson-num{display:grid;place-items:center;background:var(--accent);border-radius:14px;color:white;font-size:23px;font-weight:900;min-width:53px;height:53px}.lesson-head h3{font-size:22px;line-height:1.24;margin:0}.lesson-head p{margin:4px 0 0;font-size:13px;color:#5d718b}.lesson-body{padding:21px 23px}.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}.explanation,.student{min-width:0}.explanation h4,.student h4{margin:0 0 10px;font-size:17px}.explanation>p{color:#4b617c;margin:0 0 14px}.point{display:flex;gap:10px;align-items:flex-start;background:#f8fbff;border:1px solid #e2eaf5;border-radius:10px;padding:9px 11px;margin:7px 0;font-size:13px}.point strong{min-width:112px;color:#1c568d}
+.commands{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0}.cmd{display:inline-flex;align-items:center;gap:6px;background:#eaf3ff;border-radius:9px;padding:7px 9px;color:#134f98;font-weight:800;font-size:12px}.cmd button{border:0;background:#fff;border-radius:6px;padding:3px 6px;color:#135caa;font-size:11px;font-weight:850}
+.codebox{background:#0e1a2c;border:1px solid #273e5e;border-radius:12px;overflow:hidden;margin-top:12px}.codehead{display:flex;gap:5px;align-items:center;background:#1e2c42;padding:8px 11px;color:#a8c2de;font-size:11px}.dot{width:9px;height:9px;background:#f5666a;border-radius:50%}.dot:nth-child(2){background:#f3c14d}.dot:nth-child(3){background:#35c47c}.codehead span{margin-left:9px}.codebox pre{white-space:pre-wrap;overflow-wrap:anywhere;color:#e5f4ff;padding:15px;margin:0;font-size:12px;line-height:1.65}
+.student{border:2px solid #13a775;background:#f3fcf7;border-radius:16px;padding:17px}.student h4{color:#087b54}.badge{background:#0c9865;color:white;border-radius:7px;padding:4px 9px;font-size:11px;margin-right:7px}.task-intro{font-size:13px;color:#547063}.steps{display:grid;gap:8px;margin-top:12px}.step{background:white;border:1px solid #d0e9db;border-radius:10px;padding:10px;display:flex;align-items:flex-start;gap:9px;font-size:13px}.step input{accent-color:#0a9666;width:17px;height:17px;margin-top:3px;flex-shrink:0}.step.done span{text-decoration:line-through;color:#768f83}
+.evidence{border-top:1px dashed #afdcc8;margin-top:15px;padding-top:12px}.evidence label{display:block;font-weight:800;color:#0b8058;font-size:13px;margin-bottom:7px}.evidence input{font-size:12px;width:100%}.evidence img{display:block;max-width:100%;max-height:250px;object-fit:contain;border:1px solid #b8d4c6;border-radius:10px;margin-top:9px}.result{background:#e3f6ea;border-radius:10px;color:#13663f;font-size:13px;font-weight:750;padding:11px;margin-top:13px}.tip{background:#fff7df;border-left:4px solid #e9ad2a;padding:11px 13px;border-radius:8px;margin-top:13px;color:#765921;font-size:13px}
+.quiz{margin-top:17px;background:#f6f9fe;border:1px solid #dae6f6;border-radius:13px;padding:14px}.quiz strong{display:block;font-size:14px;margin-bottom:9px}.choices{display:flex;flex-wrap:wrap;gap:8px}.choices button{background:#fff;border:1px solid #bed2ea;border-radius:8px;padding:8px 11px;color:#22507f;font-size:13px;font-weight:750}.choices button.good{background:#dff7eb;border-color:#17a76c;color:#0b6f48}.choices button.bad{background:#ffe8ec;border-color:#ef6373;color:#9d2735}.feedback{font-size:13px;margin-top:7px;min-height:19px;font-weight:700}
+.practice{margin-top:17px;border:1px solid #d6e2f1;border-radius:13px;background:#f9fbff;padding:14px}.practice summary{font-weight:800;color:#1a4e91;cursor:pointer}.practice p{font-size:13px;color:#536b85}.practice textarea{display:block;width:100%;min-height:220px;background:#10213b;color:#e8f4ff;border:1px solid #304565;border-radius:10px;padding:12px;font:12px/1.5 Consolas,monospace;resize:vertical}.practice-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.practice-actions button{border:0;background:#155db3;color:#fff;border-radius:8px;padding:9px 12px;font-weight:800;font-size:12px}.practice-actions button.secondary{background:#e7f1ff;color:#17569e}.practice-output{background:#eaf3ff;border-radius:9px;margin-top:9px;padding:11px;white-space:pre-wrap;font:12px/1.5 Consolas,monospace}
+.reference{background:white;border:1px solid var(--line);border-radius:15px;overflow:hidden}table{width:100%;border-collapse:collapse}th{text-align:left;background:#114c96;color:white;padding:11px}td{padding:9px 11px;border-bottom:1px solid #e5edf7;font-size:13px}tr:nth-child(even) td{background:#f6faff}
+.workflow{background:#e8f3ff;border:1px solid #c7dff8;border-radius:16px;padding:17px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;color:#0d4d96;font-weight:800}.workflow span{background:white;padding:8px 11px;border-radius:9px}.workflow b{font-size:21px}
+.report{padding:23px;margin-top:24px}.report h3{margin:0 0 5px;font-size:22px}.report p{color:#5c7189;font-size:13px}.fields{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}.field{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:800;color:#34567e}.field input,.field textarea{border:1px solid #c5d7ed;border-radius:9px;background:#fcfdff;padding:11px;color:#203653;width:100%}.field textarea{min-height:85px;resize:vertical}.checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.checklist label{border:1px solid #dbe6f3;border-radius:10px;background:#fafcff;padding:11px;font-size:13px;font-weight:750}.checklist input{accent-color:#0c9568}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.actions button{border:0;background:#125bb0;color:white;border-radius:10px;padding:11px 15px;font-weight:850}.actions button.green{background:#0b9568}.actions button.secondary{background:#e7f2ff;color:#175599}.small{font-size:12px;color:#71849b}.toast{position:fixed;bottom:20px;right:20px;background:#153b6d;color:#fff;padding:12px 16px;border-radius:10px;box-shadow:0 10px 25px #0003;opacity:0;transform:translateY(12px);transition:.2s;pointer-events:none;z-index:99}.toast.show{opacity:1;transform:translateY(0)}footer{text-align:center;padding:22px;color:#6e8196;font-size:12px}
+@media(max-width:920px){.roadmap{grid-template-columns:repeat(2,1fr)}.cols{grid-template-columns:1fr}.fields{grid-template-columns:1fr}}
+@media(max-width:580px){.top-inner{align-items:flex-start}.pill{display:none}main{padding:0 11px}.hero{padding:22px 18px}.lesson-head{padding:16px}.lesson-body{padding:14px}.lesson-head h3{font-size:18px}.roadmap{grid-template-columns:repeat(2,1fr)}.checklist{grid-template-columns:1fr}.nav-inner{padding:8px}.nav a{padding:6px;font-size:11px}}
+@media print{body{background:white}.top,.nav,.actions,.evidence input,.practice,.toast,footer{display:none!important}main{max-width:none;padding:0}.hero,.lesson,.report{box-shadow:none;break-inside:avoid}.lesson{border:1px solid #999}.cols{grid-template-columns:1fr 1fr}.student{border:1px solid #555}.codebox{print-color-adjust:exact}}
+
+
+.fcfs-simulator{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:20px;margin:22px 0;overflow:hidden;scroll-margin-top:90px}
+.sim-head{background:linear-gradient(105deg,#e7f3ff,#f6fbff);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:15px;border-bottom:1px solid #d5e6fa}
+.sim-head h2{margin:3px 0 5px;font-size:23px;color:#153d73}.sim-head p{margin:0;color:#4b6481;font-size:13px;max-width:720px}.sim-label{font-size:12px;font-weight:800;color:#1656a0;background:#fff;border-radius:25px;padding:8px 11px;white-space:nowrap}
+.sim-layout{display:grid;grid-template-columns:minmax(280px,.85fr) minmax(400px,1.5fr);gap:23px;padding:21px 23px}.sim-layout h3{font-size:16px;margin:0 0 12px}.sim-table-wrap{overflow-x:auto}.sim-table{min-width:380px}.sim-table th{background:#17569f;font-size:12px}.sim-table td{font-size:13px}.sim-table input{width:100%;max-width:110px;min-width:70px;border:1px solid #b7cee8;border-radius:8px;padding:7px 9px;color:#173f74;font-weight:750}
+.sim-buttons{display:flex;gap:8px;margin:13px 0 5px;flex-wrap:wrap}.sim-buttons button{border:0;border-radius:9px;background:#1261bd;color:#fff;font-weight:800;padding:10px 13px}.sim-buttons .sim-secondary{background:#e7f2ff;color:#1657a0}.sim-hint{font-size:12px;color:#5d738c}.sim-hint.error{color:#bb3a46;font-weight:750}
+.gantt{display:flex;min-height:86px;align-items:stretch;overflow-x:auto;padding:7px 0 22px;gap:2px}.gantt-block{position:relative;flex:var(--weight) 0 48px;min-width:48px;max-width:100%;background:var(--color);color:white;border-radius:7px 7px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:14px;font-weight:900}.gantt-block.idle{background:#a9b8ca;color:#23394f}.gantt-block small{font-size:11px;font-weight:700}.gantt-block .gantt-start{position:absolute;left:0;bottom:-21px;color:#425975;font-size:11px;transform:translateX(-15%);font-weight:800}.gantt-block .gantt-end{position:absolute;right:0;bottom:-21px;color:#425975;font-size:11px;transform:translateX(20%);font-weight:800}
+.sim-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:9px 0 15px}.sim-metrics>div{background:#edf6ff;border-radius:11px;padding:11px}.sim-metrics small{display:block;color:#54708d;font-size:11px;line-height:1.3}.sim-metrics strong{display:block;font-size:23px;color:#12559f;margin-top:3px}.results-table{min-width:510px}.results-table td{font-variant-numeric:tabular-nums}
+@media(max-width:980px){.sim-layout{grid-template-columns:1fr}.sim-label{display:none}}@media(max-width:600px){.sim-layout{padding:15px}.sim-head{padding:17px}.sim-metrics{grid-template-columns:1fr 1fr}.gantt-block{min-width:40px}}
+@media print{.sim-buttons{display:none}.fcfs-simulator{break-inside:avoid}}
+</style></head>
+<body><header class="top"><div class="top-inner"><div aria-hidden="true" class="logo">🐧</div><div><h1>CSCI 300 – Operating Systems</h1><p>Interactive Linux Labs · Explanation → Example → Student Task</p></div><span class="pill">Ubuntu + Bash</span></div></header>
+<nav class="nav"><div class="nav-inner"><a href="#overview">Overview</a><a href="#fcfs-simulator">FCFS Visualizer</a><a href="#lesson-1">Task 1</a><a href="#lesson-2">Task 2</a><a href="#lesson-3">Task 3</a><a href="#lesson-4">Task 4</a><a href="#lab-report">Submission</a><button onclick="window.print()" type="button">🖨 Print</button></div></nav>
+<main><section class="hero" id="overview"><span class="eyebrow">Week 12 Lab · First Come, First Served (FCFS) CPU Scheduling</span><h2>Schedule CPU Processes with FCFS in C</h2><p>Learn how the operating system selects processes using <strong>First Come, First Served (FCFS)</strong>. Explore a live Gantt chart, study each C example, and complete <strong>four student tasks</strong> using Ubuntu Terminal.</p><div class="tags"><span>4 lessons</span><span>4 required student tasks</span><span>4 screenshot sections</span><span>Quizzes + code practice</span><span>Downloadable lab report</span></div></section>
+<h2 class="section-title">🗺️ Week 7 Learning Journey</h2><div class="roadmap"><a href="#lesson-1" style="--accent:#2266c8"><b>1</b><h3>How Does FCFS Choose the Next Process?</h3><p>Run processes in arrival order and calculate waiting time.</p></a><a href="#lesson-2" style="--accent:#0d996c"><b>2</b><h3>What Happens When Processes Arrive at Different Times?</h3><p>Use arrival times and notice when the CPU is idle.</p></a><a href="#lesson-3" style="--accent:#d7850c"><b>3</b><h3>How Can We Build an FCFS Schedule and Gantt Chart?</h3><p>Sort processes by arrival and calculate average waiting and turnaround times.</p></a><a href="#lesson-4" style="--accent:#8050c8"><b>4</b><h3>How Can We Schedule Processes Entered by the User?</h3><p>Read arrival and burst times, validate them, and compute FCFS results.</p></a></div>
+<section class="fcfs-simulator" id="fcfs-simulator">
+<div class="sim-head"><div><span class="eyebrow">Interactive FCFS Visualizer</span><h2>🧩 Build Your Own Gantt Chart</h2><p>Change arrival and burst times, then choose <b>Calculate FCFS</b>. This visualizer runs in your browser; the student tasks still require real C programs in Ubuntu.</p></div><span class="sim-label">Non-preemptive FCFS</span></div>
+<div class="sim-layout"><div class="sim-input"><h3>Process Data</h3><div class="sim-table-wrap"><table class="sim-table"><thead><tr><th>Process</th><th>Arrival Time</th><th>Burst Time</th></tr></thead><tbody>
+<tr><td>P1</td><td><input aria-label="P1 arrival time" id="at1" max="100" min="0" step="1" type="number" value="4"/></td><td><input aria-label="P1 burst time" id="bt1" max="100" min="1" step="1" type="number" value="2"/></td></tr>
+<tr><td>P2</td><td><input aria-label="P2 arrival time" id="at2" max="100" min="0" step="1" type="number" value="0"/></td><td><input aria-label="P2 burst time" id="bt2" max="100" min="1" step="1" type="number" value="3"/></td></tr>
+<tr><td>P3</td><td><input aria-label="P3 arrival time" id="at3" max="100" min="0" step="1" type="number" value="2"/></td><td><input aria-label="P3 burst time" id="bt3" max="100" min="1" step="1" type="number" value="4"/></td></tr>
+<tr><td>P4</td><td><input aria-label="P4 arrival time" id="at4" max="100" min="0" step="1" type="number" value="2"/></td><td><input aria-label="P4 burst time" id="bt4" max="100" min="1" step="1" type="number" value="1"/></td></tr>
+</tbody></table></div><div class="sim-buttons"><button id="fcfs-calculate" type="button">▶ Calculate FCFS</button><button class="sim-secondary" id="fcfs-reset" type="button">↺ Reset Example</button></div><p class="sim-hint" id="sim-message" role="status">Processes with equal arrival times keep their input order.</p></div>
+<div class="sim-results"><h3>Gantt Chart</h3><div aria-label="FCFS Gantt chart" class="gantt" id="gantt-chart"></div><div class="sim-metrics"><div><small>Average Waiting Time</small><strong id="sim-avg-wt">–</strong></div><div><small>Average Turnaround Time</small><strong id="sim-avg-tat">–</strong></div><div><small>Final Completion Time</small><strong id="sim-end">–</strong></div></div><div class="sim-table-wrap"><table class="sim-table results-table"><thead><tr><th>Process</th><th>AT</th><th>BT</th><th>Start</th><th>Finish</th><th>WT</th><th>TAT</th></tr></thead><tbody id="fcfs-table-body"></tbody></table></div></div></div>
+</section><section class="progress"><div><h3>🎯 Your Task Progress</h3><p>Check off each step after completing it in Ubuntu. Checklist progress and student details are saved in this browser.</p><div class="bar"><div id="progress-bar"></div></div></div><strong class="percent" id="progress-number">0%</strong></section>
+<article class="lesson" id="lesson-1" style="--accent:#2266c8;--soft:#eaf3ff">
+<div class="lesson-head"><div class="lesson-num">1</div><div><h3>Lesson 1 – How Does FCFS Choose the Next Process?</h3><p>Run processes in arrival order and calculate waiting time.</p></div></div>
+<div class="lesson-body"><div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>First Come, First Served (FCFS) runs the process that arrived first. FCFS is non-preemptive: once a process starts, it runs until its CPU burst finishes. When all processes arrive at time 0, the given order is the FCFS order.</p><div class="point"><strong>Burst Time (BT)</strong><span>How long a process needs the CPU.</span></div><div class="point"><strong>Waiting Time (WT)</strong><span>Time spent waiting before CPU execution.</span></div><div class="point"><strong>Turnaround Time (TAT)</strong><span>Time from arrival to completion.</span></div><div class="point"><strong>TAT = WT + BT</strong><span>When the process runs without interruption.</span></div>
+<div class="commands"><span class="cmd"><code>nano fcfs_basic.c</code><button data-copy="nano fcfs_basic.c" type="button">Copy</button></span><span class="cmd"><code>gcc -Wall -Wextra fcfs_basic.c -o fcfs_basic</code><button data-copy="gcc -Wall -Wextra fcfs_basic.c -o fcfs_basic" type="button">Copy</button></span><span class="cmd"><code>./fcfs_basic</code><button data-copy="./fcfs_basic" type="button">Copy</button></span><span class="cmd"><button data-copy-script="1" type="button">Copy full C program</button></span></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>fcfs_basic.c — example C program</span></div><pre>#include &lt;stdio.h&gt;
+
+int main(void) {
+    int burst[] = {4, 3, 2};
+    int waiting[3], turnaround[3];
+    int time = 0;
+
+    printf("Process  BT  WT  TAT\n");
+    for (int i = 0; i &lt; 3; i++) {
+        waiting[i] = time;
+        time += burst[i];
+        turnaround[i] = time;
+        printf("P%d       %d   %d    %d\n",
+               i + 1, burst[i], waiting[i], turnaround[i]);
+    }
+    printf("Total CPU time: %d\n", time);
+    return 0;
+}</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Ubuntu Terminal output</span></div><pre>Process  BT  WT  TAT
+P1       4   0    4
+P2       3   4    7
+P3       2   7    9
+Total CPU time: 9</pre></div>
+<div class="tip">💡 With all arrivals at 0, the waiting time of each process equals the sum of the burst times before it.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 1</span> Your turn</h4><p class="task-intro">Write, compile, and run the program in your real Ubuntu Terminal. Tick each step after completing it.</p><div class="steps"><label class="step"><input data-task="1-1" type="checkbox"/><span><b>1.</b> Create <code>fcfs_basic.c</code> using <code>nano fcfs_basic.c</code>.</span></label><label class="step"><input data-task="1-2" type="checkbox"/><span><b>2.</b> Compile with <code>gcc -Wall -Wextra fcfs_basic.c -o fcfs_basic</code> and run <code>./fcfs_basic</code>.</span></label><label class="step"><input data-task="1-3" type="checkbox"/><span><b>3.</b> Change the second process burst time from <code>3</code> to <code>5</code>.</span></label><label class="step"><input data-task="1-4" type="checkbox"/><span><b>4.</b> Recompile and run. Compare the waiting times for P2 and P3 with the original results.</span></label></div><div class="evidence"><label for="shot-1">📸 Attach Screenshot 1</label><input accept="image/*" data-shot="1" id="shot-1" type="file"/><div id="preview-1"></div></div><div class="result">Required result: Screenshot of the modified program showing all three processes, waiting times, and turnaround times.</div></section>
+</div><div class="quiz" data-quiz="1"><strong>🧠 Quick Check: If P1 has a burst of 4 and arrives first, how long does P2 wait (all arrive at time 0)?</strong><div class="choices"><button data-answer="0" type="button">0 units</button><button data-answer="1" type="button">4 units</button><button data-answer="2" type="button">7 units</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the C Program</summary><p>Use this area to review or edit the C code. It does <b>not</b> compile or run C. To see real results, compile with GCC and run in Ubuntu.</p><textarea class="code-editor" id="practice-1" spellcheck="false">#include &lt;stdio.h&gt;
+
+int main(void) {
+    int burst[] = {4, 3, 2};
+    int waiting[3], turnaround[3];
+    int time = 0;
+
+    printf("Process  BT  WT  TAT\n");
+    for (int i = 0; i &lt; 3; i++) {
+        waiting[i] = time;
+        time += burst[i];
+        turnaround[i] = time;
+        printf("P%d       %d   %d    %d\n",
+               i + 1, burst[i], waiting[i], turnaround[i]);
+    }
+    printf("Total CPU time: %d\n", time);
+    return 0;
+}</textarea><div class="practice-actions"><button data-show="1" type="button">Show example output</button><button class="secondary" data-restore="1" type="button">Restore example program</button></div><div class="practice-output" id="practice-output-1">Choose “Show example output” to see a sample result.</div></details>
+</div></article>
+<article class="lesson" id="lesson-2" style="--accent:#0d996c;--soft:#e8f9f0">
+<div class="lesson-head"><div class="lesson-num">2</div><div><h3>Lesson 2 – What Happens When Processes Arrive at Different Times?</h3><p>Use arrival times and notice when the CPU is idle.</p></div></div>
+<div class="lesson-body"><div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>A process cannot run before it arrives. The start time is the later of the CPU becoming free and the process arrival time. If no process has arrived, the CPU stays idle. Here the processes are already listed in arrival order.</p><div class="point"><strong>Arrival Time (AT)</strong><span>The time a process enters the ready queue.</span></div><div class="point"><strong>Start = max(time, AT)</strong><span>Do not start before the process arrives.</span></div><div class="point"><strong>WT = Start − AT</strong><span>How long the process waits.</span></div><div class="point"><strong>TAT = Finish − AT</strong><span>Total time in the system.</span></div>
+<div class="commands"><span class="cmd"><code>nano fcfs_arrival.c</code><button data-copy="nano fcfs_arrival.c" type="button">Copy</button></span><span class="cmd"><code>gcc -Wall -Wextra fcfs_arrival.c -o fcfs_arrival</code><button data-copy="gcc -Wall -Wextra fcfs_arrival.c -o fcfs_arrival" type="button">Copy</button></span><span class="cmd"><code>./fcfs_arrival</code><button data-copy="./fcfs_arrival" type="button">Copy</button></span><span class="cmd"><button data-copy-script="2" type="button">Copy full C program</button></span></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>fcfs_arrival.c — example C program</span></div><pre>#include &lt;stdio.h&gt;
+
+typedef struct {
+    int arrival;
+    int burst;
+} Process;
+
+int main(void) {
+    Process p[3] = {{0, 3}, {2, 2}, {4, 4}};
+    int time = 0;
+
+    printf("Process  AT  BT  Start  Finish  WT  TAT\n");
+    for (int i = 0; i &lt; 3; i++) {
+        if (time &lt; p[i].arrival) {
+            printf("CPU idle: %d to %d\n", time, p[i].arrival);
+            time = p[i].arrival;
+        }
+        int start = time;
+        time += p[i].burst;
+        int wt = start - p[i].arrival;
+        int tat = time - p[i].arrival;
+        printf("P%d        %d   %d     %d       %d    %d    %d\n",
+               i + 1, p[i].arrival, p[i].burst,
+               start, time, wt, tat);
+    }
+    return 0;
+}</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Ubuntu Terminal output</span></div><pre>Process  AT  BT  Start  Finish  WT  TAT
+P1        0   3     0       3    0    3
+P2        2   2     3       5    1    3
+P3        4   4     5       9    1    5</pre></div>
+<div class="tip">💡 The modified data produces CPU idle time from 3 to 5. P3 arrives at 6 but starts at 7, so its waiting time is 1.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 2</span> Your turn</h4><p class="task-intro">Write, compile, and run the program in your real Ubuntu Terminal. Tick each step after completing it.</p><div class="steps"><label class="step"><input data-task="2-1" type="checkbox"/><span><b>1.</b> Create <code>fcfs_arrival.c</code>, compile it using GCC, and run it.</span></label><label class="step"><input data-task="2-2" type="checkbox"/><span><b>2.</b> Check the start, finish, waiting, and turnaround times for all three processes.</span></label><label class="step"><input data-task="2-3" type="checkbox"/><span><b>3.</b> Change the arrival times to <code>0</code>, <code>5</code>, and <code>6</code>, keeping the same burst times.</span></label><label class="step"><input data-task="2-4" type="checkbox"/><span><b>4.</b> Recompile and run. Identify the CPU idle interval and the waiting time of P3.</span></label></div><div class="evidence"><label for="shot-2">📸 Attach Screenshot 2</label><input accept="image/*" data-shot="2" id="shot-2" type="file"/><div id="preview-2"></div></div><div class="result">Required result: Screenshot showing the CPU idle interval and the updated process table.</div></section>
+</div><div class="quiz" data-quiz="2"><strong>🧠 Quick Check: If the CPU finishes at time 3 and the next process arrives at time 5, what happens?</strong><div class="choices"><button data-answer="0" type="button">The CPU is idle from 3 to 5</button><button data-answer="1" type="button">The process starts at 3</button><button data-answer="2" type="button">The process is skipped</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the C Program</summary><p>Use this area to review or edit the C code. It does <b>not</b> compile or run C. To see real results, compile with GCC and run in Ubuntu.</p><textarea class="code-editor" id="practice-2" spellcheck="false">#include &lt;stdio.h&gt;
+
+typedef struct {
+    int arrival;
+    int burst;
+} Process;
+
+int main(void) {
+    Process p[3] = {{0, 3}, {2, 2}, {4, 4}};
+    int time = 0;
+
+    printf("Process  AT  BT  Start  Finish  WT  TAT\n");
+    for (int i = 0; i &lt; 3; i++) {
+        if (time &lt; p[i].arrival) {
+            printf("CPU idle: %d to %d\n", time, p[i].arrival);
+            time = p[i].arrival;
+        }
+        int start = time;
+        time += p[i].burst;
+        int wt = start - p[i].arrival;
+        int tat = time - p[i].arrival;
+        printf("P%d        %d   %d     %d       %d    %d    %d\n",
+               i + 1, p[i].arrival, p[i].burst,
+               start, time, wt, tat);
+    }
+    return 0;
+}</textarea><div class="practice-actions"><button data-show="2" type="button">Show example output</button><button class="secondary" data-restore="2" type="button">Restore example program</button></div><div class="practice-output" id="practice-output-2">Choose “Show example output” to see a sample result.</div></details>
+</div></article>
+<article class="lesson" id="lesson-3" style="--accent:#d7850c;--soft:#fff6e6">
+<div class="lesson-head"><div class="lesson-num">3</div><div><h3>Lesson 3 – How Can We Build an FCFS Schedule and Gantt Chart?</h3><p>Sort processes by arrival and calculate average waiting and turnaround times.</p></div></div>
+<div class="lesson-body"><div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>Processes may be entered in a different order from their arrival times. FCFS sorts them by arrival time. If arrival times are equal, this example keeps the original input order. A Gantt chart shows which process uses the CPU at each time interval.</p><div class="point"><strong>Sort by arrival</strong><span>Earlier arrival gets the CPU first.</span></div><div class="point"><strong>Stable tie rule</strong><span>Keep original input order when arrivals match.</span></div><div class="point"><strong>Gantt chart</strong><span>Show process start and finish times.</span></div><div class="point"><strong>Average WT / TAT</strong><span>Add each value and divide by the number of processes.</span></div>
+<div class="commands"><span class="cmd"><code>nano fcfs_gantt.c</code><button data-copy="nano fcfs_gantt.c" type="button">Copy</button></span><span class="cmd"><code>gcc -Wall -Wextra fcfs_gantt.c -o fcfs_gantt</code><button data-copy="gcc -Wall -Wextra fcfs_gantt.c -o fcfs_gantt" type="button">Copy</button></span><span class="cmd"><code>./fcfs_gantt</code><button data-copy="./fcfs_gantt" type="button">Copy</button></span><span class="cmd"><button data-copy-script="3" type="button">Copy full C program</button></span></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>fcfs_gantt.c — example C program</span></div><pre>#include &lt;stdio.h&gt;
+
+typedef struct {
+    int id, arrival, burst;
+} Process;
+
+int main(void) {
+    Process p[4] = {
+        {1, 4, 2}, {2, 0, 3}, {3, 2, 4}, {4, 2, 1}
+    };
+    int time = 0, total_wt = 0, total_tat = 0;
+
+    /* Stable insertion sort by arrival time. */
+    for (int i = 1; i &lt; 4; i++) {
+        Process key = p[i];
+        int j = i - 1;
+        while (j &gt;= 0 &amp;&amp; p[j].arrival &gt; key.arrival) {
+            p[j + 1] = p[j];
+            j--;
+        }
+        p[j + 1] = key;
+    }
+
+    printf("Gantt chart intervals:\n");
+    printf("Process  AT  BT  Start  End  WT  TAT\n");
+    for (int i = 0; i &lt; 4; i++) {
+        if (time &lt; p[i].arrival) {
+            printf("Idle: %d-%d\n", time, p[i].arrival);
+            time = p[i].arrival;
+        }
+        int start = time;
+        time += p[i].burst;
+        int wt = start - p[i].arrival;
+        int tat = time - p[i].arrival;
+        total_wt += wt;
+        total_tat += tat;
+        printf("P%d        %d   %d     %d    %d    %d    %d\n",
+               p[i].id, p[i].arrival, p[i].burst,
+               start, time, wt, tat);
+    }
+    printf("Average WT: %.2f\n", total_wt / 4.0);
+    printf("Average TAT: %.2f\n", total_tat / 4.0);
+    return 0;
+}</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Ubuntu Terminal output</span></div><pre>Gantt chart intervals:
+Process  AT  BT  Start  End  WT  TAT
+P2        0   3     0    3    0    3
+P3        2   4     3    7    1    5
+P4        2   1     7    8    5    6
+P1        4   2     8    10    4    6
+Average WT: 2.50
+Average TAT: 5.00</pre></div>
+<div class="tip">💡 Changing P1 burst from 2 to 5 changes P1 completion and turnaround times, but P1 is last, so average waiting time stays 2.50. Average turnaround becomes 5.75.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 3</span> Your turn</h4><p class="task-intro">Write, compile, and run the program in your real Ubuntu Terminal. Tick each step after completing it.</p><div class="steps"><label class="step"><input data-task="3-1" type="checkbox"/><span><b>1.</b> Create <code>fcfs_gantt.c</code>, compile it, and run the example.</span></label><label class="step"><input data-task="3-2" type="checkbox"/><span><b>2.</b> Draw the Gantt chart using the displayed start/end intervals: <code>P2 → P3 → P4 → P1</code>.</span></label><label class="step"><input data-task="3-3" type="checkbox"/><span><b>3.</b> Change P1 burst time from <code>2</code> to <code>5</code>, recompile, and record the new averages.</span></label><label class="step"><input data-task="3-4" type="checkbox"/><span><b>4.</b> Explain why the order of processes remains the same even after changing P1 burst time.</span></label></div><div class="evidence"><label for="shot-3">📸 Attach Screenshot 3</label><input accept="image/*" data-shot="3" id="shot-3" type="file"/><div id="preview-3"></div></div><div class="result">Required result: Screenshot showing the updated schedule and average waiting and turnaround times; include your drawn Gantt chart if requested.</div></section>
+</div><div class="quiz" data-quiz="3"><strong>🧠 Quick Check: Which process executes first in the example?</strong><div class="choices"><button data-answer="0" type="button">P1, because it is listed first</button><button data-answer="1" type="button">P2, because it arrives at time 0</button><button data-answer="2" type="button">P4, because it has the shortest burst</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the C Program</summary><p>Use this area to review or edit the C code. It does <b>not</b> compile or run C. To see real results, compile with GCC and run in Ubuntu.</p><textarea class="code-editor" id="practice-3" spellcheck="false">#include &lt;stdio.h&gt;
+
+typedef struct {
+    int id, arrival, burst;
+} Process;
+
+int main(void) {
+    Process p[4] = {
+        {1, 4, 2}, {2, 0, 3}, {3, 2, 4}, {4, 2, 1}
+    };
+    int time = 0, total_wt = 0, total_tat = 0;
+
+    /* Stable insertion sort by arrival time. */
+    for (int i = 1; i &lt; 4; i++) {
+        Process key = p[i];
+        int j = i - 1;
+        while (j &gt;= 0 &amp;&amp; p[j].arrival &gt; key.arrival) {
+            p[j + 1] = p[j];
+            j--;
+        }
+        p[j + 1] = key;
+    }
+
+    printf("Gantt chart intervals:\n");
+    printf("Process  AT  BT  Start  End  WT  TAT\n");
+    for (int i = 0; i &lt; 4; i++) {
+        if (time &lt; p[i].arrival) {
+            printf("Idle: %d-%d\n", time, p[i].arrival);
+            time = p[i].arrival;
+        }
+        int start = time;
+        time += p[i].burst;
+        int wt = start - p[i].arrival;
+        int tat = time - p[i].arrival;
+        total_wt += wt;
+        total_tat += tat;
+        printf("P%d        %d   %d     %d    %d    %d    %d\n",
+               p[i].id, p[i].arrival, p[i].burst,
+               start, time, wt, tat);
+    }
+    printf("Average WT: %.2f\n", total_wt / 4.0);
+    printf("Average TAT: %.2f\n", total_tat / 4.0);
+    return 0;
+}</textarea><div class="practice-actions"><button data-show="3" type="button">Show example output</button><button class="secondary" data-restore="3" type="button">Restore example program</button></div><div class="practice-output" id="practice-output-3">Choose “Show example output” to see a sample result.</div></details>
+</div></article>
+<article class="lesson" id="lesson-4" style="--accent:#8050c8;--soft:#f4edff">
+<div class="lesson-head"><div class="lesson-num">4</div><div><h3>Lesson 4 – How Can We Schedule Processes Entered by the User?</h3><p>Read arrival and burst times, validate them, and compute FCFS results.</p></div></div>
+<div class="lesson-body"><div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>A useful FCFS program should accept different process data instead of using fixed numbers. This program asks for the number of processes and their arrival/burst times, sorts by arrival, prints the execution intervals, and calculates average waiting and turnaround times.</p><div class="point"><strong>scanf()</strong><span>Read the process data entered in Terminal.</span></div><div class="point"><strong>Stable sort</strong><span>Run the earliest arrivals first; preserve input order for ties.</span></div><div class="point"><strong>Idle interval</strong><span>Show gaps when the CPU has no ready process.</span></div><div class="point"><strong>Averages</strong><span>Calculate and display mean waiting and turnaround times.</span></div>
+<div class="commands"><span class="cmd"><code>nano fcfs_input.c</code><button data-copy="nano fcfs_input.c" type="button">Copy</button></span><span class="cmd"><code>gcc -Wall -Wextra fcfs_input.c -o fcfs_input</code><button data-copy="gcc -Wall -Wextra fcfs_input.c -o fcfs_input" type="button">Copy</button></span><span class="cmd"><code>./fcfs_input</code><button data-copy="./fcfs_input" type="button">Copy</button></span><span class="cmd"><button data-copy-script="4" type="button">Copy full C program</button></span></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>fcfs_input.c — example C program</span></div><pre>#include &lt;stdio.h&gt;
+
+#define MAX 10
+
+typedef struct {
+    int id, arrival, burst;
+} Process;
+
+int main(void) {
+    Process p[MAX];
+    int n, time = 0;
+    int total_wt = 0, total_tat = 0;
+
+    printf("Number of processes (1-10): ");
+    if (scanf("%d", &amp;n) != 1 || n &lt; 1 || n &gt; MAX) {
+        printf("Invalid number of processes.\n");
+        return 1;
+    }
+    for (int i = 0; i &lt; n; i++) {
+        p[i].id = i + 1;
+        printf("P%d arrival and burst: ", i + 1);
+        if (scanf("%d %d", &amp;p[i].arrival, &amp;p[i].burst) != 2 ||
+            p[i].arrival &lt; 0 || p[i].burst &lt;= 0) {
+            printf("Invalid process data.\n");
+            return 1;
+        }
+    }
+
+    for (int i = 1; i &lt; n; i++) {
+        Process key = p[i];
+        int j = i - 1;
+        while (j &gt;= 0 &amp;&amp; p[j].arrival &gt; key.arrival) {
+            p[j + 1] = p[j];
+            j--;
+        }
+        p[j + 1] = key;
+    }
+
+    printf("\nFCFS schedule:\n");
+    printf("Process  AT  BT  Start  End  WT  TAT\n");
+    for (int i = 0; i &lt; n; i++) {
+        if (time &lt; p[i].arrival) {
+            printf("CPU idle: %d-%d\n", time, p[i].arrival);
+            time = p[i].arrival;
+        }
+        int start = time;
+        time += p[i].burst;
+        int wt = start - p[i].arrival;
+        int tat = time - p[i].arrival;
+        total_wt += wt;
+        total_tat += tat;
+        printf("P%d        %d   %d     %d    %d    %d    %d\n",
+               p[i].id, p[i].arrival, p[i].burst,
+               start, time, wt, tat);
+    }
+    printf("Average WT: %.2f\n", (double)total_wt / n);
+    printf("Average TAT: %.2f\n", (double)total_tat / n);
+    return 0;
+}</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Ubuntu Terminal output</span></div><pre>Number of processes (1-10): 3
+P1 arrival and burst: 0 4
+P2 arrival and burst: 1 3
+P3 arrival and burst: 6 2
+
+FCFS schedule:
+Process  AT  BT  Start  End  WT  TAT
+P1        0   4     0    4    0    4
+P2        1   3     4    7    3    6
+P3        6   2     7    9    1    3
+Average WT: 1.33
+Average TAT: 4.33</pre></div>
+<div class="tip">💡 For the four-process test, the CPU is idle from 2 to 5 and from 9 to 9 is not an interval. P4 begins at 9. Average WT is 0.75 and average TAT is 2.75.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 4</span> Your turn</h4><p class="task-intro">Write, compile, and run the program in your real Ubuntu Terminal. Tick each step after completing it.</p><div class="steps"><label class="step"><input data-task="4-1" type="checkbox"/><span><b>1.</b> Create <code>fcfs_input.c</code>, compile it, and test the three processes shown in the example.</span></label><label class="step"><input data-task="4-2" type="checkbox"/><span><b>2.</b> Run the program again with <code>4</code> processes and input <code>P1: 0 2</code>, <code>P2: 5 3</code>, <code>P3: 5 1</code>, <code>P4: 9 2</code>.</span></label><label class="step"><input data-task="4-3" type="checkbox"/><span><b>3.</b> Record the process order, any CPU idle intervals, and the average waiting and turnaround times.</span></label><label class="step"><input data-task="4-4" type="checkbox"/><span><b>4.</b> Run one more test with an invalid burst time of <code>0</code>. Explain why the program rejects it.</span></label></div><div class="evidence"><label for="shot-4">📸 Attach Screenshot 4</label><input accept="image/*" data-shot="4" id="shot-4" type="file"/><div id="preview-4"></div></div><div class="result">Required result: Screenshots showing the four-process schedule, its averages, and the invalid-input message.</div></section>
+</div><div class="quiz" data-quiz="4"><strong>🧠 Quick Check: Why must the burst time be greater than 0?</strong><div class="choices"><button data-answer="0" type="button">A process needs positive CPU execution time</button><button data-answer="1" type="button">FCFS always uses the shortest burst first</button><button data-answer="2" type="button">Every process must arrive at time 0</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the C Program</summary><p>Use this area to review or edit the C code. It does <b>not</b> compile or run C. To see real results, compile with GCC and run in Ubuntu.</p><textarea class="code-editor" id="practice-4" spellcheck="false">#include &lt;stdio.h&gt;
+
+#define MAX 10
+
+typedef struct {
+    int id, arrival, burst;
+} Process;
+
+int main(void) {
+    Process p[MAX];
+    int n, time = 0;
+    int total_wt = 0, total_tat = 0;
+
+    printf("Number of processes (1-10): ");
+    if (scanf("%d", &amp;n) != 1 || n &lt; 1 || n &gt; MAX) {
+        printf("Invalid number of processes.\n");
+        return 1;
+    }
+    for (int i = 0; i &lt; n; i++) {
+        p[i].id = i + 1;
+        printf("P%d arrival and burst: ", i + 1);
+        if (scanf("%d %d", &amp;p[i].arrival, &amp;p[i].burst) != 2 ||
+            p[i].arrival &lt; 0 || p[i].burst &lt;= 0) {
+            printf("Invalid process data.\n");
+            return 1;
+        }
+    }
+
+    for (int i = 1; i &lt; n; i++) {
+        Process key = p[i];
+        int j = i - 1;
+        while (j &gt;= 0 &amp;&amp; p[j].arrival &gt; key.arrival) {
+            p[j + 1] = p[j];
+            j--;
+        }
+        p[j + 1] = key;
+    }
+
+    printf("\nFCFS schedule:\n");
+    printf("Process  AT  BT  Start  End  WT  TAT\n");
+    for (int i = 0; i &lt; n; i++) {
+        if (time &lt; p[i].arrival) {
+            printf("CPU idle: %d-%d\n", time, p[i].arrival);
+            time = p[i].arrival;
+        }
+        int start = time;
+        time += p[i].burst;
+        int wt = start - p[i].arrival;
+        int tat = time - p[i].arrival;
+        total_wt += wt;
+        total_tat += tat;
+        printf("P%d        %d   %d     %d    %d    %d    %d\n",
+               p[i].id, p[i].arrival, p[i].burst,
+               start, time, wt, tat);
+    }
+    printf("Average WT: %.2f\n", (double)total_wt / n);
+    printf("Average TAT: %.2f\n", (double)total_tat / n);
+    return 0;
+}</textarea><div class="practice-actions"><button data-show="4" type="button">Show example output</button><button class="secondary" data-restore="4" type="button">Restore example program</button></div><div class="practice-output" id="practice-output-4">Choose “Show example output” to see a sample result.</div></details>
+</div></article>
+<h2 class="section-title">📘 Quick Bash Reference</h2><div class="reference"><table><thead><tr><th>Syntax / Command</th><th>Purpose</th><th>Example</th></tr></thead><tbody><tr><td><code>FCFS</code></td><td>Run in arrival order</td><td><code>First Come, First Served</code></td></tr><tr><td><code>AT</code></td><td>Time process enters ready queue</td><td><code>Arrival Time</code></td></tr><tr><td><code>BT</code></td><td>CPU time needed</td><td><code>Burst Time</code></td></tr><tr><td><code>Start</code></td><td>When process starts CPU execution</td><td><code>max(CPU free, AT)</code></td></tr><tr><td><code>Finish</code></td><td>Time process completes</td><td><code>Start + BT</code></td></tr><tr><td><code>WT</code></td><td>Time waiting in ready queue</td><td><code>Start − AT</code></td></tr><tr><td><code>TAT</code></td><td>Total time from arrival to completion</td><td><code>Finish − AT</code></td></tr><tr><td><code>Average WT</code></td><td>Mean waiting time</td><td><code>sum(WT) / n</code></td></tr><tr><td><code>Average TAT</code></td><td>Mean turnaround time</td><td><code>sum(TAT) / n</code></td></tr><tr><td><code>CPU idle</code></td><td>Gap with no ready process</td><td><code>time → next arrival</code></td></tr><tr><td><code>gcc</code></td><td>Compile C source</td><td><code>gcc fcfs_basic.c -o fcfs_basic</code></td></tr></tbody></table></div>
+<h2 class="section-title">🔄 Complete Week 7 Flow</h2><div class="workflow"><span>Read arrivals + bursts</span><b>→</b><span>Sort by arrival</span><b>→</b><span>Assign CPU start/end</span><b>→</b><span>Calculate WT + TAT</span><b>→</b><span>Draw Gantt chart</span></div>
+<section class="report" id="lab-report"><h3>📝 Student Information &amp; Submission</h3><p>Complete all four FCFS programs in Ubuntu Terminal, attach your screenshots, and download your report.</p><div class="fields"><label class="field">Student Name<input data-save="name" id="student-name" placeholder="Your full name"/></label><label class="field">Student ID<input data-save="id" id="student-id" placeholder="Your university ID"/></label><label class="field">Section<input data-save="section" id="student-section" placeholder="Your section"/></label></div>
+<label class="field">Task 4 observation: What CPU idle interval(s) appeared, and what were the average waiting and turnaround times?<textarea data-save="observation" id="observation" placeholder="Write your observation here..."></textarea></label>
+<h4>Final submission checklist</h4><div class="checklist"><label><input data-final="0" type="checkbox"/> Task 1 screenshot attached</label><label><input data-final="1" type="checkbox"/> Task 2 screenshot attached</label><label><input data-final="2" type="checkbox"/> Task 3 screenshot attached</label><label><input data-final="3" type="checkbox"/> Task 4 screenshot attached</label><label><input data-final="4" type="checkbox"/> Student name and ID entered</label><label><input data-final="5" type="checkbox"/> All four C programs compiled and tested in Ubuntu</label></div>
+<div class="actions"><button class="green" id="download-report" type="button">⬇ Download Completed Lab Report</button><button class="secondary" onclick="window.print()" type="button">🖨 Print / Save as PDF</button><button class="secondary" id="reset-progress" type="button">↺ Reset Checklists</button></div><p class="small">The report downloads as an HTML file with your currently attached screenshots. Open it to print or save as PDF. Screenshots are kept only while this page is open; nothing is submitted automatically. The FCFS visualizer runs in your browser; the code practice area does not compile C.</p></section></main>
+<footer>CSCI 300 – Operating Systems · Week 12 Lab – FCFS Scheduling Algorithms</footer><div aria-live="polite" class="toast" id="toast" role="status"></div><script>
+const lessons = [{"id": 1, "icon": "⏱️", "title": "How Does FCFS Choose the Next Process?", "subtitle": "Run processes in arrival order and calculate waiting time.", "why": "First Come, First Served (FCFS) runs the process that arrived first. FCFS is non-preemptive: once a process starts, it runs until its CPU burst finishes. When all processes arrive at time 0, the given order is the FCFS order.", "concepts": [["Burst Time (BT)", "How long a process needs the CPU."], ["Waiting Time (WT)", "Time spent waiting before CPU execution."], ["Turnaround Time (TAT)", "Time from arrival to completion."], ["TAT = WT + BT", "When the process runs without interruption."]], "filename": "fcfs_basic.c", "program": "fcfs_basic", "code": "#include <stdio.h>\n\nint main(void) {\n    int burst[] = {4, 3, 2};\n    int waiting[3], turnaround[3];\n    int time = 0;\n\n    printf(\"Process  BT  WT  TAT\\n\");\n    for (int i = 0; i < 3; i++) {\n        waiting[i] = time;\n        time += burst[i];\n        turnaround[i] = time;\n        printf(\"P%d       %d   %d    %d\\n\",\n               i + 1, burst[i], waiting[i], turnaround[i]);\n    }\n    printf(\"Total CPU time: %d\\n\", time);\n    return 0;\n}", "output": "Process  BT  WT  TAT\nP1       4   0    4\nP2       3   4    7\nP3       2   7    9\nTotal CPU time: 9", "steps": ["Create <code>fcfs_basic.c<\/code> using <code>nano fcfs_basic.c<\/code>.", "Compile with <code>gcc -Wall -Wextra fcfs_basic.c -o fcfs_basic<\/code> and run <code>./fcfs_basic<\/code>.", "Change the second process burst time from <code>3<\/code> to <code>5<\/code>.", "Recompile and run. Compare the waiting times for P2 and P3 with the original results."], "evidence": "Screenshot of the modified program showing all three processes, waiting times, and turnaround times.", "quiz": {"q": "If P1 has a burst of 4 and arrives first, how long does P2 wait (all arrive at time 0)?", "options": ["0 units", "4 units", "7 units"], "correct": 1, "explain": "P2 must wait for P1 to finish, so its waiting time is 4."}, "tip": "With all arrivals at 0, the waiting time of each process equals the sum of the burst times before it.", "accent": "#2266c8", "soft": "#eaf3ff"}, {"id": 2, "icon": "🕒", "title": "What Happens When Processes Arrive at Different Times?", "subtitle": "Use arrival times and notice when the CPU is idle.", "why": "A process cannot run before it arrives. The start time is the later of the CPU becoming free and the process arrival time. If no process has arrived, the CPU stays idle. Here the processes are already listed in arrival order.", "concepts": [["Arrival Time (AT)", "The time a process enters the ready queue."], ["Start = max(time, AT)", "Do not start before the process arrives."], ["WT = Start − AT", "How long the process waits."], ["TAT = Finish − AT", "Total time in the system."]], "filename": "fcfs_arrival.c", "program": "fcfs_arrival", "code": "#include <stdio.h>\n\ntypedef struct {\n    int arrival;\n    int burst;\n} Process;\n\nint main(void) {\n    Process p[3] = {{0, 3}, {2, 2}, {4, 4}};\n    int time = 0;\n\n    printf(\"Process  AT  BT  Start  Finish  WT  TAT\\n\");\n    for (int i = 0; i < 3; i++) {\n        if (time < p[i].arrival) {\n            printf(\"CPU idle: %d to %d\\n\", time, p[i].arrival);\n            time = p[i].arrival;\n        }\n        int start = time;\n        time += p[i].burst;\n        int wt = start - p[i].arrival;\n        int tat = time - p[i].arrival;\n        printf(\"P%d        %d   %d     %d       %d    %d    %d\\n\",\n               i + 1, p[i].arrival, p[i].burst,\n               start, time, wt, tat);\n    }\n    return 0;\n}", "output": "Process  AT  BT  Start  Finish  WT  TAT\nP1        0   3     0       3    0    3\nP2        2   2     3       5    1    3\nP3        4   4     5       9    1    5", "steps": ["Create <code>fcfs_arrival.c<\/code>, compile it using GCC, and run it.", "Check the start, finish, waiting, and turnaround times for all three processes.", "Change the arrival times to <code>0<\/code>, <code>5<\/code>, and <code>6<\/code>, keeping the same burst times.", "Recompile and run. Identify the CPU idle interval and the waiting time of P3."], "evidence": "Screenshot showing the CPU idle interval and the updated process table.", "quiz": {"q": "If the CPU finishes at time 3 and the next process arrives at time 5, what happens?", "options": ["The CPU is idle from 3 to 5", "The process starts at 3", "The process is skipped"], "correct": 0, "explain": "The CPU cannot start a process before its arrival, so it is idle until time 5."}, "tip": "The modified data produces CPU idle time from 3 to 5. P3 arrives at 6 but starts at 7, so its waiting time is 1.", "accent": "#0d996c", "soft": "#e8f9f0"}, {"id": 3, "icon": "📊", "title": "How Can We Build an FCFS Schedule and Gantt Chart?", "subtitle": "Sort processes by arrival and calculate average waiting and turnaround times.", "why": "Processes may be entered in a different order from their arrival times. FCFS sorts them by arrival time. If arrival times are equal, this example keeps the original input order. A Gantt chart shows which process uses the CPU at each time interval.", "concepts": [["Sort by arrival", "Earlier arrival gets the CPU first."], ["Stable tie rule", "Keep original input order when arrivals match."], ["Gantt chart", "Show process start and finish times."], ["Average WT / TAT", "Add each value and divide by the number of processes."]], "filename": "fcfs_gantt.c", "program": "fcfs_gantt", "code": "#include <stdio.h>\n\ntypedef struct {\n    int id, arrival, burst;\n} Process;\n\nint main(void) {\n    Process p[4] = {\n        {1, 4, 2}, {2, 0, 3}, {3, 2, 4}, {4, 2, 1}\n    };\n    int time = 0, total_wt = 0, total_tat = 0;\n\n    /* Stable insertion sort by arrival time. */\n    for (int i = 1; i < 4; i++) {\n        Process key = p[i];\n        int j = i - 1;\n        while (j >= 0 && p[j].arrival > key.arrival) {\n            p[j + 1] = p[j];\n            j--;\n        }\n        p[j + 1] = key;\n    }\n\n    printf(\"Gantt chart intervals:\\n\");\n    printf(\"Process  AT  BT  Start  End  WT  TAT\\n\");\n    for (int i = 0; i < 4; i++) {\n        if (time < p[i].arrival) {\n            printf(\"Idle: %d-%d\\n\", time, p[i].arrival);\n            time = p[i].arrival;\n        }\n        int start = time;\n        time += p[i].burst;\n        int wt = start - p[i].arrival;\n        int tat = time - p[i].arrival;\n        total_wt += wt;\n        total_tat += tat;\n        printf(\"P%d        %d   %d     %d    %d    %d    %d\\n\",\n               p[i].id, p[i].arrival, p[i].burst,\n               start, time, wt, tat);\n    }\n    printf(\"Average WT: %.2f\\n\", total_wt / 4.0);\n    printf(\"Average TAT: %.2f\\n\", total_tat / 4.0);\n    return 0;\n}", "output": "Gantt chart intervals:\nProcess  AT  BT  Start  End  WT  TAT\nP2        0   3     0    3    0    3\nP3        2   4     3    7    1    5\nP4        2   1     7    8    5    6\nP1        4   2     8    10    4    6\nAverage WT: 2.50\nAverage TAT: 5.00", "steps": ["Create <code>fcfs_gantt.c<\/code>, compile it, and run the example.", "Draw the Gantt chart using the displayed start/end intervals: <code>P2 → P3 → P4 → P1<\/code>.", "Change P1 burst time from <code>2<\/code> to <code>5<\/code>, recompile, and record the new averages.", "Explain why the order of processes remains the same even after changing P1 burst time."], "evidence": "Screenshot showing the updated schedule and average waiting and turnaround times; include your drawn Gantt chart if requested.", "quiz": {"q": "Which process executes first in the example?", "options": ["P1, because it is listed first", "P2, because it arrives at time 0", "P4, because it has the shortest burst"], "correct": 1, "explain": "FCFS chooses the earliest arrival, which is P2 at time 0."}, "tip": "Changing P1 burst from 2 to 5 changes P1 completion and turnaround times, but P1 is last, so average waiting time stays 2.50. Average turnaround becomes 5.75.", "accent": "#d7850c", "soft": "#fff6e6"}, {"id": 4, "icon": "⌨️", "title": "How Can We Schedule Processes Entered by the User?", "subtitle": "Read arrival and burst times, validate them, and compute FCFS results.", "why": "A useful FCFS program should accept different process data instead of using fixed numbers. This program asks for the number of processes and their arrival/burst times, sorts by arrival, prints the execution intervals, and calculates average waiting and turnaround times.", "concepts": [["scanf()", "Read the process data entered in Terminal."], ["Stable sort", "Run the earliest arrivals first; preserve input order for ties."], ["Idle interval", "Show gaps when the CPU has no ready process."], ["Averages", "Calculate and display mean waiting and turnaround times."]], "filename": "fcfs_input.c", "program": "fcfs_input", "code": "#include <stdio.h>\n\n#define MAX 10\n\ntypedef struct {\n    int id, arrival, burst;\n} Process;\n\nint main(void) {\n    Process p[MAX];\n    int n, time = 0;\n    int total_wt = 0, total_tat = 0;\n\n    printf(\"Number of processes (1-10): \");\n    if (scanf(\"%d\", &n) != 1 || n < 1 || n > MAX) {\n        printf(\"Invalid number of processes.\\n\");\n        return 1;\n    }\n    for (int i = 0; i < n; i++) {\n        p[i].id = i + 1;\n        printf(\"P%d arrival and burst: \", i + 1);\n        if (scanf(\"%d %d\", &p[i].arrival, &p[i].burst) != 2 ||\n            p[i].arrival < 0 || p[i].burst <= 0) {\n            printf(\"Invalid process data.\\n\");\n            return 1;\n        }\n    }\n\n    for (int i = 1; i < n; i++) {\n        Process key = p[i];\n        int j = i - 1;\n        while (j >= 0 && p[j].arrival > key.arrival) {\n            p[j + 1] = p[j];\n            j--;\n        }\n        p[j + 1] = key;\n    }\n\n    printf(\"\\nFCFS schedule:\\n\");\n    printf(\"Process  AT  BT  Start  End  WT  TAT\\n\");\n    for (int i = 0; i < n; i++) {\n        if (time < p[i].arrival) {\n            printf(\"CPU idle: %d-%d\\n\", time, p[i].arrival);\n            time = p[i].arrival;\n        }\n        int start = time;\n        time += p[i].burst;\n        int wt = start - p[i].arrival;\n        int tat = time - p[i].arrival;\n        total_wt += wt;\n        total_tat += tat;\n        printf(\"P%d        %d   %d     %d    %d    %d    %d\\n\",\n               p[i].id, p[i].arrival, p[i].burst,\n               start, time, wt, tat);\n    }\n    printf(\"Average WT: %.2f\\n\", (double)total_wt / n);\n    printf(\"Average TAT: %.2f\\n\", (double)total_tat / n);\n    return 0;\n}", "output": "Number of processes (1-10): 3\nP1 arrival and burst: 0 4\nP2 arrival and burst: 1 3\nP3 arrival and burst: 6 2\n\nFCFS schedule:\nProcess  AT  BT  Start  End  WT  TAT\nP1        0   4     0    4    0    4\nP2        1   3     4    7    3    6\nP3        6   2     7    9    1    3\nAverage WT: 1.33\nAverage TAT: 4.33", "steps": ["Create <code>fcfs_input.c<\/code>, compile it, and test the three processes shown in the example.", "Run the program again with <code>4<\/code> processes and input <code>P1: 0 2<\/code>, <code>P2: 5 3<\/code>, <code>P3: 5 1<\/code>, <code>P4: 9 2<\/code>.", "Record the process order, any CPU idle intervals, and the average waiting and turnaround times.", "Run one more test with an invalid burst time of <code>0<\/code>. Explain why the program rejects it."], "evidence": "Screenshots showing the four-process schedule, its averages, and the invalid-input message.", "quiz": {"q": "Why must the burst time be greater than 0?", "options": ["A process needs positive CPU execution time", "FCFS always uses the shortest burst first", "Every process must arrive at time 0"], "correct": 0, "explain": "This lab models processes that require at least one positive unit of CPU time."}, "tip": "For the four-process test, the CPU is idle from 2 to 5 and from 9 to 9 is not an interval. P4 begins at 9. Average WT is 0.75 and average TAT is 2.75.", "accent": "#8050c8", "soft": "#f4edff"}];
+const shots = {};
+const PREFIX="csci300-week12-";
+const $=id=>document.getElementById(id);
+function toast(msg){let el=$("toast");el.textContent=msg;el.classList.add("show");clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.classList.remove("show"),2000)}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function updateProgress(){
+ let boxes=[...document.querySelectorAll("input[data-task]")], done=boxes.filter(x=>x.checked).length;
+ let pct=Math.round(done/boxes.length*100);
+ $("progress-bar").style.width=pct+"%";$("progress-number").textContent=pct+"%";
+}
+for(let box of document.querySelectorAll("input[data-task]")){
+ box.checked=localStorage.getItem(PREFIX+box.dataset.task)==="1";
+ box.closest(".step").classList.toggle("done",box.checked);
+ box.addEventListener("change",()=>{localStorage.setItem(PREFIX+box.dataset.task,box.checked?"1":"0");box.closest(".step").classList.toggle("done",box.checked);updateProgress()});
+}
+updateProgress();
+for(let el of document.querySelectorAll("[data-save]")){
+ el.value=localStorage.getItem(PREFIX+el.dataset.save)||"";
+ el.addEventListener("input",()=>localStorage.setItem(PREFIX+el.dataset.save,el.value));
+}
+for(let el of document.querySelectorAll("[data-final]")){
+ el.checked=localStorage.getItem(PREFIX+"final-"+el.dataset.final)==="1";
+ el.addEventListener("change",()=>localStorage.setItem(PREFIX+"final-"+el.dataset.final,el.checked?"1":"0"));
+}
+async function copyText(s){
+ try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(s)}else{let t=document.createElement("textarea");t.value=s;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove()}toast("Copied!")}
+ catch(e){toast("Please select and copy the text manually.")}
+}
+document.addEventListener("click",event=>{
+ let b=event.target.closest("[data-copy]");if(b){copyText(b.dataset.copy);return}
+ b=event.target.closest("[data-copy-script]");if(b){copyText(lessons[Number(b.dataset.copyScript)-1].code);return}
+ b=event.target.closest("[data-answer]");if(b){
+   let wrapper=b.closest("[data-quiz]"),l=lessons[Number(wrapper.dataset.quiz)-1],ans=l.quiz.correct;
+   wrapper.querySelectorAll("[data-answer]").forEach(x=>{x.classList.remove("good","bad");if(Number(x.dataset.answer)===ans)x.classList.add("good")});
+   if(Number(b.dataset.answer)!==ans)b.classList.add("bad");
+   let f=wrapper.querySelector(".feedback");f.textContent=(Number(b.dataset.answer)===ans?"✓ Correct. ":"Try again. ")+l.quiz.explain;f.style.color=Number(b.dataset.answer)===ans?"#087b54":"#ae3642";
+   return;
+ }
+ b=event.target.closest("[data-show]");if(b){let l=lessons[Number(b.dataset.show)-1];$("practice-output-"+l.id).textContent=l.output;return}
+ b=event.target.closest("[data-restore]");if(b){let l=lessons[Number(b.dataset.restore)-1];$("practice-"+l.id).value=l.code;toast("Example script restored.");return}
+});
+for(let input of document.querySelectorAll("[data-shot]")){
+ input.addEventListener("change",()=>{
+   let file=input.files&&input.files[0];if(!file)return;
+   if(!file.type.startsWith("image/")){toast("Choose an image file.");input.value="";return}
+   if(file.size>8*1024*1024){toast("Please use an image smaller than 8 MB.");input.value="";return}
+   let reader=new FileReader();reader.onload=()=>{
+     shots[input.dataset.shot]=reader.result;
+     $("preview-"+input.dataset.shot).innerHTML='<img alt="Attached screenshot" src="'+reader.result+'"><p class="small">✓ '+escapeHTML(file.name)+' attached for this session.</p>';
+     toast("Screenshot attached.");
+   };reader.readAsDataURL(file);
+ });
+}
+$("reset-progress").addEventListener("click",()=>{
+ if(!confirm("Reset the task and submission checkboxes? Student details and current screenshots will stay."))return;
+ document.querySelectorAll("[data-task],[data-final]").forEach(x=>{x.checked=false;localStorage.removeItem(PREFIX+(x.dataset.task||"final-"+x.dataset.final));x.closest(".step")?.classList.remove("done")});
+ updateProgress();toast("Checklists reset.");
+});
+$("download-report").addEventListener("click",()=>{
+ const name=$("student-name").value.trim(),id=$("student-id").value.trim(),section=$("student-section").value.trim(),obs=$("observation").value.trim();
+ const taskSections=lessons.map(l=>'<section class="task"><h2>Task '+l.id+' – '+escapeHTML(l.title)+'</h2><ol>'+l.steps.map((s,i)=>'<li>'+(localStorage.getItem(PREFIX+l.id+"-"+(i+1))==="1"?"☑ ":"☐ ")+s+'</li>').join("")+'</ol><p><b>Required evidence:</b> '+escapeHTML(l.evidence)+'</p>'+(shots[l.id]?'<img alt="Screenshot for Task '+l.id+'" src="'+shots[l.id]+'">':'<p class="missing">No screenshot attached.</p>')+'</section>').join("");
+ const report='<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>CSCI 300 Week 12 Lab Report</title><style>body{font-family:Arial,sans-serif;max-width:900px;margin:25px auto;padding:0 18px;color:#203653;line-height:1.55}h1{color:#0d4c99;border-bottom:4px solid #0d4c99;padding-bottom:10px}h2{color:#155aab}.task{border-bottom:1px solid #cbd8e8;padding:15px 0;break-inside:avoid}.task img{max-width:100%;max-height:650px;object-fit:contain;border:1px solid #bccddd;border-radius:8px}li{margin:7px 0}.missing{color:#a9293b}button{padding:10px 14px;background:#145db1;color:#fff;border:0;border-radius:8px;font-weight:bold}@media print{button{display:none}.task{break-inside:avoid}}</style></head><body><button onclick="window.print()">Print / Save as PDF</button><h1>CSCI 300 – Operating Systems<br>Week 12 Lab – FCFS Scheduling Algorithms</h1><p><b>Student Name:</b> '+escapeHTML(name||"Not entered")+'<br><b>Student ID:</b> '+escapeHTML(id||"Not entered")+'<br><b>Section:</b> '+escapeHTML(section||"Not entered")+'<br><b>Date:</b> '+escapeHTML(new Date().toLocaleDateString())+'</p>'+taskSections+'<h2>Task 4 Observation</h2><p>'+escapeHTML(obs||"Not entered")+'</p><p>Complete all C threading programs in Ubuntu Terminal. Review screenshots before submission.</p></body></html>';
+ const blob=new Blob([report],{type:"text/html;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download=(id||"StudentID").replace(/[^a-zA-Z0-9_-]/g,"_")+"_Week12_Lab_Report.html";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);toast("Report downloaded!");
+});
+
+// Interactive FCFS visualizer: stable order by arrival, explicit idle segments.
+const sampleFCFS = [{at:4,bt:2},{at:0,bt:3},{at:2,bt:4},{at:2,bt:1}];
+const fcfsColors = ['#1c65b8','#0d986f','#d7850c','#8050c8'];
+function calculateFCFS(){
+  const processes=[];
+  for(let i=1;i<=4;i++){
+    const a=$('at'+i).value.trim(), b=$('bt'+i).value.trim();
+    const at=Number(a), bt=Number(b);
+    if(a===''||b===''||!Number.isSafeInteger(at)||!Number.isSafeInteger(bt)||at<0||at>100||bt<1||bt>100){
+      $('sim-message').textContent='Enter whole-number arrivals from 0 to 100 and bursts from 1 to 100.';
+      $('sim-message').classList.add('error');
+      return;
+    }
+    processes.push({id:i,at,bt});
+  }
+  $('sim-message').textContent='FCFS uses arrival order; equal arrivals keep input order. Gray blocks represent idle CPU time.';
+  $('sim-message').classList.remove('error');
+  processes.sort((a,b)=>a.at-b.at||a.id-b.id);
+  let time=0, totalWT=0, totalTAT=0;
+  const segments=[];
+  const rows=[];
+  for(const p of processes){
+    if(time<p.at){segments.push({label:'Idle',start:time,end:p.at,color:'#a9b8ca',idle:true});time=p.at;}
+    const start=time;time+=p.bt;
+    const wt=start-p.at,tat=time-p.at;
+    totalWT+=wt;totalTAT+=tat;
+    segments.push({label:'P'+p.id,start,end:time,color:fcfsColors[p.id-1],idle:false});
+    rows.push({id:p.id,at:p.at,bt:p.bt,start,end:time,wt,tat});
+  }
+  const gantt=$('gantt-chart');gantt.replaceChildren();
+  for(const [i,s] of segments.entries()){
+    const block=document.createElement('div');block.className='gantt-block'+(s.idle?' idle':'');
+    block.style.setProperty('--weight',String(s.end-s.start));block.style.setProperty('--color',s.color);
+    const name=document.createElement('span');name.textContent=s.label;
+    const duration=document.createElement('small');duration.textContent=(s.end-s.start)+' unit'+(s.end-s.start===1?'':'s');
+    const left=document.createElement('span');left.className='gantt-start';left.textContent=s.start;
+    block.append(name,duration,left);
+    if(i===segments.length-1){const right=document.createElement('span');right.className='gantt-end';right.textContent=s.end;block.append(right);}
+    gantt.append(block);
+  }
+  const body=$('fcfs-table-body');body.replaceChildren();
+  for(const r of rows){const tr=document.createElement('tr');
+    for(const v of ['P'+r.id,r.at,r.bt,r.start,r.end,r.wt,r.tat]){const td=document.createElement('td');td.textContent=v;tr.append(td)}
+    body.append(tr);
+  }
+  $('sim-avg-wt').textContent=(totalWT/4).toFixed(2);
+  $('sim-avg-tat').textContent=(totalTAT/4).toFixed(2);
+  $('sim-end').textContent=time;
+}
+$('fcfs-calculate').addEventListener('click',calculateFCFS);
+$('fcfs-reset').addEventListener('click',()=>{
+  sampleFCFS.forEach((p,i)=>{$('at'+(i+1)).value=p.at;$('bt'+(i+1)).value=p.bt});
+  calculateFCFS();
+});
+calculateFCFS();
+</script></body></html>
