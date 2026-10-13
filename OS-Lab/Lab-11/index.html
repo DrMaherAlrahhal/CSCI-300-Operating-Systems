@@ -1,1 +1,444 @@
 
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="light" name="color-scheme"/><title>CSCI 300 – Week 11 Lab | Thread Management in C</title><style>
+:root{--navy:#102e61;--blue:#1b62c4;--ink:#203653;--muted:#64758a;--bg:#f3f7fc;--line:#dce6f3;--green:#0b9365;--shadow:0 9px 26px #173d7710}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font:15px/1.55 system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+button,input,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid #f6b53d;outline-offset:3px}
+code,pre,textarea.code-editor{font-family:Consolas,Monaco,'Courier New',monospace}code{overflow-wrap:anywhere}
+.top{background:linear-gradient(115deg,#0b2756,#145cbd 72%,#1694c7);color:#fff;padding:24px 22px}.top-inner{max-width:1200px;margin:auto;display:flex;align-items:center;gap:17px}.logo{font-size:40px;border-radius:18px;padding:9px 15px;background:#ffffff22}.top h1{font-size:clamp(24px,3.5vw,35px);margin:0;line-height:1.2}.top p{margin:5px 0;color:#dceaff}.pill{margin-left:auto;background:#ffedab;color:#19325e;border-radius:50px;padding:9px 15px;font-weight:800;white-space:nowrap}
+.nav{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 3px 13px #0b346510}.nav-inner{max-width:1200px;margin:auto;padding:10px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.nav a{border-radius:9px;color:#31547f;text-decoration:none;padding:9px 11px;font-weight:750;font-size:13px}.nav a:hover{background:#e9f2ff}.nav button{margin-left:auto;border:1px solid #bcd0e9;border-radius:10px;padding:9px 13px;background:#f4f8ff;color:#164987;font-weight:750}
+main{max-width:1200px;margin:24px auto 64px;padding:0 18px}.hero,.lesson,.report,.progress{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:20px}
+.hero{padding:28px 32px;background:linear-gradient(125deg,#fff 65%,#eaf4ff)}.eyebrow{font-size:12px;color:#1b63c4;text-transform:uppercase;letter-spacing:.8px;font-weight:850}.hero h2{font-size:clamp(28px,4vw,43px);letter-spacing:-1px;line-height:1.17;margin:8px 0}.hero p{max-width:800px;color:#536985;font-size:16px;margin:0}.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.tags span{border-radius:10px;background:#e9f3ff;color:#1554a3;padding:7px 11px;font-size:12px;font-weight:800}
+.section-title{font-size:23px;letter-spacing:-.5px;margin:28px 0 15px}.roadmap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.roadmap a{text-decoration:none;color:inherit;background:white;border:1px solid var(--line);border-radius:15px;padding:18px;box-shadow:var(--shadow)}.roadmap b{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--accent);color:white;font-size:20px}.roadmap h3{font-size:15px;line-height:1.35;margin:10px 0 5px}.roadmap p{font-size:12px;color:#667b92;margin:0}
+.progress{display:grid;grid-template-columns:1fr auto;gap:15px;padding:18px 22px;margin-top:20px;align-items:center}.progress h3{margin:0 0 2px;font-size:17px}.progress p{margin:0;color:#66788e;font-size:12px}.bar{height:11px;background:#e8eff8;border-radius:50px;overflow:hidden;margin-top:10px}.bar div{height:100%;width:0;background:linear-gradient(90deg,#11a475,#1fc49d);transition:width .2s}.percent{font-size:27px;color:#0d9466;font-weight:900}
+.lesson{margin-top:20px;overflow:hidden;scroll-margin-top:85px}.lesson-head{background:linear-gradient(100deg,var(--soft),#fff);border-bottom:1px solid var(--line);padding:20px 23px;display:flex;align-items:center;gap:14px}.lesson-num{display:grid;place-items:center;background:var(--accent);border-radius:14px;color:white;font-size:23px;font-weight:900;min-width:53px;height:53px}.lesson-head h3{font-size:22px;line-height:1.24;margin:0}.lesson-head p{margin:4px 0 0;font-size:13px;color:#5d718b}.lesson-body{padding:21px 23px}.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}.explanation,.student{min-width:0}.explanation h4,.student h4{margin:0 0 10px;font-size:17px}.explanation>p{color:#4b617c;margin:0 0 14px}.point{display:flex;gap:10px;align-items:flex-start;background:#f8fbff;border:1px solid #e2eaf5;border-radius:10px;padding:9px 11px;margin:7px 0;font-size:13px}.point strong{min-width:112px;color:#1c568d}
+.commands{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0}.cmd{display:inline-flex;align-items:center;gap:6px;background:#eaf3ff;border-radius:9px;padding:7px 9px;color:#134f98;font-weight:800;font-size:12px}.cmd button{border:0;background:#fff;border-radius:6px;padding:3px 6px;color:#135caa;font-size:11px;font-weight:850}
+.codebox{background:#0e1a2c;border:1px solid #273e5e;border-radius:12px;overflow:hidden;margin-top:12px}.codehead{display:flex;gap:5px;align-items:center;background:#1e2c42;padding:8px 11px;color:#a8c2de;font-size:11px}.dot{width:9px;height:9px;background:#f5666a;border-radius:50%}.dot:nth-child(2){background:#f3c14d}.dot:nth-child(3){background:#35c47c}.codehead span{margin-left:9px}.codebox pre{white-space:pre-wrap;overflow-wrap:anywhere;color:#e5f4ff;padding:15px;margin:0;font-size:12px;line-height:1.65}
+.student{border:2px solid #13a775;background:#f3fcf7;border-radius:16px;padding:17px}.student h4{color:#087b54}.badge{background:#0c9865;color:white;border-radius:7px;padding:4px 9px;font-size:11px;margin-right:7px}.task-intro{font-size:13px;color:#547063}.steps{display:grid;gap:8px;margin-top:12px}.step{background:white;border:1px solid #d0e9db;border-radius:10px;padding:10px;display:flex;align-items:flex-start;gap:9px;font-size:13px}.step input{accent-color:#0a9666;width:17px;height:17px;margin-top:3px;flex-shrink:0}.step.done span{text-decoration:line-through;color:#768f83}
+.evidence{border-top:1px dashed #afdcc8;margin-top:15px;padding-top:12px}.evidence label{display:block;font-weight:800;color:#0b8058;font-size:13px;margin-bottom:7px}.evidence input{font-size:12px;width:100%}.evidence img{display:block;max-width:100%;max-height:250px;object-fit:contain;border:1px solid #b8d4c6;border-radius:10px;margin-top:9px}.result{background:#e3f6ea;border-radius:10px;color:#13663f;font-size:13px;font-weight:750;padding:11px;margin-top:13px}.tip{background:#fff7df;border-left:4px solid #e9ad2a;padding:11px 13px;border-radius:8px;margin-top:13px;color:#765921;font-size:13px}
+.quiz{margin-top:17px;background:#f6f9fe;border:1px solid #dae6f6;border-radius:13px;padding:14px}.quiz strong{display:block;font-size:14px;margin-bottom:9px}.choices{display:flex;flex-wrap:wrap;gap:8px}.choices button{background:#fff;border:1px solid #bed2ea;border-radius:8px;padding:8px 11px;color:#22507f;font-size:13px;font-weight:750}.choices button.good{background:#dff7eb;border-color:#17a76c;color:#0b6f48}.choices button.bad{background:#ffe8ec;border-color:#ef6373;color:#9d2735}.feedback{font-size:13px;margin-top:7px;min-height:19px;font-weight:700}
+.practice{margin-top:17px;border:1px solid #d6e2f1;border-radius:13px;background:#f9fbff;padding:14px}.practice summary{font-weight:800;color:#1a4e91;cursor:pointer}.practice p{font-size:13px;color:#536b85}.practice textarea{display:block;width:100%;min-height:220px;background:#10213b;color:#e8f4ff;border:1px solid #304565;border-radius:10px;padding:12px;font:12px/1.5 Consolas,monospace;resize:vertical}.practice-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.practice-actions button{border:0;background:#155db3;color:#fff;border-radius:8px;padding:9px 12px;font-weight:800;font-size:12px}.practice-actions button.secondary{background:#e7f1ff;color:#17569e}.practice-output{background:#eaf3ff;border-radius:9px;margin-top:9px;padding:11px;white-space:pre-wrap;font:12px/1.5 Consolas,monospace}
+.reference{background:white;border:1px solid var(--line);border-radius:15px;overflow:hidden}table{width:100%;border-collapse:collapse}th{text-align:left;background:#114c96;color:white;padding:11px}td{padding:9px 11px;border-bottom:1px solid #e5edf7;font-size:13px}tr:nth-child(even) td{background:#f6faff}
+.workflow{background:#e8f3ff;border:1px solid #c7dff8;border-radius:16px;padding:17px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;color:#0d4d96;font-weight:800}.workflow span{background:white;padding:8px 11px;border-radius:9px}.workflow b{font-size:21px}
+.report{padding:23px;margin-top:24px}.report h3{margin:0 0 5px;font-size:22px}.report p{color:#5c7189;font-size:13px}.fields{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}.field{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:800;color:#34567e}.field input,.field textarea{border:1px solid #c5d7ed;border-radius:9px;background:#fcfdff;padding:11px;color:#203653;width:100%}.field textarea{min-height:85px;resize:vertical}.checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.checklist label{border:1px solid #dbe6f3;border-radius:10px;background:#fafcff;padding:11px;font-size:13px;font-weight:750}.checklist input{accent-color:#0c9568}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.actions button{border:0;background:#125bb0;color:white;border-radius:10px;padding:11px 15px;font-weight:850}.actions button.green{background:#0b9568}.actions button.secondary{background:#e7f2ff;color:#175599}.small{font-size:12px;color:#71849b}.toast{position:fixed;bottom:20px;right:20px;background:#153b6d;color:#fff;padding:12px 16px;border-radius:10px;box-shadow:0 10px 25px #0003;opacity:0;transform:translateY(12px);transition:.2s;pointer-events:none;z-index:99}.toast.show{opacity:1;transform:translateY(0)}footer{text-align:center;padding:22px;color:#6e8196;font-size:12px}
+@media(max-width:920px){.roadmap{grid-template-columns:repeat(2,1fr)}.cols{grid-template-columns:1fr}.fields{grid-template-columns:1fr}}
+@media(max-width:580px){.top-inner{align-items:flex-start}.pill{display:none}main{padding:0 11px}.hero{padding:22px 18px}.lesson-head{padding:16px}.lesson-body{padding:14px}.lesson-head h3{font-size:18px}.roadmap{grid-template-columns:repeat(2,1fr)}.checklist{grid-template-columns:1fr}.nav-inner{padding:8px}.nav a{padding:6px;font-size:11px}}
+@media print{body{background:white}.top,.nav,.actions,.evidence input,.practice,.toast,footer{display:none!important}main{max-width:none;padding:0}.hero,.lesson,.report{box-shadow:none;break-inside:avoid}.lesson{border:1px solid #999}.cols{grid-template-columns:1fr 1fr}.student{border:1px solid #555}.codebox{print-color-adjust:exact}}
+</style></head>
+<body><header class="top"><div class="top-inner"><div aria-hidden="true" class="logo">🐧</div><div><h1>CSCI 300 – Operating Systems</h1><p>Interactive Linux Labs · Explanation → Example → Student Task</p></div><span class="pill">Ubuntu + Bash</span></div></header>
+<nav class="nav"><div class="nav-inner"><a href="#overview">Overview</a><a href="#lesson-1">Task 1</a><a href="#lesson-2">Task 2</a><a href="#lesson-3">Task 3</a><a href="#lesson-4">Task 4</a><a href="#lab-report">Submission</a><button onclick="window.print()" type="button">🖨 Print</button></div></nav>
+<main><section class="hero" id="overview"><span class="eyebrow">Week 11 Lab · Thread Management in C</span><h2>Manage Thread Identity, Results, and Lifecycle</h2><p>Learn how to identify threads, collect return values, manage multiple workers, and cancel a running thread. Study each example, then complete the <strong>Student Task</strong> using Ubuntu Terminal.</p><div class="tags"><span>4 lessons</span><span>4 required student tasks</span><span>4 screenshot sections</span><span>Quizzes + code practice</span><span>Downloadable lab report</span></div></section>
+<h2 class="section-title">🗺️ Week 7 Learning Journey</h2><div class="roadmap"><a href="#lesson-1" style="--accent:#2266c8"><b>1</b><h3>How Can a Thread Identify Itself?</h3><p>Use pthread_self() and pthread_equal() to compare threads.</p></a><a href="#lesson-2" style="--accent:#0d996c"><b>2</b><h3>How Can a Thread Return a Result?</h3><p>Use pthread_exit() and pthread_join() to pass back a value.</p></a><a href="#lesson-3" style="--accent:#d7850c"><b>3</b><h3>How Can We Manage Several Threads?</h3><p>Create three workers, pass each a task, and collect all results.</p></a><a href="#lesson-4" style="--accent:#8050c8"><b>4</b><h3>How Can We Stop a Running Thread Safely?</h3><p>Request cancellation and confirm it with pthread_join().</p></a></div>
+<section class="progress"><div><h3>🎯 Your Task Progress</h3><p>Check off each step after completing it in Ubuntu. Checklist progress and student details are saved in this browser.</p><div class="bar"><div id="progress-bar"></div></div></div><strong class="percent" id="progress-number">0%</strong></section>
+<article class="lesson" id="lesson-1" style="--accent:#2266c8;--soft:#eaf3ff">
+<div class="lesson-head"><div class="lesson-num">1</div><div><h3>Lesson 1 – How Can a Thread Identify Itself?</h3><p>Use pthread_self() and pthread_equal() to compare threads.</p></div></div>
+<div class="lesson-body"><div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>Every thread has an identifier. pthread_self() gets the identifier of the currently running thread. pthread_equal() checks whether two thread identifiers refer to the same thread. The main thread and a new worker thread are different.</p><div class="point"><strong>pthread_self()</strong><span>Get the identifier of the current thread.</span></div><div class="point"><strong>pthread_t</strong><span>Type used to store a thread identifier.</span></div><div class="point"><strong>pthread_equal(a, b)</strong><span>Check whether two thread IDs identify the same thread.</span></div><div class="point"><strong>pthread_join()</strong><span>Wait for a worker thread to finish.</span></div>
+<div class="commands"><span class="cmd"><code>nano thread_identity.c</code><button data-copy="nano thread_identity.c" type="button">Copy</button></span><span class="cmd"><code>gcc -Wall -Wextra -pthread thread_identity.c -o thread_identity</code><button data-copy="gcc -Wall -Wextra -pthread thread_identity.c -o thread_identity" type="button">Copy</button></span><span class="cmd"><code>./thread_identity</code><button data-copy="./thread_identity" type="button">Copy</button></span><span class="cmd"><button data-copy-script="1" type="button">Copy full C program</button></span></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>thread_identity.c — example C program</span></div><pre>#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
+
+pthread_t main_thread;
+
+void *worker(void *arg) {
+    (void)arg;
+    pthread_t worker_thread = pthread_self();
+    printf("Worker: I have started.\n");
+
+    if (pthread_equal(worker_thread, main_thread)) {
+        printf("Worker: Same as main thread.\n");
+    } else {
+        printf("Worker: Different from main thread.\n");
+    }
+    return NULL;
+}
+
+int main(void) {
+    pthread_t thread;
+    main_thread = pthread_self();
+    printf("Main: Creating a worker thread.\n");
+
+    if (pthread_create(&amp;thread, NULL, worker, NULL) != 0) {
+        fprintf(stderr, "Thread creation failed.\n");
+        return 1;
+    }
+    pthread_join(thread, NULL);
+    printf("Main: Worker finished.\n");
+    return 0;
+}</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Ubuntu Terminal output</span></div><pre>Main: Creating a worker thread.
+Worker: I have started.
+Worker: Different from main thread.
+Main: Worker finished.</pre></div>
+<div class="tip">💡 Do not compare pthread_t values using ==. Use pthread_equal() for a portable thread identity check.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 1</span> Your turn</h4><p class="task-intro">Write, compile, and run the program in your real Ubuntu Terminal. Tick each step after completing it.</p><div class="steps"><label class="step"><input data-task="1-1" type="checkbox"/><span><b>1.</b> Create <code>thread_identity.c</code> using <code>nano thread_identity.c</code>.</span></label><label class="step"><input data-task="1-2" type="checkbox"/><span><b>2.</b> Enter the example C program and save the file.</span></label><label class="step"><input data-task="1-3" type="checkbox"/><span><b>3.</b> Compile using <code>gcc -Wall -Wextra -pthread thread_identity.c -o thread_identity</code>, then run <code>./thread_identity</code>.</span></label><label class="step"><input data-task="1-4" type="checkbox"/><span><b>4.</b> Change the first worker message to <code>Worker: Checking my thread identity.</code>, recompile, and run again.</span></label></div><div class="evidence"><label for="shot-1">📸 Attach Screenshot 1</label><input accept="image/*" data-shot="1" id="shot-1" type="file"/><div id="preview-1"></div></div><div class="result">Required result: A screenshot showing the changed worker message and the comparison with the main thread.</div></section>
+</div><div class="quiz" data-quiz="1"><strong>🧠 Quick Check: Which function checks whether two thread IDs refer to the same thread?</strong><div class="choices"><button data-answer="0" type="button">pthread_equal()</button><button data-answer="1" type="button">pthread_create()</button><button data-answer="2" type="button">pthread_cancel()</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the C Program</summary><p>Use this area to review or edit the C code. It does <b>not</b> compile or run C. To see real results, compile with GCC and run in Ubuntu.</p><textarea class="code-editor" id="practice-1" spellcheck="false">#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
+
+pthread_t main_thread;
+
+void *worker(void *arg) {
+    (void)arg;
+    pthread_t worker_thread = pthread_self();
+    printf("Worker: I have started.\n");
+
+    if (pthread_equal(worker_thread, main_thread)) {
+        printf("Worker: Same as main thread.\n");
+    } else {
+        printf("Worker: Different from main thread.\n");
+    }
+    return NULL;
+}
+
+int main(void) {
+    pthread_t thread;
+    main_thread = pthread_self();
+    printf("Main: Creating a worker thread.\n");
+
+    if (pthread_create(&amp;thread, NULL, worker, NULL) != 0) {
+        fprintf(stderr, "Thread creation failed.\n");
+        return 1;
+    }
+    pthread_join(thread, NULL);
+    printf("Main: Worker finished.\n");
+    return 0;
+}</textarea><div class="practice-actions"><button data-show="1" type="button">Show example output</button><button class="secondary" data-restore="1" type="button">Restore example program</button></div><div class="practice-output" id="practice-output-1">Choose “Show example output” to see a sample result.</div></details>
+</div></article>
+<article class="lesson" id="lesson-2" style="--accent:#0d996c;--soft:#e8f9f0">
+<div class="lesson-head"><div class="lesson-num">2</div><div><h3>Lesson 2 – How Can a Thread Return a Result?</h3><p>Use pthread_exit() and pthread_join() to pass back a value.</p></div></div>
+<div class="lesson-body"><div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>A worker can finish and return a result to the main thread. pthread_exit() supplies a pointer to the result. pthread_join() waits for the thread and receives that pointer. In this example, the result is stored in a static variable, so it remains valid after the worker finishes.</p><div class="point"><strong>pthread_exit(&amp;result)</strong><span>Finish a thread and return a pointer to its result.</span></div><div class="point"><strong>pthread_join(thread, &amp;value)</strong><span>Wait for the thread and collect the returned pointer.</span></div><div class="point"><strong>static int result</strong><span>Keep the result alive after the function finishes.</span></div><div class="point"><strong>*(int *)value</strong><span>Read the integer stored at the returned pointer.</span></div>
+<div class="commands"><span class="cmd"><code>nano thread_result.c</code><button data-copy="nano thread_result.c" type="button">Copy</button></span><span class="cmd"><code>gcc -Wall -Wextra -pthread thread_result.c -o thread_result</code><button data-copy="gcc -Wall -Wextra -pthread thread_result.c -o thread_result" type="button">Copy</button></span><span class="cmd"><code>./thread_result</code><button data-copy="./thread_result" type="button">Copy</button></span><span class="cmd"><button data-copy-script="2" type="button">Copy full C program</button></span></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>thread_result.c — example C program</span></div><pre>#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
+
+void *worker(void *arg) {
+    (void)arg;
+    static int result = 25;
+    printf("Worker: Calculation complete.\n");
+    pthread_exit(&amp;result);
+}
+
+int main(void) {
+    pthread_t thread;
+    void *value = NULL;
+
+    if (pthread_create(&amp;thread, NULL, worker, NULL) != 0) {
+        fprintf(stderr, "Thread creation failed.\n");
+        return 1;
+    }
+    if (pthread_join(thread, &amp;value) != 0) {
+        fprintf(stderr, "Could not join thread.\n");
+        return 1;
+    }
+
+    printf("Main: Received result = %d\n", *(int *)value);
+    return 0;
+}</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Ubuntu Terminal output</span></div><pre>Worker: Calculation complete.
+Main: Received result = 25</pre></div>
+<div class="tip">💡 Never return the address of a normal local variable from a finished thread. That variable no longer exists. This example uses static storage for one worker.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 2</span> Your turn</h4><p class="task-intro">Write, compile, and run the program in your real Ubuntu Terminal. Tick each step after completing it.</p><div class="steps"><label class="step"><input data-task="2-1" type="checkbox"/><span><b>1.</b> Create <code>thread_result.c</code> and enter the example program.</span></label><label class="step"><input data-task="2-2" type="checkbox"/><span><b>2.</b> Compile using <code>gcc -Wall -Wextra -pthread thread_result.c -o thread_result</code> and run <code>./thread_result</code>.</span></label><label class="step"><input data-task="2-3" type="checkbox"/><span><b>3.</b> Change <code>static int result = 25;</code> to <code>static int result = 64;</code>.</span></label><label class="step"><input data-task="2-4" type="checkbox"/><span><b>4.</b> Recompile and run. Confirm that the main thread receives and prints <code>64</code>.</span></label></div><div class="evidence"><label for="shot-2">📸 Attach Screenshot 2</label><input accept="image/*" data-shot="2" id="shot-2" type="file"/><div id="preview-2"></div></div><div class="result">Required result: A screenshot showing the worker finishing and the main thread receiving result 64.</div></section>
+</div><div class="quiz" data-quiz="2"><strong>🧠 Quick Check: What does pthread_join(thread, &amp;value) do?</strong><div class="choices"><button data-answer="0" type="button">Starts two threads</button><button data-answer="1" type="button">Waits and collects the thread result</button><button data-answer="2" type="button">Deletes the thread source file</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the C Program</summary><p>Use this area to review or edit the C code. It does <b>not</b> compile or run C. To see real results, compile with GCC and run in Ubuntu.</p><textarea class="code-editor" id="practice-2" spellcheck="false">#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
+
+void *worker(void *arg) {
+    (void)arg;
+    static int result = 25;
+    printf("Worker: Calculation complete.\n");
+    pthread_exit(&amp;result);
+}
+
+int main(void) {
+    pthread_t thread;
+    void *value = NULL;
+
+    if (pthread_create(&amp;thread, NULL, worker, NULL) != 0) {
+        fprintf(stderr, "Thread creation failed.\n");
+        return 1;
+    }
+    if (pthread_join(thread, &amp;value) != 0) {
+        fprintf(stderr, "Could not join thread.\n");
+        return 1;
+    }
+
+    printf("Main: Received result = %d\n", *(int *)value);
+    return 0;
+}</textarea><div class="practice-actions"><button data-show="2" type="button">Show example output</button><button class="secondary" data-restore="2" type="button">Restore example program</button></div><div class="practice-output" id="practice-output-2">Choose “Show example output” to see a sample result.</div></details>
+</div></article>
+<article class="lesson" id="lesson-3" style="--accent:#d7850c;--soft:#fff6e6">
+<div class="lesson-head"><div class="lesson-num">3</div><div><h3>Lesson 3 – How Can We Manage Several Threads?</h3><p>Create three workers, pass each a task, and collect all results.</p></div></div>
+<div class="lesson-body"><div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>An application may need several threads. We can create a thread for each task, give each thread different data, and join every thread before reading its result. Each worker updates only its own task record, so this example does not need a mutex.</p><div class="point"><strong>pthread_t threads[3]</strong><span>Store three worker thread identifiers.</span></div><div class="point"><strong>Task tasks[3]</strong><span>Store a separate input and output for each worker.</span></div><div class="point"><strong>pthread_create(..., &amp;tasks[i])</strong><span>Pass a unique task record to each worker.</span></div><div class="point"><strong>pthread_join(threads[i], NULL)</strong><span>Wait for every worker before printing its result.</span></div>
+<div class="commands"><span class="cmd"><code>nano manage_workers.c</code><button data-copy="nano manage_workers.c" type="button">Copy</button></span><span class="cmd"><code>gcc -Wall -Wextra -pthread manage_workers.c -o manage_workers</code><button data-copy="gcc -Wall -Wextra -pthread manage_workers.c -o manage_workers" type="button">Copy</button></span><span class="cmd"><code>./manage_workers</code><button data-copy="./manage_workers" type="button">Copy</button></span><span class="cmd"><button data-copy-script="3" type="button">Copy full C program</button></span></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>manage_workers.c — example C program</span></div><pre>#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
+
+typedef struct {
+    int id;
+    int number;
+    int square;
+} Task;
+
+void *calculate(void *arg) {
+    Task *task = (Task *)arg;
+    task-&gt;square = task-&gt;number * task-&gt;number;
+    return NULL;
+}
+
+int main(void) {
+    pthread_t threads[3];
+    Task tasks[3] = {{1, 2, 0}, {2, 3, 0}, {3, 4, 0}};
+
+    for (int i = 0; i &lt; 3; i++) {
+        if (pthread_create(&amp;threads[i], NULL,
+                           calculate, &amp;tasks[i]) != 0) {
+            fprintf(stderr, "Thread creation failed.\n");
+            return 1;
+        }
+    }
+
+    for (int i = 0; i &lt; 3; i++) {
+        pthread_join(threads[i], NULL);
+        printf("Task %d: %d squared = %d\n",
+               tasks[i].id, tasks[i].number, tasks[i].square);
+    }
+    return 0;
+}</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Ubuntu Terminal output</span></div><pre>Task 1: 2 squared = 4
+Task 2: 3 squared = 9
+Task 3: 4 squared = 16</pre></div>
+<div class="tip">💡 The order in which threads execute is not guaranteed. This example prints results in a stable order because the main thread prints after joining each worker.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 3</span> Your turn</h4><p class="task-intro">Write, compile, and run the program in your real Ubuntu Terminal. Tick each step after completing it.</p><div class="steps"><label class="step"><input data-task="3-1" type="checkbox"/><span><b>1.</b> Create <code>manage_workers.c</code>, compile with <code>-pthread</code>, and run it.</span></label><label class="step"><input data-task="3-2" type="checkbox"/><span><b>2.</b> Check that all three tasks display the correct squared numbers.</span></label><label class="step"><input data-task="3-3" type="checkbox"/><span><b>3.</b> Change the task numbers to <code>3</code>, <code>5</code>, and <code>7</code>, then recompile and run.</span></label><label class="step"><input data-task="3-4" type="checkbox"/><span><b>4.</b> After joining all threads, add a line to display the sum of the three squares. Confirm that the sum is <code>83</code>.</span></label></div><div class="evidence"><label for="shot-3">📸 Attach Screenshot 3</label><input accept="image/*" data-shot="3" id="shot-3" type="file"/><div id="preview-3"></div></div><div class="result">Required result: A screenshot showing squares 9, 25, 49 and their sum 83.</div></section>
+</div><div class="quiz" data-quiz="3"><strong>🧠 Quick Check: Why do we join all three worker threads before using their results?</strong><div class="choices"><button data-answer="0" type="button">To ensure every calculation has finished</button><button data-answer="1" type="button">To run all workers in the same thread</button><button data-answer="2" type="button">To stop GCC from compiling</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the C Program</summary><p>Use this area to review or edit the C code. It does <b>not</b> compile or run C. To see real results, compile with GCC and run in Ubuntu.</p><textarea class="code-editor" id="practice-3" spellcheck="false">#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
+
+typedef struct {
+    int id;
+    int number;
+    int square;
+} Task;
+
+void *calculate(void *arg) {
+    Task *task = (Task *)arg;
+    task-&gt;square = task-&gt;number * task-&gt;number;
+    return NULL;
+}
+
+int main(void) {
+    pthread_t threads[3];
+    Task tasks[3] = {{1, 2, 0}, {2, 3, 0}, {3, 4, 0}};
+
+    for (int i = 0; i &lt; 3; i++) {
+        if (pthread_create(&amp;threads[i], NULL,
+                           calculate, &amp;tasks[i]) != 0) {
+            fprintf(stderr, "Thread creation failed.\n");
+            return 1;
+        }
+    }
+
+    for (int i = 0; i &lt; 3; i++) {
+        pthread_join(threads[i], NULL);
+        printf("Task %d: %d squared = %d\n",
+               tasks[i].id, tasks[i].number, tasks[i].square);
+    }
+    return 0;
+}</textarea><div class="practice-actions"><button data-show="3" type="button">Show example output</button><button class="secondary" data-restore="3" type="button">Restore example program</button></div><div class="practice-output" id="practice-output-3">Choose “Show example output” to see a sample result.</div></details>
+</div></article>
+<article class="lesson" id="lesson-4" style="--accent:#8050c8;--soft:#f4edff">
+<div class="lesson-head"><div class="lesson-num">4</div><div><h3>Lesson 4 – How Can We Stop a Running Thread Safely?</h3><p>Request cancellation and confirm it with pthread_join().</p></div></div>
+<div class="lesson-body"><div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>Sometimes the main thread must stop a worker before it finishes naturally. pthread_cancel() requests cancellation. The worker responds at a cancellation point, such as nanosleep() or pthread_testcancel(). After that, pthread_join() confirms that the thread ended. A condition variable is used here to make sure the worker has started before cancellation is requested.</p><div class="point"><strong>pthread_cancel(thread)</strong><span>Ask a running thread to stop.</span></div><div class="point"><strong>pthread_testcancel()</strong><span>Give the worker a cancellation point.</span></div><div class="point"><strong>pthread_join(thread, &amp;status)</strong><span>Wait until cancellation has completed.</span></div><div class="point"><strong>status == PTHREAD_CANCELED</strong><span>Check whether the worker was cancelled.</span></div>
+<div class="commands"><span class="cmd"><code>nano cancel_worker.c</code><button data-copy="nano cancel_worker.c" type="button">Copy</button></span><span class="cmd"><code>gcc -Wall -Wextra -pthread cancel_worker.c -o cancel_worker</code><button data-copy="gcc -Wall -Wextra -pthread cancel_worker.c -o cancel_worker" type="button">Copy</button></span><span class="cmd"><code>./cancel_worker</code><button data-copy="./cancel_worker" type="button">Copy</button></span><span class="cmd"><button data-copy-script="4" type="button">Copy full C program</button></span></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>cancel_worker.c — example C program</span></div><pre>#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;time.h&gt;
+
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t ready_cond = PTHREAD_COND_INITIALIZER;
+int ready = 0;
+
+void *worker(void *arg) {
+    (void)arg;
+    printf("Worker: Started.\n");
+
+    pthread_mutex_lock(&amp;mutex);
+    ready = 1;
+    pthread_cond_signal(&amp;ready_cond);
+    pthread_mutex_unlock(&amp;mutex);
+
+    for (;;) {
+        pthread_testcancel();
+        struct timespec pause = {0, 100000000L};
+        nanosleep(&amp;pause, NULL);
+    }
+    return NULL;
+}
+
+int main(void) {
+    pthread_t thread;
+    void *status = NULL;
+
+    if (pthread_create(&amp;thread, NULL, worker, NULL) != 0) {
+        fprintf(stderr, "Thread creation failed.\n");
+        return 1;
+    }
+
+    pthread_mutex_lock(&amp;mutex);
+    while (!ready) {
+        pthread_cond_wait(&amp;ready_cond, &amp;mutex);
+    }
+    pthread_mutex_unlock(&amp;mutex);
+
+    printf("Main: Requesting cancellation.\n");
+    pthread_cancel(thread);
+    pthread_join(thread, &amp;status);
+
+    if (status == PTHREAD_CANCELED) {
+        printf("Main: Worker was cancelled.\n");
+    }
+    pthread_cond_destroy(&amp;ready_cond);
+    pthread_mutex_destroy(&amp;mutex);
+    return 0;
+}</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Ubuntu Terminal output</span></div><pre>Worker: Started.
+Main: Requesting cancellation.
+Main: Worker was cancelled.</pre></div>
+<div class="tip">💡 pthread_cancel() does not immediately kill a thread. Cancellation normally happens at a cancellation point. The program uses a condition variable to avoid relying on timing guesses.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 4</span> Your turn</h4><p class="task-intro">Write, compile, and run the program in your real Ubuntu Terminal. Tick each step after completing it.</p><div class="steps"><label class="step"><input data-task="4-1" type="checkbox"/><span><b>1.</b> Create <code>cancel_worker.c</code>, compile it using <code>gcc -Wall -Wextra -pthread cancel_worker.c -o cancel_worker</code>, and run it.</span></label><label class="step"><input data-task="4-2" type="checkbox"/><span><b>2.</b> Identify the lines that request cancellation and confirm that the worker has stopped.</span></label><label class="step"><input data-task="4-3" type="checkbox"/><span><b>3.</b> Change the worker message to <code>Worker: Ready for cancellation.</code>, recompile, and run again.</span></label><label class="step"><input data-task="4-4" type="checkbox"/><span><b>4.</b> Add <code>printf("Main: Cleanup complete.\n");</code> after destroying the condition variable and mutex. Recompile and show the final message.</span></label></div><div class="evidence"><label for="shot-4">📸 Attach Screenshot 4</label><input accept="image/*" data-shot="4" id="shot-4" type="file"/><div id="preview-4"></div></div><div class="result">Required result: A screenshot showing the updated worker message, cancellation confirmation, and cleanup message.</div></section>
+</div><div class="quiz" data-quiz="4"><strong>🧠 Quick Check: Which statement confirms that a cancelled thread has finished?</strong><div class="choices"><button data-answer="0" type="button">pthread_self()</button><button data-answer="1" type="button">pthread_join()</button><button data-answer="2" type="button">pthread_create()</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the C Program</summary><p>Use this area to review or edit the C code. It does <b>not</b> compile or run C. To see real results, compile with GCC and run in Ubuntu.</p><textarea class="code-editor" id="practice-4" spellcheck="false">#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;time.h&gt;
+
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t ready_cond = PTHREAD_COND_INITIALIZER;
+int ready = 0;
+
+void *worker(void *arg) {
+    (void)arg;
+    printf("Worker: Started.\n");
+
+    pthread_mutex_lock(&amp;mutex);
+    ready = 1;
+    pthread_cond_signal(&amp;ready_cond);
+    pthread_mutex_unlock(&amp;mutex);
+
+    for (;;) {
+        pthread_testcancel();
+        struct timespec pause = {0, 100000000L};
+        nanosleep(&amp;pause, NULL);
+    }
+    return NULL;
+}
+
+int main(void) {
+    pthread_t thread;
+    void *status = NULL;
+
+    if (pthread_create(&amp;thread, NULL, worker, NULL) != 0) {
+        fprintf(stderr, "Thread creation failed.\n");
+        return 1;
+    }
+
+    pthread_mutex_lock(&amp;mutex);
+    while (!ready) {
+        pthread_cond_wait(&amp;ready_cond, &amp;mutex);
+    }
+    pthread_mutex_unlock(&amp;mutex);
+
+    printf("Main: Requesting cancellation.\n");
+    pthread_cancel(thread);
+    pthread_join(thread, &amp;status);
+
+    if (status == PTHREAD_CANCELED) {
+        printf("Main: Worker was cancelled.\n");
+    }
+    pthread_cond_destroy(&amp;ready_cond);
+    pthread_mutex_destroy(&amp;mutex);
+    return 0;
+}</textarea><div class="practice-actions"><button data-show="4" type="button">Show example output</button><button class="secondary" data-restore="4" type="button">Restore example program</button></div><div class="practice-output" id="practice-output-4">Choose “Show example output” to see a sample result.</div></details>
+</div></article>
+<h2 class="section-title">📘 Quick Bash Reference</h2><div class="reference"><table><thead><tr><th>Syntax / Command</th><th>Purpose</th><th>Example</th></tr></thead><tbody><tr><td><code>pthread_t</code></td><td>Thread identifier type</td><td><code>pthread_t worker;</code></td></tr><tr><td><code>pthread_self()</code></td><td>Get current thread ID</td><td><code>pthread_t id = pthread_self();</code></td></tr><tr><td><code>pthread_equal(a, b)</code></td><td>Compare thread IDs</td><td><code>pthread_equal(id, main_thread)</code></td></tr><tr><td><code>pthread_exit(value)</code></td><td>Exit thread and return a pointer</td><td><code>pthread_exit(&amp;result);</code></td></tr><tr><td><code>pthread_join(t, &amp;value)</code></td><td>Wait and collect result</td><td><code>pthread_join(thread, &amp;value);</code></td></tr><tr><td><code>pthread_create()</code></td><td>Start a worker</td><td><code>pthread_create(&amp;thread, NULL, worker, NULL)</code></td></tr><tr><td><code>pthread_cancel(t)</code></td><td>Request cancellation</td><td><code>pthread_cancel(thread);</code></td></tr><tr><td><code>pthread_testcancel()</code></td><td>Check cancellation request</td><td><code>pthread_testcancel();</code></td></tr><tr><td><code>PTHREAD_CANCELED</code></td><td>Value returned after cancellation</td><td><code>status == PTHREAD_CANCELED</code></td></tr><tr><td><code>pthread_cond_wait()</code></td><td>Wait for a condition</td><td><code>pthread_cond_wait(&amp;ready_cond, &amp;mutex)</code></td></tr><tr><td><code>gcc -pthread</code></td><td>Compile and link pthread support</td><td><code>gcc -pthread program.c -o program</code></td></tr></tbody></table></div>
+<h2 class="section-title">🔄 Complete Week 7 Flow</h2><div class="workflow"><span>Write C program</span><b>→</b><span>Compile with -pthread</span><b>→</b><span>Create worker</span><b>→</b><span>Manage / join / cancel</span><b>→</b><span>Check results</span></div>
+<section class="report" id="lab-report"><h3>📝 Student Information &amp; Submission</h3><p>Complete the four C threading programs in Ubuntu Terminal, attach your screenshots, and download your report.</p><div class="fields"><label class="field">Student Name<input data-save="name" id="student-name" placeholder="Your full name"/></label><label class="field">Student ID<input data-save="id" id="student-id" placeholder="Your university ID"/></label><label class="field">Section<input data-save="section" id="student-section" placeholder="Your section"/></label></div>
+<label class="field">Task 4 observation: What is the difference between requesting cancellation with pthread_cancel() and waiting for completion with pthread_join()?<textarea data-save="observation" id="observation" placeholder="Write your observation here..."></textarea></label>
+<h4>Final submission checklist</h4><div class="checklist"><label><input data-final="0" type="checkbox"/> Task 1 screenshot attached</label><label><input data-final="1" type="checkbox"/> Task 2 screenshot attached</label><label><input data-final="2" type="checkbox"/> Task 3 screenshot attached</label><label><input data-final="3" type="checkbox"/> Task 4 screenshot attached</label><label><input data-final="4" type="checkbox"/> Student name and ID entered</label><label><input data-final="5" type="checkbox"/> All four C programs compiled and tested in Ubuntu</label></div>
+<div class="actions"><button class="green" id="download-report" type="button">⬇ Download Completed Lab Report</button><button class="secondary" onclick="window.print()" type="button">🖨 Print / Save as PDF</button><button class="secondary" id="reset-progress" type="button">↺ Reset Checklists</button></div><p class="small">The report downloads as an HTML file with the screenshots currently attached. Open it to print or save as PDF. Screenshots are kept only while this page is open; no work is submitted automatically. The practice area shows example output and does not execute C code.</p></section></main>
+<footer>CSCI 300 – Operating Systems · Week 11 Lab – Thread Management in C</footer><div aria-live="polite" class="toast" id="toast" role="status"></div><script>
+const lessons = [{"id": 1, "icon": "🪪", "title": "How Can a Thread Identify Itself?", "subtitle": "Use pthread_self() and pthread_equal() to compare threads.", "why": "Every thread has an identifier. pthread_self() gets the identifier of the currently running thread. pthread_equal() checks whether two thread identifiers refer to the same thread. The main thread and a new worker thread are different.", "concepts": [["pthread_self()", "Get the identifier of the current thread."], ["pthread_t", "Type used to store a thread identifier."], ["pthread_equal(a, b)", "Check whether two thread IDs identify the same thread."], ["pthread_join()", "Wait for a worker thread to finish."]], "filename": "thread_identity.c", "program": "thread_identity", "code": "#include <stdio.h>\n#include <pthread.h>\n\npthread_t main_thread;\n\nvoid *worker(void *arg) {\n    (void)arg;\n    pthread_t worker_thread = pthread_self();\n    printf(\"Worker: I have started.\\n\");\n\n    if (pthread_equal(worker_thread, main_thread)) {\n        printf(\"Worker: Same as main thread.\\n\");\n    } else {\n        printf(\"Worker: Different from main thread.\\n\");\n    }\n    return NULL;\n}\n\nint main(void) {\n    pthread_t thread;\n    main_thread = pthread_self();\n    printf(\"Main: Creating a worker thread.\\n\");\n\n    if (pthread_create(&thread, NULL, worker, NULL) != 0) {\n        fprintf(stderr, \"Thread creation failed.\\n\");\n        return 1;\n    }\n    pthread_join(thread, NULL);\n    printf(\"Main: Worker finished.\\n\");\n    return 0;\n}", "output": "Main: Creating a worker thread.\nWorker: I have started.\nWorker: Different from main thread.\nMain: Worker finished.", "steps": ["Create <code>thread_identity.c<\/code> using <code>nano thread_identity.c<\/code>.", "Enter the example C program and save the file.", "Compile using <code>gcc -Wall -Wextra -pthread thread_identity.c -o thread_identity<\/code>, then run <code>./thread_identity<\/code>.", "Change the first worker message to <code>Worker: Checking my thread identity.<\/code>, recompile, and run again."], "evidence": "A screenshot showing the changed worker message and the comparison with the main thread.", "quiz": {"q": "Which function checks whether two thread IDs refer to the same thread?", "options": ["pthread_equal()", "pthread_create()", "pthread_cancel()"], "correct": 0, "explain": "pthread_equal() compares two pthread_t values."}, "tip": "Do not compare pthread_t values using ==. Use pthread_equal() for a portable thread identity check.", "accent": "#2266c8", "soft": "#eaf3ff"}, {"id": 2, "icon": "📦", "title": "How Can a Thread Return a Result?", "subtitle": "Use pthread_exit() and pthread_join() to pass back a value.", "why": "A worker can finish and return a result to the main thread. pthread_exit() supplies a pointer to the result. pthread_join() waits for the thread and receives that pointer. In this example, the result is stored in a static variable, so it remains valid after the worker finishes.", "concepts": [["pthread_exit(&result)", "Finish a thread and return a pointer to its result."], ["pthread_join(thread, &value)", "Wait for the thread and collect the returned pointer."], ["static int result", "Keep the result alive after the function finishes."], ["*(int *)value", "Read the integer stored at the returned pointer."]], "filename": "thread_result.c", "program": "thread_result", "code": "#include <stdio.h>\n#include <pthread.h>\n\nvoid *worker(void *arg) {\n    (void)arg;\n    static int result = 25;\n    printf(\"Worker: Calculation complete.\\n\");\n    pthread_exit(&result);\n}\n\nint main(void) {\n    pthread_t thread;\n    void *value = NULL;\n\n    if (pthread_create(&thread, NULL, worker, NULL) != 0) {\n        fprintf(stderr, \"Thread creation failed.\\n\");\n        return 1;\n    }\n    if (pthread_join(thread, &value) != 0) {\n        fprintf(stderr, \"Could not join thread.\\n\");\n        return 1;\n    }\n\n    printf(\"Main: Received result = %d\\n\", *(int *)value);\n    return 0;\n}", "output": "Worker: Calculation complete.\nMain: Received result = 25", "steps": ["Create <code>thread_result.c<\/code> and enter the example program.", "Compile using <code>gcc -Wall -Wextra -pthread thread_result.c -o thread_result<\/code> and run <code>./thread_result<\/code>.", "Change <code>static int result = 25;<\/code> to <code>static int result = 64;<\/code>.", "Recompile and run. Confirm that the main thread receives and prints <code>64<\/code>."], "evidence": "A screenshot showing the worker finishing and the main thread receiving result 64.", "quiz": {"q": "What does pthread_join(thread, &value) do?", "options": ["Starts two threads", "Waits and collects the thread result", "Deletes the thread source file"], "correct": 1, "explain": "pthread_join() waits for the target thread to finish and can receive its return value."}, "tip": "Never return the address of a normal local variable from a finished thread. That variable no longer exists. This example uses static storage for one worker.", "accent": "#0d996c", "soft": "#e8f9f0"}, {"id": 3, "icon": "👥", "title": "How Can We Manage Several Threads?", "subtitle": "Create three workers, pass each a task, and collect all results.", "why": "An application may need several threads. We can create a thread for each task, give each thread different data, and join every thread before reading its result. Each worker updates only its own task record, so this example does not need a mutex.", "concepts": [["pthread_t threads[3]", "Store three worker thread identifiers."], ["Task tasks[3]", "Store a separate input and output for each worker."], ["pthread_create(..., &tasks[i])", "Pass a unique task record to each worker."], ["pthread_join(threads[i], NULL)", "Wait for every worker before printing its result."]], "filename": "manage_workers.c", "program": "manage_workers", "code": "#include <stdio.h>\n#include <pthread.h>\n\ntypedef struct {\n    int id;\n    int number;\n    int square;\n} Task;\n\nvoid *calculate(void *arg) {\n    Task *task = (Task *)arg;\n    task->square = task->number * task->number;\n    return NULL;\n}\n\nint main(void) {\n    pthread_t threads[3];\n    Task tasks[3] = {{1, 2, 0}, {2, 3, 0}, {3, 4, 0}};\n\n    for (int i = 0; i < 3; i++) {\n        if (pthread_create(&threads[i], NULL,\n                           calculate, &tasks[i]) != 0) {\n            fprintf(stderr, \"Thread creation failed.\\n\");\n            return 1;\n        }\n    }\n\n    for (int i = 0; i < 3; i++) {\n        pthread_join(threads[i], NULL);\n        printf(\"Task %d: %d squared = %d\\n\",\n               tasks[i].id, tasks[i].number, tasks[i].square);\n    }\n    return 0;\n}", "output": "Task 1: 2 squared = 4\nTask 2: 3 squared = 9\nTask 3: 4 squared = 16", "steps": ["Create <code>manage_workers.c<\/code>, compile with <code>-pthread<\/code>, and run it.", "Check that all three tasks display the correct squared numbers.", "Change the task numbers to <code>3<\/code>, <code>5<\/code>, and <code>7<\/code>, then recompile and run.", "After joining all threads, add a line to display the sum of the three squares. Confirm that the sum is <code>83<\/code>."], "evidence": "A screenshot showing squares 9, 25, 49 and their sum 83.", "quiz": {"q": "Why do we join all three worker threads before using their results?", "options": ["To ensure every calculation has finished", "To run all workers in the same thread", "To stop GCC from compiling"], "correct": 0, "explain": "pthread_join() ensures the worker has finished writing its result before the main thread reads it."}, "tip": "The order in which threads execute is not guaranteed. This example prints results in a stable order because the main thread prints after joining each worker.", "accent": "#d7850c", "soft": "#fff6e6"}, {"id": 4, "icon": "🛑", "title": "How Can We Stop a Running Thread Safely?", "subtitle": "Request cancellation and confirm it with pthread_join().", "why": "Sometimes the main thread must stop a worker before it finishes naturally. pthread_cancel() requests cancellation. The worker responds at a cancellation point, such as nanosleep() or pthread_testcancel(). After that, pthread_join() confirms that the thread ended. A condition variable is used here to make sure the worker has started before cancellation is requested.", "concepts": [["pthread_cancel(thread)", "Ask a running thread to stop."], ["pthread_testcancel()", "Give the worker a cancellation point."], ["pthread_join(thread, &status)", "Wait until cancellation has completed."], ["status == PTHREAD_CANCELED", "Check whether the worker was cancelled."]], "filename": "cancel_worker.c", "program": "cancel_worker", "code": "#include <stdio.h>\n#include <pthread.h>\n#include <time.h>\n\npthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;\npthread_cond_t ready_cond = PTHREAD_COND_INITIALIZER;\nint ready = 0;\n\nvoid *worker(void *arg) {\n    (void)arg;\n    printf(\"Worker: Started.\\n\");\n\n    pthread_mutex_lock(&mutex);\n    ready = 1;\n    pthread_cond_signal(&ready_cond);\n    pthread_mutex_unlock(&mutex);\n\n    for (;;) {\n        pthread_testcancel();\n        struct timespec pause = {0, 100000000L};\n        nanosleep(&pause, NULL);\n    }\n    return NULL;\n}\n\nint main(void) {\n    pthread_t thread;\n    void *status = NULL;\n\n    if (pthread_create(&thread, NULL, worker, NULL) != 0) {\n        fprintf(stderr, \"Thread creation failed.\\n\");\n        return 1;\n    }\n\n    pthread_mutex_lock(&mutex);\n    while (!ready) {\n        pthread_cond_wait(&ready_cond, &mutex);\n    }\n    pthread_mutex_unlock(&mutex);\n\n    printf(\"Main: Requesting cancellation.\\n\");\n    pthread_cancel(thread);\n    pthread_join(thread, &status);\n\n    if (status == PTHREAD_CANCELED) {\n        printf(\"Main: Worker was cancelled.\\n\");\n    }\n    pthread_cond_destroy(&ready_cond);\n    pthread_mutex_destroy(&mutex);\n    return 0;\n}", "output": "Worker: Started.\nMain: Requesting cancellation.\nMain: Worker was cancelled.", "steps": ["Create <code>cancel_worker.c<\/code>, compile it using <code>gcc -Wall -Wextra -pthread cancel_worker.c -o cancel_worker<\/code>, and run it.", "Identify the lines that request cancellation and confirm that the worker has stopped.", "Change the worker message to <code>Worker: Ready for cancellation.<\/code>, recompile, and run again.", "Add <code>printf(\"Main: Cleanup complete.\\n\");<\/code> after destroying the condition variable and mutex. Recompile and show the final message."], "evidence": "A screenshot showing the updated worker message, cancellation confirmation, and cleanup message.", "quiz": {"q": "Which statement confirms that a cancelled thread has finished?", "options": ["pthread_self()", "pthread_join()", "pthread_create()"], "correct": 1, "explain": "pthread_cancel() only requests cancellation; pthread_join() waits until the worker has actually finished."}, "tip": "pthread_cancel() does not immediately kill a thread. Cancellation normally happens at a cancellation point. The program uses a condition variable to avoid relying on timing guesses.", "accent": "#8050c8", "soft": "#f4edff"}];
+const shots = {};
+const PREFIX="csci300-week11-";
+const $=id=>document.getElementById(id);
+function toast(msg){let el=$("toast");el.textContent=msg;el.classList.add("show");clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.classList.remove("show"),2000)}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function updateProgress(){
+ let boxes=[...document.querySelectorAll("input[data-task]")], done=boxes.filter(x=>x.checked).length;
+ let pct=Math.round(done/boxes.length*100);
+ $("progress-bar").style.width=pct+"%";$("progress-number").textContent=pct+"%";
+}
+for(let box of document.querySelectorAll("input[data-task]")){
+ box.checked=localStorage.getItem(PREFIX+box.dataset.task)==="1";
+ box.closest(".step").classList.toggle("done",box.checked);
+ box.addEventListener("change",()=>{localStorage.setItem(PREFIX+box.dataset.task,box.checked?"1":"0");box.closest(".step").classList.toggle("done",box.checked);updateProgress()});
+}
+updateProgress();
+for(let el of document.querySelectorAll("[data-save]")){
+ el.value=localStorage.getItem(PREFIX+el.dataset.save)||"";
+ el.addEventListener("input",()=>localStorage.setItem(PREFIX+el.dataset.save,el.value));
+}
+for(let el of document.querySelectorAll("[data-final]")){
+ el.checked=localStorage.getItem(PREFIX+"final-"+el.dataset.final)==="1";
+ el.addEventListener("change",()=>localStorage.setItem(PREFIX+"final-"+el.dataset.final,el.checked?"1":"0"));
+}
+async function copyText(s){
+ try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(s)}else{let t=document.createElement("textarea");t.value=s;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove()}toast("Copied!")}
+ catch(e){toast("Please select and copy the text manually.")}
+}
+document.addEventListener("click",event=>{
+ let b=event.target.closest("[data-copy]");if(b){copyText(b.dataset.copy);return}
+ b=event.target.closest("[data-copy-script]");if(b){copyText(lessons[Number(b.dataset.copyScript)-1].code);return}
+ b=event.target.closest("[data-answer]");if(b){
+   let wrapper=b.closest("[data-quiz]"),l=lessons[Number(wrapper.dataset.quiz)-1],ans=l.quiz.correct;
+   wrapper.querySelectorAll("[data-answer]").forEach(x=>{x.classList.remove("good","bad");if(Number(x.dataset.answer)===ans)x.classList.add("good")});
+   if(Number(b.dataset.answer)!==ans)b.classList.add("bad");
+   let f=wrapper.querySelector(".feedback");f.textContent=(Number(b.dataset.answer)===ans?"✓ Correct. ":"Try again. ")+l.quiz.explain;f.style.color=Number(b.dataset.answer)===ans?"#087b54":"#ae3642";
+   return;
+ }
+ b=event.target.closest("[data-show]");if(b){let l=lessons[Number(b.dataset.show)-1];$("practice-output-"+l.id).textContent=l.output;return}
+ b=event.target.closest("[data-restore]");if(b){let l=lessons[Number(b.dataset.restore)-1];$("practice-"+l.id).value=l.code;toast("Example script restored.");return}
+});
+for(let input of document.querySelectorAll("[data-shot]")){
+ input.addEventListener("change",()=>{
+   let file=input.files&&input.files[0];if(!file)return;
+   if(!file.type.startsWith("image/")){toast("Choose an image file.");input.value="";return}
+   if(file.size>8*1024*1024){toast("Please use an image smaller than 8 MB.");input.value="";return}
+   let reader=new FileReader();reader.onload=()=>{
+     shots[input.dataset.shot]=reader.result;
+     $("preview-"+input.dataset.shot).innerHTML='<img alt="Attached screenshot" src="'+reader.result+'"><p class="small">✓ '+escapeHTML(file.name)+' attached for this session.</p>';
+     toast("Screenshot attached.");
+   };reader.readAsDataURL(file);
+ });
+}
+$("reset-progress").addEventListener("click",()=>{
+ if(!confirm("Reset the task and submission checkboxes? Student details and current screenshots will stay."))return;
+ document.querySelectorAll("[data-task],[data-final]").forEach(x=>{x.checked=false;localStorage.removeItem(PREFIX+(x.dataset.task||"final-"+x.dataset.final));x.closest(".step")?.classList.remove("done")});
+ updateProgress();toast("Checklists reset.");
+});
+$("download-report").addEventListener("click",()=>{
+ const name=$("student-name").value.trim(),id=$("student-id").value.trim(),section=$("student-section").value.trim(),obs=$("observation").value.trim();
+ const taskSections=lessons.map(l=>'<section class="task"><h2>Task '+l.id+' – '+escapeHTML(l.title)+'</h2><ol>'+l.steps.map((s,i)=>'<li>'+(localStorage.getItem(PREFIX+l.id+"-"+(i+1))==="1"?"☑ ":"☐ ")+s+'</li>').join("")+'</ol><p><b>Required evidence:</b> '+escapeHTML(l.evidence)+'</p>'+(shots[l.id]?'<img alt="Screenshot for Task '+l.id+'" src="'+shots[l.id]+'">':'<p class="missing">No screenshot attached.</p>')+'</section>').join("");
+ const report='<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>CSCI 300 Week 11 Lab Report</title><style>body{font-family:Arial,sans-serif;max-width:900px;margin:25px auto;padding:0 18px;color:#203653;line-height:1.55}h1{color:#0d4c99;border-bottom:4px solid #0d4c99;padding-bottom:10px}h2{color:#155aab}.task{border-bottom:1px solid #cbd8e8;padding:15px 0;break-inside:avoid}.task img{max-width:100%;max-height:650px;object-fit:contain;border:1px solid #bccddd;border-radius:8px}li{margin:7px 0}.missing{color:#a9293b}button{padding:10px 14px;background:#145db1;color:#fff;border:0;border-radius:8px;font-weight:bold}@media print{button{display:none}.task{break-inside:avoid}}</style></head><body><button onclick="window.print()">Print / Save as PDF</button><h1>CSCI 300 – Operating Systems<br>Week 11 Lab – Thread Management in C</h1><p><b>Student Name:</b> '+escapeHTML(name||"Not entered")+'<br><b>Student ID:</b> '+escapeHTML(id||"Not entered")+'<br><b>Section:</b> '+escapeHTML(section||"Not entered")+'<br><b>Date:</b> '+escapeHTML(new Date().toLocaleDateString())+'</p>'+taskSections+'<h2>Task 4 Observation</h2><p>'+escapeHTML(obs||"Not entered")+'</p><p>Complete all C threading programs in Ubuntu Terminal. Review screenshots before submission.</p></body></html>';
+ const blob=new Blob([report],{type:"text/html;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download=(id||"StudentID").replace(/[^a-zA-Z0-9_-]/g,"_")+"_Week11_Lab_Report.html";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);toast("Report downloaded!");
+});
+</script></body></html>
