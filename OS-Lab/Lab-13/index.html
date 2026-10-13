@@ -1,1 +1,663 @@
 
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="light" name="color-scheme"/><title>CSCI 300 – Week 13 Lab | SJF Scheduling Algorithms</title><style>
+:root{--navy:#102e61;--blue:#1b62c4;--ink:#203653;--muted:#64758a;--bg:#f3f7fc;--line:#dce6f3;--green:#0b9365;--shadow:0 9px 26px #173d7710}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font:15px/1.55 system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+button,input,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid #f6b53d;outline-offset:3px}
+code,pre,textarea.code-editor{font-family:Consolas,Monaco,'Courier New',monospace}code{overflow-wrap:anywhere}
+.top{background:linear-gradient(115deg,#0b2756,#145cbd 72%,#1694c7);color:#fff;padding:24px 22px}.top-inner{max-width:1200px;margin:auto;display:flex;align-items:center;gap:17px}.logo{font-size:40px;border-radius:18px;padding:9px 15px;background:#ffffff22}.top h1{font-size:clamp(24px,3.5vw,35px);margin:0;line-height:1.2}.top p{margin:5px 0;color:#dceaff}.pill{margin-left:auto;background:#ffedab;color:#19325e;border-radius:50px;padding:9px 15px;font-weight:800;white-space:nowrap}
+.nav{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 3px 13px #0b346510}.nav-inner{max-width:1200px;margin:auto;padding:10px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.nav a{border-radius:9px;color:#31547f;text-decoration:none;padding:9px 11px;font-weight:750;font-size:13px}.nav a:hover{background:#e9f2ff}.nav button{margin-left:auto;border:1px solid #bcd0e9;border-radius:10px;padding:9px 13px;background:#f4f8ff;color:#164987;font-weight:750}
+main{max-width:1200px;margin:24px auto 64px;padding:0 18px}.hero,.lesson,.report,.progress{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:20px}
+.hero{padding:28px 32px;background:linear-gradient(125deg,#fff 65%,#eaf4ff)}.eyebrow{font-size:12px;color:#1b63c4;text-transform:uppercase;letter-spacing:.8px;font-weight:850}.hero h2{font-size:clamp(28px,4vw,43px);letter-spacing:-1px;line-height:1.17;margin:8px 0}.hero p{max-width:800px;color:#536985;font-size:16px;margin:0}.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.tags span{border-radius:10px;background:#e9f3ff;color:#1554a3;padding:7px 11px;font-size:12px;font-weight:800}
+.section-title{font-size:23px;letter-spacing:-.5px;margin:28px 0 15px}.roadmap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.roadmap a{text-decoration:none;color:inherit;background:white;border:1px solid var(--line);border-radius:15px;padding:18px;box-shadow:var(--shadow)}.roadmap b{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--accent);color:white;font-size:20px}.roadmap h3{font-size:15px;line-height:1.35;margin:10px 0 5px}.roadmap p{font-size:12px;color:#667b92;margin:0}
+.progress{display:grid;grid-template-columns:1fr auto;gap:15px;padding:18px 22px;margin-top:20px;align-items:center}.progress h3{margin:0 0 2px;font-size:17px}.progress p{margin:0;color:#66788e;font-size:12px}.bar{height:11px;background:#e8eff8;border-radius:50px;overflow:hidden;margin-top:10px}.bar div{height:100%;width:0;background:linear-gradient(90deg,#11a475,#1fc49d);transition:width .2s}.percent{font-size:27px;color:#0d9466;font-weight:900}
+.lesson{margin-top:20px;overflow:hidden;scroll-margin-top:85px}.lesson-head{background:linear-gradient(100deg,var(--soft),#fff);border-bottom:1px solid var(--line);padding:20px 23px;display:flex;align-items:center;gap:14px}.lesson-num{display:grid;place-items:center;background:var(--accent);border-radius:14px;color:white;font-size:23px;font-weight:900;min-width:53px;height:53px}.lesson-head h3{font-size:22px;line-height:1.24;margin:0}.lesson-head p{margin:4px 0 0;font-size:13px;color:#5d718b}.lesson-body{padding:21px 23px}.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}.explanation,.student{min-width:0}.explanation h4,.student h4{margin:0 0 10px;font-size:17px}.explanation>p{color:#4b617c;margin:0 0 14px}.point{display:flex;gap:10px;align-items:flex-start;background:#f8fbff;border:1px solid #e2eaf5;border-radius:10px;padding:9px 11px;margin:7px 0;font-size:13px}.point strong{min-width:112px;color:#1c568d}
+.commands{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0}.cmd{display:inline-flex;align-items:center;gap:6px;background:#eaf3ff;border-radius:9px;padding:7px 9px;color:#134f98;font-weight:800;font-size:12px}.cmd button{border:0;background:#fff;border-radius:6px;padding:3px 6px;color:#135caa;font-size:11px;font-weight:850}
+.codebox{background:#0e1a2c;border:1px solid #273e5e;border-radius:12px;overflow:hidden;margin-top:12px}.codehead{display:flex;gap:5px;align-items:center;background:#1e2c42;padding:8px 11px;color:#a8c2de;font-size:11px}.dot{width:9px;height:9px;background:#f5666a;border-radius:50%}.dot:nth-child(2){background:#f3c14d}.dot:nth-child(3){background:#35c47c}.codehead span{margin-left:9px}.codebox pre{white-space:pre-wrap;overflow-wrap:anywhere;color:#e5f4ff;padding:15px;margin:0;font-size:12px;line-height:1.65}
+.student{border:2px solid #13a775;background:#f3fcf7;border-radius:16px;padding:17px}.student h4{color:#087b54}.badge{background:#0c9865;color:white;border-radius:7px;padding:4px 9px;font-size:11px;margin-right:7px}.task-intro{font-size:13px;color:#547063}.steps{display:grid;gap:8px;margin-top:12px}.step{background:white;border:1px solid #d0e9db;border-radius:10px;padding:10px;display:flex;align-items:flex-start;gap:9px;font-size:13px}.step input{accent-color:#0a9666;width:17px;height:17px;margin-top:3px;flex-shrink:0}.step.done span{text-decoration:line-through;color:#768f83}
+.evidence{border-top:1px dashed #afdcc8;margin-top:15px;padding-top:12px}.evidence label{display:block;font-weight:800;color:#0b8058;font-size:13px;margin-bottom:7px}.evidence input{font-size:12px;width:100%}.evidence img{display:block;max-width:100%;max-height:250px;object-fit:contain;border:1px solid #b8d4c6;border-radius:10px;margin-top:9px}.result{background:#e3f6ea;border-radius:10px;color:#13663f;font-size:13px;font-weight:750;padding:11px;margin-top:13px}.tip{background:#fff7df;border-left:4px solid #e9ad2a;padding:11px 13px;border-radius:8px;margin-top:13px;color:#765921;font-size:13px}
+.quiz{margin-top:17px;background:#f6f9fe;border:1px solid #dae6f6;border-radius:13px;padding:14px}.quiz strong{display:block;font-size:14px;margin-bottom:9px}.choices{display:flex;flex-wrap:wrap;gap:8px}.choices button{background:#fff;border:1px solid #bed2ea;border-radius:8px;padding:8px 11px;color:#22507f;font-size:13px;font-weight:750}.choices button.good{background:#dff7eb;border-color:#17a76c;color:#0b6f48}.choices button.bad{background:#ffe8ec;border-color:#ef6373;color:#9d2735}.feedback{font-size:13px;margin-top:7px;min-height:19px;font-weight:700}
+.practice{margin-top:17px;border:1px solid #d6e2f1;border-radius:13px;background:#f9fbff;padding:14px}.practice summary{font-weight:800;color:#1a4e91;cursor:pointer}.practice p{font-size:13px;color:#536b85}.practice textarea{display:block;width:100%;min-height:220px;background:#10213b;color:#e8f4ff;border:1px solid #304565;border-radius:10px;padding:12px;font:12px/1.5 Consolas,monospace;resize:vertical}.practice-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.practice-actions button{border:0;background:#155db3;color:#fff;border-radius:8px;padding:9px 12px;font-weight:800;font-size:12px}.practice-actions button.secondary{background:#e7f1ff;color:#17569e}.practice-output{background:#eaf3ff;border-radius:9px;margin-top:9px;padding:11px;white-space:pre-wrap;font:12px/1.5 Consolas,monospace}
+.reference{background:white;border:1px solid var(--line);border-radius:15px;overflow:hidden}table{width:100%;border-collapse:collapse}th{text-align:left;background:#114c96;color:white;padding:11px}td{padding:9px 11px;border-bottom:1px solid #e5edf7;font-size:13px}tr:nth-child(even) td{background:#f6faff}
+.workflow{background:#e8f3ff;border:1px solid #c7dff8;border-radius:16px;padding:17px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;color:#0d4d96;font-weight:800}.workflow span{background:white;padding:8px 11px;border-radius:9px}.workflow b{font-size:21px}
+.report{padding:23px;margin-top:24px}.report h3{margin:0 0 5px;font-size:22px}.report p{color:#5c7189;font-size:13px}.fields{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}.field{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:800;color:#34567e}.field input,.field textarea{border:1px solid #c5d7ed;border-radius:9px;background:#fcfdff;padding:11px;color:#203653;width:100%}.field textarea{min-height:85px;resize:vertical}.checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.checklist label{border:1px solid #dbe6f3;border-radius:10px;background:#fafcff;padding:11px;font-size:13px;font-weight:750}.checklist input{accent-color:#0c9568}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.actions button{border:0;background:#125bb0;color:white;border-radius:10px;padding:11px 15px;font-weight:850}.actions button.green{background:#0b9568}.actions button.secondary{background:#e7f2ff;color:#175599}.small{font-size:12px;color:#71849b}.toast{position:fixed;bottom:20px;right:20px;background:#153b6d;color:#fff;padding:12px 16px;border-radius:10px;box-shadow:0 10px 25px #0003;opacity:0;transform:translateY(12px);transition:.2s;pointer-events:none;z-index:99}.toast.show{opacity:1;transform:translateY(0)}footer{text-align:center;padding:22px;color:#6e8196;font-size:12px}
+@media(max-width:920px){.roadmap{grid-template-columns:repeat(2,1fr)}.cols{grid-template-columns:1fr}.fields{grid-template-columns:1fr}}
+@media(max-width:580px){.top-inner{align-items:flex-start}.pill{display:none}main{padding:0 11px}.hero{padding:22px 18px}.lesson-head{padding:16px}.lesson-body{padding:14px}.lesson-head h3{font-size:18px}.roadmap{grid-template-columns:repeat(2,1fr)}.checklist{grid-template-columns:1fr}.nav-inner{padding:8px}.nav a{padding:6px;font-size:11px}}
+@media print{body{background:white}.top,.nav,.actions,.evidence input,.practice,.toast,footer{display:none!important}main{max-width:none;padding:0}.hero,.lesson,.report{box-shadow:none;break-inside:avoid}.lesson{border:1px solid #999}.cols{grid-template-columns:1fr 1fr}.student{border:1px solid #555}.codebox{print-color-adjust:exact}}
+
+
+.sjf-simulator{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:20px;margin:22px 0;overflow:hidden;scroll-margin-top:90px}
+.sim-head{background:linear-gradient(105deg,#e7f3ff,#f6fbff);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:15px;border-bottom:1px solid #d5e6fa}
+.sim-head h2{margin:3px 0 5px;font-size:23px;color:#153d73}.sim-head p{margin:0;color:#4b6481;font-size:13px;max-width:720px}.sim-label{font-size:12px;font-weight:800;color:#1656a0;background:#fff;border-radius:25px;padding:8px 11px;white-space:nowrap}
+.sim-layout{display:grid;grid-template-columns:minmax(280px,.85fr) minmax(400px,1.5fr);gap:23px;padding:21px 23px}.sim-layout h3{font-size:16px;margin:0 0 12px}.sim-table-wrap{overflow-x:auto}.sim-table{min-width:380px}.sim-table th{background:#17569f;font-size:12px}.sim-table td{font-size:13px}.sim-table input{width:100%;max-width:110px;min-width:70px;border:1px solid #b7cee8;border-radius:8px;padding:7px 9px;color:#173f74;font-weight:750}
+.sim-buttons{display:flex;gap:8px;margin:13px 0 5px;flex-wrap:wrap}.sim-buttons button{border:0;border-radius:9px;background:#1261bd;color:#fff;font-weight:800;padding:10px 13px}.sim-buttons .sim-secondary{background:#e7f2ff;color:#1657a0}.sim-hint{font-size:12px;color:#5d738c}.sim-hint.error{color:#bb3a46;font-weight:750}
+.gantt{display:flex;min-height:86px;align-items:stretch;overflow-x:auto;padding:7px 0 22px;gap:2px}.gantt-block{position:relative;flex:var(--weight) 0 48px;min-width:48px;max-width:100%;background:var(--color);color:white;border-radius:7px 7px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:14px;font-weight:900}.gantt-block.idle{background:#a9b8ca;color:#23394f}.gantt-block small{font-size:11px;font-weight:700}.gantt-block .gantt-start{position:absolute;left:0;bottom:-21px;color:#425975;font-size:11px;transform:translateX(-15%);font-weight:800}.gantt-block .gantt-end{position:absolute;right:0;bottom:-21px;color:#425975;font-size:11px;transform:translateX(20%);font-weight:800}
+.sim-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:9px 0 15px}.sim-metrics>div{background:#edf6ff;border-radius:11px;padding:11px}.sim-metrics small{display:block;color:#54708d;font-size:11px;line-height:1.3}.sim-metrics strong{display:block;font-size:23px;color:#12559f;margin-top:3px}.results-table{min-width:510px}.results-table td{font-variant-numeric:tabular-nums}
+@media(max-width:980px){.sim-layout{grid-template-columns:1fr}.sim-label{display:none}}@media(max-width:600px){.sim-layout{padding:15px}.sim-head{padding:17px}.sim-metrics{grid-template-columns:1fr 1fr}.gantt-block{min-width:40px}}
+@media print{.sim-buttons{display:none}.sjf-simulator{break-inside:avoid}}
+</style></head>
+<body><header class="top"><div class="top-inner"><div aria-hidden="true" class="logo">🐧</div><div><h1>CSCI 300 – Operating Systems</h1><p>Interactive Linux Labs · Explanation → Example → Student Task</p></div><span class="pill">Ubuntu + Bash</span></div></header>
+<nav class="nav"><div class="nav-inner"><a href="#overview">Overview</a><a href="#sjf-simulator">SJF Visualizer</a><a href="#lesson-1">Task 1</a><a href="#lesson-2">Task 2</a><a href="#lesson-3">Task 3</a><a href="#lesson-4">Task 4</a><a href="#lab-report">Submission</a><button onclick="window.print()" type="button">🖨 Print</button></div></nav>
+<main><section class="hero" id="overview"><span class="eyebrow">Week 13 Lab · Shortest Job First (SJF) CPU Scheduling</span><h2>Schedule CPU Processes with SJF in C</h2><p>Learn how <strong>non-preemptive Shortest Job First (SJF)</strong> chooses the shortest ready process. Explore an interactive Gantt chart, study the C programs, and complete <strong>four student tasks</strong> in Ubuntu Terminal.</p><div class="tags"><span>4 lessons</span><span>4 required student tasks</span><span>4 screenshot sections</span><span>Quizzes + code practice</span><span>Downloadable lab report</span></div></section>
+<h2 class="section-title">🗺️ Week 7 Learning Journey</h2><div class="roadmap"><a href="#lesson-1" style="--accent:#2266c8"><b>1</b><h3>How Does SJF Choose the Next Process?</h3><p>Choose the shortest CPU burst when all processes are ready.</p></a><a href="#lesson-2" style="--accent:#0d996c"><b>2</b><h3>Can a New Shorter Process Interrupt the CPU?</h3><p>See how non-preemptive SJF handles different arrival times.</p></a><a href="#lesson-3" style="--accent:#d7850c"><b>3</b><h3>How Can We Draw an SJF Gantt Chart?</h3><p>Choose among ready processes and calculate average WT and TAT.</p></a><a href="#lesson-4" style="--accent:#8050c8"><b>4</b><h3>How Can We Build an SJF Scheduler with User Input?</h3><p>Read process data, calculate a schedule, and test special cases.</p></a></div>
+<section class="sjf-simulator" id="sjf-simulator">
+<div class="sim-head"><div><span class="eyebrow">Interactive Non-preemptive SJF Visualizer</span><h2>🧩 Build Your Own SJF Gantt Chart</h2><p>Change arrival and burst times, then choose <b>Calculate SJF</b>. At each decision point, the CPU chooses the shortest ready job. The student tasks still require real C programs in Ubuntu.</p></div><span class="sim-label">Non-preemptive SJF</span></div>
+<div class="sim-layout"><div class="sim-input"><h3>Process Data</h3><div class="sim-table-wrap"><table class="sim-table"><thead><tr><th>Process</th><th>Arrival Time</th><th>Burst Time</th></tr></thead><tbody>
+<tr><td>P1</td><td><input aria-label="P1 arrival time" id="at1" max="100" min="0" step="1" type="number" value="0"/></td><td><input aria-label="P1 burst time" id="bt1" max="100" min="1" step="1" type="number" value="5"/></td></tr>
+<tr><td>P2</td><td><input aria-label="P2 arrival time" id="at2" max="100" min="0" step="1" type="number" value="1"/></td><td><input aria-label="P2 burst time" id="bt2" max="100" min="1" step="1" type="number" value="3"/></td></tr>
+<tr><td>P3</td><td><input aria-label="P3 arrival time" id="at3" max="100" min="0" step="1" type="number" value="2"/></td><td><input aria-label="P3 burst time" id="bt3" max="100" min="1" step="1" type="number" value="1"/></td></tr>
+<tr><td>P4</td><td><input aria-label="P4 arrival time" id="at4" max="100" min="0" step="1" type="number" value="4"/></td><td><input aria-label="P4 burst time" id="bt4" max="100" min="1" step="1" type="number" value="2"/></td></tr>
+</tbody></table></div><div class="sim-buttons"><button id="sjf-calculate" type="button">▶ Calculate SJF</button><button class="sim-secondary" id="sjf-reset" type="button">↺ Reset Example</button></div><p class="sim-hint" id="sim-message" role="status">When burst times tie, earlier arrival wins; if still tied, lower process ID wins.</p></div>
+<div class="sim-results"><h3>Gantt Chart</h3><div aria-label="SJF Gantt chart" class="gantt" id="gantt-chart"></div><div class="sim-metrics"><div><small>Average Waiting Time</small><strong id="sim-avg-wt">–</strong></div><div><small>Average Turnaround Time</small><strong id="sim-avg-tat">–</strong></div><div><small>Final Completion Time</small><strong id="sim-end">–</strong></div></div><div class="sim-table-wrap"><table class="sim-table results-table"><thead><tr><th>Process</th><th>AT</th><th>BT</th><th>Start</th><th>Finish</th><th>WT</th><th>TAT</th></tr></thead><tbody id="sjf-table-body"></tbody></table></div></div></div>
+</section><section class="progress"><div><h3>🎯 Your Task Progress</h3><p>Check off each step after completing it in Ubuntu. Checklist progress and student details are saved in this browser.</p><div class="bar"><div id="progress-bar"></div></div></div><strong class="percent" id="progress-number">0%</strong></section>
+<article class="lesson" id="lesson-1" style="--accent:#2266c8;--soft:#eaf3ff">
+<div class="lesson-head"><div class="lesson-num">1</div><div><h3>Lesson 1 – How Does SJF Choose the Next Process?</h3><p>Choose the shortest CPU burst when all processes are ready.</p></div></div>
+<div class="lesson-body"><div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>Shortest Job First (SJF) selects the ready process with the smallest CPU burst. In this lab, we use non-preemptive SJF: once a process starts, it finishes before another process runs. When all processes arrive at time 0, we can order them by burst time.</p><div class="point"><strong>Burst Time (BT)</strong><span>How many CPU time units a process needs.</span></div><div class="point"><strong>Shortest first</strong><span>Choose the ready process with the smallest burst.</span></div><div class="point"><strong>Waiting Time (WT)</strong><span>Time before the process starts (when AT = 0).</span></div><div class="point"><strong>Turnaround Time (TAT)</strong><span>Completion time when arrival time is 0.</span></div>
+<div class="commands"><span class="cmd"><code>nano sjf_basic.c</code><button data-copy="nano sjf_basic.c" type="button">Copy</button></span><span class="cmd"><code>gcc -Wall -Wextra sjf_basic.c -o sjf_basic</code><button data-copy="gcc -Wall -Wextra sjf_basic.c -o sjf_basic" type="button">Copy</button></span><span class="cmd"><code>./sjf_basic</code><button data-copy="./sjf_basic" type="button">Copy</button></span><span class="cmd"><button data-copy-script="1" type="button">Copy full C program</button></span></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>sjf_basic.c — example C program</span></div><pre>#include &lt;stdio.h&gt;
+
+typedef struct {
+    int id, burst;
+} Process;
+
+int main(void) {
+    Process p[3] = {{1, 6}, {2, 2}, {3, 4}};
+    int time = 0;
+
+    /* Sort by burst time (shortest first). */
+    for (int i = 0; i &lt; 3; i++) {
+        for (int j = i + 1; j &lt; 3; j++) {
+            if (p[j].burst &lt; p[i].burst) {
+                Process temp = p[i];
+                p[i] = p[j];
+                p[j] = temp;
+            }
+        }
+    }
+
+    printf("Process  BT  WT  TAT\n");
+    for (int i = 0; i &lt; 3; i++) {
+        int wt = time;
+        time += p[i].burst;
+        int tat = time;
+        printf("P%d       %d   %d    %d\n",
+               p[i].id, p[i].burst, wt, tat);
+    }
+    return 0;
+}</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Ubuntu Terminal output</span></div><pre>Process  BT  WT  TAT
+P2       2   0    2
+P3       4   2    6
+P1       6   6    12</pre></div>
+<div class="tip">💡 With all processes ready at time 0, the order is based on burst time. With different arrivals, SJF must choose only among processes that have already arrived.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 1</span> Your turn</h4><p class="task-intro">Write, compile, and run the program in your real Ubuntu Terminal. Tick each step after completing it.</p><div class="steps"><label class="step"><input data-task="1-1" type="checkbox"/><span><b>1.</b> Create <code>sjf_basic.c</code> using <code>nano sjf_basic.c</code>.</span></label><label class="step"><input data-task="1-2" type="checkbox"/><span><b>2.</b> Compile with <code>gcc -Wall -Wextra sjf_basic.c -o sjf_basic</code> and run <code>./sjf_basic</code>.</span></label><label class="step"><input data-task="1-3" type="checkbox"/><span><b>3.</b> Change P1 burst time from <code>6</code> to <code>1</code> and run the program again.</span></label><label class="step"><input data-task="1-4" type="checkbox"/><span><b>4.</b> Identify the new execution order and record the waiting times.</span></label></div><div class="evidence"><label for="shot-1">📸 Attach Screenshot 1</label><input accept="image/*" data-shot="1" id="shot-1" type="file"/><div id="preview-1"></div></div><div class="result">Required result: Screenshot showing the updated process order, waiting times, and turnaround times.</div></section>
+</div><div class="quiz" data-quiz="1"><strong>🧠 Quick Check: If all processes arrive together with bursts 6, 2, and 4, which runs first?</strong><div class="choices"><button data-answer="0" type="button">P1 (6 units)</button><button data-answer="1" type="button">P2 (2 units)</button><button data-answer="2" type="button">P3 (4 units)</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the C Program</summary><p>Use this area to review or edit the C code. It does <b>not</b> compile or run C. To see real results, compile with GCC and run in Ubuntu.</p><textarea class="code-editor" id="practice-1" spellcheck="false">#include &lt;stdio.h&gt;
+
+typedef struct {
+    int id, burst;
+} Process;
+
+int main(void) {
+    Process p[3] = {{1, 6}, {2, 2}, {3, 4}};
+    int time = 0;
+
+    /* Sort by burst time (shortest first). */
+    for (int i = 0; i &lt; 3; i++) {
+        for (int j = i + 1; j &lt; 3; j++) {
+            if (p[j].burst &lt; p[i].burst) {
+                Process temp = p[i];
+                p[i] = p[j];
+                p[j] = temp;
+            }
+        }
+    }
+
+    printf("Process  BT  WT  TAT\n");
+    for (int i = 0; i &lt; 3; i++) {
+        int wt = time;
+        time += p[i].burst;
+        int tat = time;
+        printf("P%d       %d   %d    %d\n",
+               p[i].id, p[i].burst, wt, tat);
+    }
+    return 0;
+}</textarea><div class="practice-actions"><button data-show="1" type="button">Show example output</button><button class="secondary" data-restore="1" type="button">Restore example program</button></div><div class="practice-output" id="practice-output-1">Choose “Show example output” to see a sample result.</div></details>
+</div></article>
+<article class="lesson" id="lesson-2" style="--accent:#0d996c;--soft:#e8f9f0">
+<div class="lesson-head"><div class="lesson-num">2</div><div><h3>Lesson 2 – Can a New Shorter Process Interrupt the CPU?</h3><p>See how non-preemptive SJF handles different arrival times.</p></div></div>
+<div class="lesson-body"><div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>SJF must consider arrival time. When the CPU becomes free, it chooses the shortest burst among the processes that have already arrived. A shorter process arriving while another is running does not interrupt it in non-preemptive SJF.</p><div class="point"><strong>Arrival Time (AT)</strong><span>When a process becomes ready.</span></div><div class="point"><strong>Ready processes</strong><span>Only processes with AT at or before the current time.</span></div><div class="point"><strong>Non-preemptive</strong><span>A running process is not interrupted.</span></div><div class="point"><strong>WT = Start − AT</strong><span>Time spent waiting for CPU.</span></div>
+<div class="commands"><span class="cmd"><code>nano sjf_arrival.c</code><button data-copy="nano sjf_arrival.c" type="button">Copy</button></span><span class="cmd"><code>gcc -Wall -Wextra sjf_arrival.c -o sjf_arrival</code><button data-copy="gcc -Wall -Wextra sjf_arrival.c -o sjf_arrival" type="button">Copy</button></span><span class="cmd"><code>./sjf_arrival</code><button data-copy="./sjf_arrival" type="button">Copy</button></span><span class="cmd"><button data-copy-script="2" type="button">Copy full C program</button></span></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>sjf_arrival.c — example C program</span></div><pre>#include &lt;stdio.h&gt;
+
+typedef struct {
+    int id, arrival, burst, done;
+} Process;
+
+int main(void) {
+    Process p[3] = {
+        {1, 0, 6, 0}, {2, 1, 2, 0}, {3, 2, 1, 0}
+    };
+    int time = 0;
+
+    printf("Process  AT  BT  Start  End  WT  TAT\n");
+    for (int finished = 0; finished &lt; 3; finished++) {
+        int best = -1;
+        for (int i = 0; i &lt; 3; i++) {
+            if (!p[i].done &amp;&amp; p[i].arrival &lt;= time &amp;&amp;
+                (best == -1 || p[i].burst &lt; p[best].burst)) {
+                best = i;
+            }
+        }
+        if (best == -1) {
+            int next = -1;
+            for (int i = 0; i &lt; 3; i++) {
+                if (!p[i].done &amp;&amp;
+                    (next == -1 || p[i].arrival &lt; p[next].arrival)) {
+                    next = i;
+                }
+            }
+            printf("CPU idle: %d-%d\n", time, p[next].arrival);
+            time = p[next].arrival;
+            best = next;
+        }
+        int start = time;
+        time += p[best].burst;
+        int wt = start - p[best].arrival;
+        int tat = time - p[best].arrival;
+        p[best].done = 1;
+        printf("P%d        %d   %d     %d    %d    %d    %d\n",
+               p[best].id, p[best].arrival, p[best].burst,
+               start, time, wt, tat);
+    }
+    return 0;
+}</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Ubuntu Terminal output</span></div><pre>Process  AT  BT  Start  End  WT  TAT
+P1        0   6     0    6    0    6
+P3        2   1     6    7    4    5
+P2        1   2     7    9    6    8</pre></div>
+<div class="tip">💡 After changing P1 burst to 3, the order is P1 → P3 → P2. P2 starts at 4 and waits 3 units.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 2</span> Your turn</h4><p class="task-intro">Write, compile, and run the program in your real Ubuntu Terminal. Tick each step after completing it.</p><div class="steps"><label class="step"><input data-task="2-1" type="checkbox"/><span><b>1.</b> Create <code>sjf_arrival.c</code>, compile it, and run the example.</span></label><label class="step"><input data-task="2-2" type="checkbox"/><span><b>2.</b> Check why P1 finishes before P2 and P3, even though they have shorter bursts.</span></label><label class="step"><input data-task="2-3" type="checkbox"/><span><b>3.</b> Change P1 burst time from <code>6</code> to <code>3</code>, recompile, and run.</span></label><label class="step"><input data-task="2-4" type="checkbox"/><span><b>4.</b> Record the updated execution order and waiting time of P2.</span></label></div><div class="evidence"><label for="shot-2">📸 Attach Screenshot 2</label><input accept="image/*" data-shot="2" id="shot-2" type="file"/><div id="preview-2"></div></div><div class="result">Required result: Screenshot showing the updated start times, waiting times, and turnaround times.</div></section>
+</div><div class="quiz" data-quiz="2"><strong>🧠 Quick Check: P1 starts at time 0 for 6 units. P3 arrives at time 2 and needs 1 unit. What happens?</strong><div class="choices"><button data-answer="0" type="button">P3 interrupts P1 immediately</button><button data-answer="1" type="button">P1 finishes at time 6, then SJF selects P3</button><button data-answer="2" type="button">P3 is ignored</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the C Program</summary><p>Use this area to review or edit the C code. It does <b>not</b> compile or run C. To see real results, compile with GCC and run in Ubuntu.</p><textarea class="code-editor" id="practice-2" spellcheck="false">#include &lt;stdio.h&gt;
+
+typedef struct {
+    int id, arrival, burst, done;
+} Process;
+
+int main(void) {
+    Process p[3] = {
+        {1, 0, 6, 0}, {2, 1, 2, 0}, {3, 2, 1, 0}
+    };
+    int time = 0;
+
+    printf("Process  AT  BT  Start  End  WT  TAT\n");
+    for (int finished = 0; finished &lt; 3; finished++) {
+        int best = -1;
+        for (int i = 0; i &lt; 3; i++) {
+            if (!p[i].done &amp;&amp; p[i].arrival &lt;= time &amp;&amp;
+                (best == -1 || p[i].burst &lt; p[best].burst)) {
+                best = i;
+            }
+        }
+        if (best == -1) {
+            int next = -1;
+            for (int i = 0; i &lt; 3; i++) {
+                if (!p[i].done &amp;&amp;
+                    (next == -1 || p[i].arrival &lt; p[next].arrival)) {
+                    next = i;
+                }
+            }
+            printf("CPU idle: %d-%d\n", time, p[next].arrival);
+            time = p[next].arrival;
+            best = next;
+        }
+        int start = time;
+        time += p[best].burst;
+        int wt = start - p[best].arrival;
+        int tat = time - p[best].arrival;
+        p[best].done = 1;
+        printf("P%d        %d   %d     %d    %d    %d    %d\n",
+               p[best].id, p[best].arrival, p[best].burst,
+               start, time, wt, tat);
+    }
+    return 0;
+}</textarea><div class="practice-actions"><button data-show="2" type="button">Show example output</button><button class="secondary" data-restore="2" type="button">Restore example program</button></div><div class="practice-output" id="practice-output-2">Choose “Show example output” to see a sample result.</div></details>
+</div></article>
+<article class="lesson" id="lesson-3" style="--accent:#d7850c;--soft:#fff6e6">
+<div class="lesson-head"><div class="lesson-num">3</div><div><h3>Lesson 3 – How Can We Draw an SJF Gantt Chart?</h3><p>Choose among ready processes and calculate average WT and TAT.</p></div></div>
+<div class="lesson-body"><div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>A Gantt chart shows the execution intervals. For different arrival times, SJF must choose the shortest ready process each time the CPU becomes free. This program also calculates average waiting and turnaround times.</p><div class="point"><strong>Gantt interval</strong><span>Each process start and finish time.</span></div><div class="point"><strong>Dynamic selection</strong><span>Select the shortest among processes that are ready now.</span></div><div class="point"><strong>Tie rule</strong><span>For equal bursts, prefer earlier arrival, then lower process ID.</span></div><div class="point"><strong>Average WT / TAT</strong><span>Sum the waiting / turnaround times and divide by process count.</span></div>
+<div class="commands"><span class="cmd"><code>nano sjf_gantt.c</code><button data-copy="nano sjf_gantt.c" type="button">Copy</button></span><span class="cmd"><code>gcc -Wall -Wextra sjf_gantt.c -o sjf_gantt</code><button data-copy="gcc -Wall -Wextra sjf_gantt.c -o sjf_gantt" type="button">Copy</button></span><span class="cmd"><code>./sjf_gantt</code><button data-copy="./sjf_gantt" type="button">Copy</button></span><span class="cmd"><button data-copy-script="3" type="button">Copy full C program</button></span></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>sjf_gantt.c — example C program</span></div><pre>#include &lt;stdio.h&gt;
+
+typedef struct {
+    int id, arrival, burst, done;
+} Process;
+
+int main(void) {
+    Process p[4] = {
+        {1, 0, 5, 0}, {2, 1, 3, 0},
+        {3, 2, 1, 0}, {4, 4, 2, 0}
+    };
+    int time = 0, total_wt = 0, total_tat = 0;
+
+    printf("SJF Gantt intervals:\n");
+    printf("Process  AT  BT  Start  End  WT  TAT\n");
+    for (int finished = 0; finished &lt; 4; finished++) {
+        int best = -1;
+        for (int i = 0; i &lt; 4; i++) {
+            if (p[i].done || p[i].arrival &gt; time) continue;
+            if (best == -1 || p[i].burst &lt; p[best].burst ||
+                (p[i].burst == p[best].burst &amp;&amp;
+                 (p[i].arrival &lt; p[best].arrival ||
+                  (p[i].arrival == p[best].arrival &amp;&amp;
+                   p[i].id &lt; p[best].id)))) {
+                best = i;
+            }
+        }
+        if (best == -1) {
+            int next = -1;
+            for (int i = 0; i &lt; 4; i++) {
+                if (!p[i].done &amp;&amp;
+                    (next == -1 || p[i].arrival &lt; p[next].arrival)) {
+                    next = i;
+                }
+            }
+            printf("CPU idle: %d-%d\n", time, p[next].arrival);
+            time = p[next].arrival;
+            best = next;
+        }
+        int start = time;
+        time += p[best].burst;
+        int wt = start - p[best].arrival;
+        int tat = time - p[best].arrival;
+        total_wt += wt;
+        total_tat += tat;
+        p[best].done = 1;
+        printf("P%d        %d   %d     %d    %d    %d    %d\n",
+               p[best].id, p[best].arrival, p[best].burst,
+               start, time, wt, tat);
+    }
+    printf("Average WT: %.2f\n", total_wt / 4.0);
+    printf("Average TAT: %.2f\n", total_tat / 4.0);
+    return 0;
+}</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Ubuntu Terminal output</span></div><pre>SJF Gantt intervals:
+Process  AT  BT  Start  End  WT  TAT
+P1        0   5     0    5    0    5
+P3        2   1     5    6    3    4
+P4        4   2     6    8    2    4
+P2        1   3     8    11    7    10
+Average WT: 3.00
+Average TAT: 5.75</pre></div>
+<div class="tip">💡 After moving P1 arrival to time 3, the CPU is idle from 0 to 1. The order becomes P2 → P3 → P4 → P1, with average WT 1.75 and average TAT 4.50.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 3</span> Your turn</h4><p class="task-intro">Write, compile, and run the program in your real Ubuntu Terminal. Tick each step after completing it.</p><div class="steps"><label class="step"><input data-task="3-1" type="checkbox"/><span><b>1.</b> Create <code>sjf_gantt.c</code>, compile it, and run the example.</span></label><label class="step"><input data-task="3-2" type="checkbox"/><span><b>2.</b> Use the output to draw the Gantt chart: <code>P1 → P3 → P4 → P2</code>.</span></label><label class="step"><input data-task="3-3" type="checkbox"/><span><b>3.</b> Change P1 arrival time from <code>0</code> to <code>3</code>, recompile, and run the program.</span></label><label class="step"><input data-task="3-4" type="checkbox"/><span><b>4.</b> Identify the CPU idle interval and record the new average waiting and turnaround times.</span></label></div><div class="evidence"><label for="shot-3">📸 Attach Screenshot 3</label><input accept="image/*" data-shot="3" id="shot-3" type="file"/><div id="preview-3"></div></div><div class="result">Required result: Screenshot showing the updated SJF schedule, CPU idle interval, and average times.</div></section>
+</div><div class="quiz" data-quiz="3"><strong>🧠 Quick Check: When the CPU becomes free at time 5, which ready process runs next?</strong><div class="choices"><button data-answer="0" type="button">P2 (BT 3)</button><button data-answer="1" type="button">P3 (BT 1)</button><button data-answer="2" type="button">P4 (BT 2)</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the C Program</summary><p>Use this area to review or edit the C code. It does <b>not</b> compile or run C. To see real results, compile with GCC and run in Ubuntu.</p><textarea class="code-editor" id="practice-3" spellcheck="false">#include &lt;stdio.h&gt;
+
+typedef struct {
+    int id, arrival, burst, done;
+} Process;
+
+int main(void) {
+    Process p[4] = {
+        {1, 0, 5, 0}, {2, 1, 3, 0},
+        {3, 2, 1, 0}, {4, 4, 2, 0}
+    };
+    int time = 0, total_wt = 0, total_tat = 0;
+
+    printf("SJF Gantt intervals:\n");
+    printf("Process  AT  BT  Start  End  WT  TAT\n");
+    for (int finished = 0; finished &lt; 4; finished++) {
+        int best = -1;
+        for (int i = 0; i &lt; 4; i++) {
+            if (p[i].done || p[i].arrival &gt; time) continue;
+            if (best == -1 || p[i].burst &lt; p[best].burst ||
+                (p[i].burst == p[best].burst &amp;&amp;
+                 (p[i].arrival &lt; p[best].arrival ||
+                  (p[i].arrival == p[best].arrival &amp;&amp;
+                   p[i].id &lt; p[best].id)))) {
+                best = i;
+            }
+        }
+        if (best == -1) {
+            int next = -1;
+            for (int i = 0; i &lt; 4; i++) {
+                if (!p[i].done &amp;&amp;
+                    (next == -1 || p[i].arrival &lt; p[next].arrival)) {
+                    next = i;
+                }
+            }
+            printf("CPU idle: %d-%d\n", time, p[next].arrival);
+            time = p[next].arrival;
+            best = next;
+        }
+        int start = time;
+        time += p[best].burst;
+        int wt = start - p[best].arrival;
+        int tat = time - p[best].arrival;
+        total_wt += wt;
+        total_tat += tat;
+        p[best].done = 1;
+        printf("P%d        %d   %d     %d    %d    %d    %d\n",
+               p[best].id, p[best].arrival, p[best].burst,
+               start, time, wt, tat);
+    }
+    printf("Average WT: %.2f\n", total_wt / 4.0);
+    printf("Average TAT: %.2f\n", total_tat / 4.0);
+    return 0;
+}</textarea><div class="practice-actions"><button data-show="3" type="button">Show example output</button><button class="secondary" data-restore="3" type="button">Restore example program</button></div><div class="practice-output" id="practice-output-3">Choose “Show example output” to see a sample result.</div></details>
+</div></article>
+<article class="lesson" id="lesson-4" style="--accent:#8050c8;--soft:#f4edff">
+<div class="lesson-head"><div class="lesson-num">4</div><div><h3>Lesson 4 – How Can We Build an SJF Scheduler with User Input?</h3><p>Read process data, calculate a schedule, and test special cases.</p></div></div>
+<div class="lesson-body"><div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>A reusable scheduler accepts process arrival and burst times from the user. This C program validates the input, selects the shortest ready job, shows CPU idle time when needed, and calculates averages. It uses non-preemptive SJF.</p><div class="point"><strong>scanf()</strong><span>Read the number of processes and their data.</span></div><div class="point"><strong>Ready queue</strong><span>Only arrived, unfinished processes are eligible.</span></div><div class="point"><strong>Input validation</strong><span>Require non-negative arrival and positive burst times.</span></div><div class="point"><strong>Tie rule</strong><span>Equal bursts: earlier arrival first, then lower process ID.</span></div>
+<div class="commands"><span class="cmd"><code>nano sjf_input.c</code><button data-copy="nano sjf_input.c" type="button">Copy</button></span><span class="cmd"><code>gcc -Wall -Wextra sjf_input.c -o sjf_input</code><button data-copy="gcc -Wall -Wextra sjf_input.c -o sjf_input" type="button">Copy</button></span><span class="cmd"><code>./sjf_input</code><button data-copy="./sjf_input" type="button">Copy</button></span><span class="cmd"><button data-copy-script="4" type="button">Copy full C program</button></span></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>sjf_input.c — example C program</span></div><pre>#include &lt;stdio.h&gt;
+
+#define MAX 10
+
+typedef struct {
+    int id, arrival, burst, done;
+} Process;
+
+int main(void) {
+    Process p[MAX];
+    int n, time = 0;
+    int total_wt = 0, total_tat = 0;
+
+    printf("Number of processes (1-10): ");
+    if (scanf("%d", &amp;n) != 1 || n &lt; 1 || n &gt; MAX) {
+        printf("Invalid number of processes.\n");
+        return 1;
+    }
+    for (int i = 0; i &lt; n; i++) {
+        p[i].id = i + 1;
+        p[i].done = 0;
+        printf("P%d arrival and burst: ", i + 1);
+        if (scanf("%d %d", &amp;p[i].arrival, &amp;p[i].burst) != 2 ||
+            p[i].arrival &lt; 0 || p[i].burst &lt;= 0) {
+            printf("Invalid process data.\n");
+            return 1;
+        }
+    }
+
+    printf("\nNon-preemptive SJF schedule:\n");
+    printf("Process  AT  BT  Start  End  WT  TAT\n");
+    for (int finished = 0; finished &lt; n; finished++) {
+        int best = -1;
+        for (int i = 0; i &lt; n; i++) {
+            if (p[i].done || p[i].arrival &gt; time) continue;
+            if (best == -1 || p[i].burst &lt; p[best].burst ||
+                (p[i].burst == p[best].burst &amp;&amp;
+                 (p[i].arrival &lt; p[best].arrival ||
+                  (p[i].arrival == p[best].arrival &amp;&amp;
+                   p[i].id &lt; p[best].id)))) {
+                best = i;
+            }
+        }
+        if (best == -1) {
+            int next = -1;
+            for (int i = 0; i &lt; n; i++) {
+                if (!p[i].done &amp;&amp;
+                    (next == -1 || p[i].arrival &lt; p[next].arrival ||
+                     (p[i].arrival == p[next].arrival &amp;&amp;
+                      p[i].id &lt; p[next].id))) {
+                    next = i;
+                }
+            }
+            printf("CPU idle: %d-%d\n", time, p[next].arrival);
+            time = p[next].arrival;
+            best = next;
+        }
+        int start = time;
+        time += p[best].burst;
+        int wt = start - p[best].arrival;
+        int tat = time - p[best].arrival;
+        total_wt += wt;
+        total_tat += tat;
+        p[best].done = 1;
+        printf("P%d        %d   %d     %d    %d    %d    %d\n",
+               p[best].id, p[best].arrival, p[best].burst,
+               start, time, wt, tat);
+    }
+    printf("Average WT: %.2f\n", (double)total_wt / n);
+    printf("Average TAT: %.2f\n", (double)total_tat / n);
+    return 0;
+}</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Ubuntu Terminal output</span></div><pre>Number of processes (1-10): 4
+P1 arrival and burst: 0 6
+P2 arrival and burst: 1 3
+P3 arrival and burst: 2 1
+P4 arrival and burst: 3 2
+
+Non-preemptive SJF schedule:
+Process  AT  BT  Start  End  WT  TAT
+P1        0   6     0    6    0    6
+P3        2   1     6    7    4    5
+P4        3   2     7    9    4    6
+P2        1   3     9    12    8    11
+Average WT: 4.00
+Average TAT: 7.00</pre></div>
+<div class="tip">💡 For the second test, the order is P1 → P3 → P4 → P2. Average WT is 2.50 and average TAT is 4.75. Invalid burst times must be rejected.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 4</span> Your turn</h4><p class="task-intro">Write, compile, and run the program in your real Ubuntu Terminal. Tick each step after completing it.</p><div class="steps"><label class="step"><input data-task="4-1" type="checkbox"/><span><b>1.</b> Create <code>sjf_input.c</code>, compile it, and test the four processes in the example.</span></label><label class="step"><input data-task="4-2" type="checkbox"/><span><b>2.</b> Run again with <code>P1: 0 3</code>, <code>P2: 0 3</code>, <code>P3: 1 1</code>, <code>P4: 2 2</code>.</span></label><label class="step"><input data-task="4-3" type="checkbox"/><span><b>3.</b> Record the process order, Gantt chart, and average waiting and turnaround times. Explain why P1 runs before P2 at time 0.</span></label><label class="step"><input data-task="4-4" type="checkbox"/><span><b>4.</b> Test an invalid burst time of <code>0</code> and record the error message.</span></label></div><div class="evidence"><label for="shot-4">📸 Attach Screenshot 4</label><input accept="image/*" data-shot="4" id="shot-4" type="file"/><div id="preview-4"></div></div><div class="result">Required result: Screenshots showing the updated four-process schedule, averages, and invalid-input message.</div></section>
+</div><div class="quiz" data-quiz="4"><strong>🧠 Quick Check: At time 0, P1 and P2 are ready with equal burst times. What breaks the tie?</strong><div class="choices"><button data-answer="0" type="button">Lower process ID (P1)</button><button data-answer="1" type="button">Highest process ID (P2)</button><button data-answer="2" type="button">Random selection</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the C Program</summary><p>Use this area to review or edit the C code. It does <b>not</b> compile or run C. To see real results, compile with GCC and run in Ubuntu.</p><textarea class="code-editor" id="practice-4" spellcheck="false">#include &lt;stdio.h&gt;
+
+#define MAX 10
+
+typedef struct {
+    int id, arrival, burst, done;
+} Process;
+
+int main(void) {
+    Process p[MAX];
+    int n, time = 0;
+    int total_wt = 0, total_tat = 0;
+
+    printf("Number of processes (1-10): ");
+    if (scanf("%d", &amp;n) != 1 || n &lt; 1 || n &gt; MAX) {
+        printf("Invalid number of processes.\n");
+        return 1;
+    }
+    for (int i = 0; i &lt; n; i++) {
+        p[i].id = i + 1;
+        p[i].done = 0;
+        printf("P%d arrival and burst: ", i + 1);
+        if (scanf("%d %d", &amp;p[i].arrival, &amp;p[i].burst) != 2 ||
+            p[i].arrival &lt; 0 || p[i].burst &lt;= 0) {
+            printf("Invalid process data.\n");
+            return 1;
+        }
+    }
+
+    printf("\nNon-preemptive SJF schedule:\n");
+    printf("Process  AT  BT  Start  End  WT  TAT\n");
+    for (int finished = 0; finished &lt; n; finished++) {
+        int best = -1;
+        for (int i = 0; i &lt; n; i++) {
+            if (p[i].done || p[i].arrival &gt; time) continue;
+            if (best == -1 || p[i].burst &lt; p[best].burst ||
+                (p[i].burst == p[best].burst &amp;&amp;
+                 (p[i].arrival &lt; p[best].arrival ||
+                  (p[i].arrival == p[best].arrival &amp;&amp;
+                   p[i].id &lt; p[best].id)))) {
+                best = i;
+            }
+        }
+        if (best == -1) {
+            int next = -1;
+            for (int i = 0; i &lt; n; i++) {
+                if (!p[i].done &amp;&amp;
+                    (next == -1 || p[i].arrival &lt; p[next].arrival ||
+                     (p[i].arrival == p[next].arrival &amp;&amp;
+                      p[i].id &lt; p[next].id))) {
+                    next = i;
+                }
+            }
+            printf("CPU idle: %d-%d\n", time, p[next].arrival);
+            time = p[next].arrival;
+            best = next;
+        }
+        int start = time;
+        time += p[best].burst;
+        int wt = start - p[best].arrival;
+        int tat = time - p[best].arrival;
+        total_wt += wt;
+        total_tat += tat;
+        p[best].done = 1;
+        printf("P%d        %d   %d     %d    %d    %d    %d\n",
+               p[best].id, p[best].arrival, p[best].burst,
+               start, time, wt, tat);
+    }
+    printf("Average WT: %.2f\n", (double)total_wt / n);
+    printf("Average TAT: %.2f\n", (double)total_tat / n);
+    return 0;
+}</textarea><div class="practice-actions"><button data-show="4" type="button">Show example output</button><button class="secondary" data-restore="4" type="button">Restore example program</button></div><div class="practice-output" id="practice-output-4">Choose “Show example output” to see a sample result.</div></details>
+</div></article>
+<h2 class="section-title">📘 Quick Bash Reference</h2><div class="reference"><table><thead><tr><th>Syntax / Command</th><th>Purpose</th><th>Example</th></tr></thead><tbody><tr><td><code>SJF</code></td><td>Choose the shortest ready CPU burst</td><td><code>Shortest Job First</code></td></tr><tr><td><code>Non-preemptive</code></td><td>Finish the running process before choosing again</td><td><code>No interruption</code></td></tr><tr><td><code>AT</code></td><td>Time process becomes ready</td><td><code>Arrival Time</code></td></tr><tr><td><code>BT</code></td><td>CPU time needed</td><td><code>Burst Time</code></td></tr><tr><td><code>Start</code></td><td>When process starts CPU execution</td><td><code>Current CPU time</code></td></tr><tr><td><code>Finish</code></td><td>Time process completes</td><td><code>Start + BT</code></td></tr><tr><td><code>WT</code></td><td>Time waiting in ready queue</td><td><code>Start − AT</code></td></tr><tr><td><code>TAT</code></td><td>Time from arrival to completion</td><td><code>Finish − AT</code></td></tr><tr><td><code>Average WT</code></td><td>Mean waiting time</td><td><code>sum(WT) / n</code></td></tr><tr><td><code>Average TAT</code></td><td>Mean turnaround time</td><td><code>sum(TAT) / n</code></td></tr><tr><td><code>CPU idle</code></td><td>Gap when no process has arrived</td><td><code>time → next arrival</code></td></tr><tr><td><code>gcc</code></td><td>Compile C source</td><td><code>gcc sjf_basic.c -o sjf_basic</code></td></tr></tbody></table></div>
+<h2 class="section-title">🔄 Complete Week 7 Flow</h2><div class="workflow"><span>Read arrivals + bursts</span><b>→</b><span>Find ready processes</span><b>→</b><span>Choose shortest burst</span><b>→</b><span>Calculate WT + TAT</span><b>→</b><span>Draw Gantt chart</span></div>
+<section class="report" id="lab-report"><h3>📝 Student Information &amp; Submission</h3><p>Complete all four SJF programs in Ubuntu Terminal, attach your screenshots, and download your report.</p><div class="fields"><label class="field">Student Name<input data-save="name" id="student-name" placeholder="Your full name"/></label><label class="field">Student ID<input data-save="id" id="student-id" placeholder="Your university ID"/></label><label class="field">Section<input data-save="section" id="student-section" placeholder="Your section"/></label></div>
+<label class="field">Task 4 observation: What was the SJF execution order, and what were the average waiting and turnaround times?<textarea data-save="observation" id="observation" placeholder="Write your observation here..."></textarea></label>
+<h4>Final submission checklist</h4><div class="checklist"><label><input data-final="0" type="checkbox"/> Task 1 screenshot attached</label><label><input data-final="1" type="checkbox"/> Task 2 screenshot attached</label><label><input data-final="2" type="checkbox"/> Task 3 screenshot attached</label><label><input data-final="3" type="checkbox"/> Task 4 screenshot attached</label><label><input data-final="4" type="checkbox"/> Student name and ID entered</label><label><input data-final="5" type="checkbox"/> All four C programs compiled and tested in Ubuntu</label></div>
+<div class="actions"><button class="green" id="download-report" type="button">⬇ Download Completed Lab Report</button><button class="secondary" onclick="window.print()" type="button">🖨 Print / Save as PDF</button><button class="secondary" id="reset-progress" type="button">↺ Reset Checklists</button></div><p class="small">The report downloads as an HTML file with your currently attached screenshots. Open it to print or save as PDF. Screenshots are kept only while this page is open; nothing is submitted automatically. The SJF visualizer runs in your browser; the code practice area does not compile C.</p></section></main>
+<footer>CSCI 300 – Operating Systems · Week 13 Lab – SJF Scheduling Algorithms</footer><div aria-live="polite" class="toast" id="toast" role="status"></div><script>
+const lessons = [{"id": 1, "icon": "⏳", "title": "How Does SJF Choose the Next Process?", "subtitle": "Choose the shortest CPU burst when all processes are ready.", "why": "Shortest Job First (SJF) selects the ready process with the smallest CPU burst. In this lab, we use non-preemptive SJF: once a process starts, it finishes before another process runs. When all processes arrive at time 0, we can order them by burst time.", "concepts": [["Burst Time (BT)", "How many CPU time units a process needs."], ["Shortest first", "Choose the ready process with the smallest burst."], ["Waiting Time (WT)", "Time before the process starts (when AT = 0)."], ["Turnaround Time (TAT)", "Completion time when arrival time is 0."]], "filename": "sjf_basic.c", "program": "sjf_basic", "code": "#include <stdio.h>\n\ntypedef struct {\n    int id, burst;\n} Process;\n\nint main(void) {\n    Process p[3] = {{1, 6}, {2, 2}, {3, 4}};\n    int time = 0;\n\n    /* Sort by burst time (shortest first). */\n    for (int i = 0; i < 3; i++) {\n        for (int j = i + 1; j < 3; j++) {\n            if (p[j].burst < p[i].burst) {\n                Process temp = p[i];\n                p[i] = p[j];\n                p[j] = temp;\n            }\n        }\n    }\n\n    printf(\"Process  BT  WT  TAT\\n\");\n    for (int i = 0; i < 3; i++) {\n        int wt = time;\n        time += p[i].burst;\n        int tat = time;\n        printf(\"P%d       %d   %d    %d\\n\",\n               p[i].id, p[i].burst, wt, tat);\n    }\n    return 0;\n}", "output": "Process  BT  WT  TAT\nP2       2   0    2\nP3       4   2    6\nP1       6   6    12", "steps": ["Create <code>sjf_basic.c<\/code> using <code>nano sjf_basic.c<\/code>.", "Compile with <code>gcc -Wall -Wextra sjf_basic.c -o sjf_basic<\/code> and run <code>./sjf_basic<\/code>.", "Change P1 burst time from <code>6<\/code> to <code>1<\/code> and run the program again.", "Identify the new execution order and record the waiting times."], "evidence": "Screenshot showing the updated process order, waiting times, and turnaround times.", "quiz": {"q": "If all processes arrive together with bursts 6, 2, and 4, which runs first?", "options": ["P1 (6 units)", "P2 (2 units)", "P3 (4 units)"], "correct": 1, "explain": "Non-preemptive SJF chooses the shortest available CPU burst: P2 has 2 units."}, "tip": "With all processes ready at time 0, the order is based on burst time. With different arrivals, SJF must choose only among processes that have already arrived.", "accent": "#2266c8", "soft": "#eaf3ff"}, {"id": 2, "icon": "🚦", "title": "Can a New Shorter Process Interrupt the CPU?", "subtitle": "See how non-preemptive SJF handles different arrival times.", "why": "SJF must consider arrival time. When the CPU becomes free, it chooses the shortest burst among the processes that have already arrived. A shorter process arriving while another is running does not interrupt it in non-preemptive SJF.", "concepts": [["Arrival Time (AT)", "When a process becomes ready."], ["Ready processes", "Only processes with AT at or before the current time."], ["Non-preemptive", "A running process is not interrupted."], ["WT = Start − AT", "Time spent waiting for CPU."]], "filename": "sjf_arrival.c", "program": "sjf_arrival", "code": "#include <stdio.h>\n\ntypedef struct {\n    int id, arrival, burst, done;\n} Process;\n\nint main(void) {\n    Process p[3] = {\n        {1, 0, 6, 0}, {2, 1, 2, 0}, {3, 2, 1, 0}\n    };\n    int time = 0;\n\n    printf(\"Process  AT  BT  Start  End  WT  TAT\\n\");\n    for (int finished = 0; finished < 3; finished++) {\n        int best = -1;\n        for (int i = 0; i < 3; i++) {\n            if (!p[i].done && p[i].arrival <= time &&\n                (best == -1 || p[i].burst < p[best].burst)) {\n                best = i;\n            }\n        }\n        if (best == -1) {\n            int next = -1;\n            for (int i = 0; i < 3; i++) {\n                if (!p[i].done &&\n                    (next == -1 || p[i].arrival < p[next].arrival)) {\n                    next = i;\n                }\n            }\n            printf(\"CPU idle: %d-%d\\n\", time, p[next].arrival);\n            time = p[next].arrival;\n            best = next;\n        }\n        int start = time;\n        time += p[best].burst;\n        int wt = start - p[best].arrival;\n        int tat = time - p[best].arrival;\n        p[best].done = 1;\n        printf(\"P%d        %d   %d     %d    %d    %d    %d\\n\",\n               p[best].id, p[best].arrival, p[best].burst,\n               start, time, wt, tat);\n    }\n    return 0;\n}", "output": "Process  AT  BT  Start  End  WT  TAT\nP1        0   6     0    6    0    6\nP3        2   1     6    7    4    5\nP2        1   2     7    9    6    8", "steps": ["Create <code>sjf_arrival.c<\/code>, compile it, and run the example.", "Check why P1 finishes before P2 and P3, even though they have shorter bursts.", "Change P1 burst time from <code>6<\/code> to <code>3<\/code>, recompile, and run.", "Record the updated execution order and waiting time of P2."], "evidence": "Screenshot showing the updated start times, waiting times, and turnaround times.", "quiz": {"q": "P1 starts at time 0 for 6 units. P3 arrives at time 2 and needs 1 unit. What happens?", "options": ["P3 interrupts P1 immediately", "P1 finishes at time 6, then SJF selects P3", "P3 is ignored"], "correct": 1, "explain": "This is non-preemptive SJF. P1 finishes before the CPU chooses the next ready process."}, "tip": "After changing P1 burst to 3, the order is P1 → P3 → P2. P2 starts at 4 and waits 3 units.", "accent": "#0d996c", "soft": "#e8f9f0"}, {"id": 3, "icon": "📊", "title": "How Can We Draw an SJF Gantt Chart?", "subtitle": "Choose among ready processes and calculate average WT and TAT.", "why": "A Gantt chart shows the execution intervals. For different arrival times, SJF must choose the shortest ready process each time the CPU becomes free. This program also calculates average waiting and turnaround times.", "concepts": [["Gantt interval", "Each process start and finish time."], ["Dynamic selection", "Select the shortest among processes that are ready now."], ["Tie rule", "For equal bursts, prefer earlier arrival, then lower process ID."], ["Average WT / TAT", "Sum the waiting / turnaround times and divide by process count."]], "filename": "sjf_gantt.c", "program": "sjf_gantt", "code": "#include <stdio.h>\n\ntypedef struct {\n    int id, arrival, burst, done;\n} Process;\n\nint main(void) {\n    Process p[4] = {\n        {1, 0, 5, 0}, {2, 1, 3, 0},\n        {3, 2, 1, 0}, {4, 4, 2, 0}\n    };\n    int time = 0, total_wt = 0, total_tat = 0;\n\n    printf(\"SJF Gantt intervals:\\n\");\n    printf(\"Process  AT  BT  Start  End  WT  TAT\\n\");\n    for (int finished = 0; finished < 4; finished++) {\n        int best = -1;\n        for (int i = 0; i < 4; i++) {\n            if (p[i].done || p[i].arrival > time) continue;\n            if (best == -1 || p[i].burst < p[best].burst ||\n                (p[i].burst == p[best].burst &&\n                 (p[i].arrival < p[best].arrival ||\n                  (p[i].arrival == p[best].arrival &&\n                   p[i].id < p[best].id)))) {\n                best = i;\n            }\n        }\n        if (best == -1) {\n            int next = -1;\n            for (int i = 0; i < 4; i++) {\n                if (!p[i].done &&\n                    (next == -1 || p[i].arrival < p[next].arrival)) {\n                    next = i;\n                }\n            }\n            printf(\"CPU idle: %d-%d\\n\", time, p[next].arrival);\n            time = p[next].arrival;\n            best = next;\n        }\n        int start = time;\n        time += p[best].burst;\n        int wt = start - p[best].arrival;\n        int tat = time - p[best].arrival;\n        total_wt += wt;\n        total_tat += tat;\n        p[best].done = 1;\n        printf(\"P%d        %d   %d     %d    %d    %d    %d\\n\",\n               p[best].id, p[best].arrival, p[best].burst,\n               start, time, wt, tat);\n    }\n    printf(\"Average WT: %.2f\\n\", total_wt / 4.0);\n    printf(\"Average TAT: %.2f\\n\", total_tat / 4.0);\n    return 0;\n}", "output": "SJF Gantt intervals:\nProcess  AT  BT  Start  End  WT  TAT\nP1        0   5     0    5    0    5\nP3        2   1     5    6    3    4\nP4        4   2     6    8    2    4\nP2        1   3     8    11    7    10\nAverage WT: 3.00\nAverage TAT: 5.75", "steps": ["Create <code>sjf_gantt.c<\/code>, compile it, and run the example.", "Use the output to draw the Gantt chart: <code>P1 → P3 → P4 → P2<\/code>.", "Change P1 arrival time from <code>0<\/code> to <code>3<\/code>, recompile, and run the program.", "Identify the CPU idle interval and record the new average waiting and turnaround times."], "evidence": "Screenshot showing the updated SJF schedule, CPU idle interval, and average times.", "quiz": {"q": "When the CPU becomes free at time 5, which ready process runs next?", "options": ["P2 (BT 3)", "P3 (BT 1)", "P4 (BT 2)"], "correct": 1, "explain": "At time 5, P2, P3, and P4 have all arrived. P3 has the shortest burst (1)."}, "tip": "After moving P1 arrival to time 3, the CPU is idle from 0 to 1. The order becomes P2 → P3 → P4 → P1, with average WT 1.75 and average TAT 4.50.", "accent": "#d7850c", "soft": "#fff6e6"}, {"id": 4, "icon": "⌨️", "title": "How Can We Build an SJF Scheduler with User Input?", "subtitle": "Read process data, calculate a schedule, and test special cases.", "why": "A reusable scheduler accepts process arrival and burst times from the user. This C program validates the input, selects the shortest ready job, shows CPU idle time when needed, and calculates averages. It uses non-preemptive SJF.", "concepts": [["scanf()", "Read the number of processes and their data."], ["Ready queue", "Only arrived, unfinished processes are eligible."], ["Input validation", "Require non-negative arrival and positive burst times."], ["Tie rule", "Equal bursts: earlier arrival first, then lower process ID."]], "filename": "sjf_input.c", "program": "sjf_input", "code": "#include <stdio.h>\n\n#define MAX 10\n\ntypedef struct {\n    int id, arrival, burst, done;\n} Process;\n\nint main(void) {\n    Process p[MAX];\n    int n, time = 0;\n    int total_wt = 0, total_tat = 0;\n\n    printf(\"Number of processes (1-10): \");\n    if (scanf(\"%d\", &n) != 1 || n < 1 || n > MAX) {\n        printf(\"Invalid number of processes.\\n\");\n        return 1;\n    }\n    for (int i = 0; i < n; i++) {\n        p[i].id = i + 1;\n        p[i].done = 0;\n        printf(\"P%d arrival and burst: \", i + 1);\n        if (scanf(\"%d %d\", &p[i].arrival, &p[i].burst) != 2 ||\n            p[i].arrival < 0 || p[i].burst <= 0) {\n            printf(\"Invalid process data.\\n\");\n            return 1;\n        }\n    }\n\n    printf(\"\\nNon-preemptive SJF schedule:\\n\");\n    printf(\"Process  AT  BT  Start  End  WT  TAT\\n\");\n    for (int finished = 0; finished < n; finished++) {\n        int best = -1;\n        for (int i = 0; i < n; i++) {\n            if (p[i].done || p[i].arrival > time) continue;\n            if (best == -1 || p[i].burst < p[best].burst ||\n                (p[i].burst == p[best].burst &&\n                 (p[i].arrival < p[best].arrival ||\n                  (p[i].arrival == p[best].arrival &&\n                   p[i].id < p[best].id)))) {\n                best = i;\n            }\n        }\n        if (best == -1) {\n            int next = -1;\n            for (int i = 0; i < n; i++) {\n                if (!p[i].done &&\n                    (next == -1 || p[i].arrival < p[next].arrival ||\n                     (p[i].arrival == p[next].arrival &&\n                      p[i].id < p[next].id))) {\n                    next = i;\n                }\n            }\n            printf(\"CPU idle: %d-%d\\n\", time, p[next].arrival);\n            time = p[next].arrival;\n            best = next;\n        }\n        int start = time;\n        time += p[best].burst;\n        int wt = start - p[best].arrival;\n        int tat = time - p[best].arrival;\n        total_wt += wt;\n        total_tat += tat;\n        p[best].done = 1;\n        printf(\"P%d        %d   %d     %d    %d    %d    %d\\n\",\n               p[best].id, p[best].arrival, p[best].burst,\n               start, time, wt, tat);\n    }\n    printf(\"Average WT: %.2f\\n\", (double)total_wt / n);\n    printf(\"Average TAT: %.2f\\n\", (double)total_tat / n);\n    return 0;\n}", "output": "Number of processes (1-10): 4\nP1 arrival and burst: 0 6\nP2 arrival and burst: 1 3\nP3 arrival and burst: 2 1\nP4 arrival and burst: 3 2\n\nNon-preemptive SJF schedule:\nProcess  AT  BT  Start  End  WT  TAT\nP1        0   6     0    6    0    6\nP3        2   1     6    7    4    5\nP4        3   2     7    9    4    6\nP2        1   3     9    12    8    11\nAverage WT: 4.00\nAverage TAT: 7.00", "steps": ["Create <code>sjf_input.c<\/code>, compile it, and test the four processes in the example.", "Run again with <code>P1: 0 3<\/code>, <code>P2: 0 3<\/code>, <code>P3: 1 1<\/code>, <code>P4: 2 2<\/code>.", "Record the process order, Gantt chart, and average waiting and turnaround times. Explain why P1 runs before P2 at time 0.", "Test an invalid burst time of <code>0<\/code> and record the error message."], "evidence": "Screenshots showing the updated four-process schedule, averages, and invalid-input message.", "quiz": {"q": "At time 0, P1 and P2 are ready with equal burst times. What breaks the tie?", "options": ["Lower process ID (P1)", "Highest process ID (P2)", "Random selection"], "correct": 0, "explain": "The program uses earlier arrival, then lower process ID for equal bursts. P1 wins this tie."}, "tip": "For the second test, the order is P1 → P3 → P4 → P2. Average WT is 2.50 and average TAT is 4.75. Invalid burst times must be rejected.", "accent": "#8050c8", "soft": "#f4edff"}];
+const shots = {};
+const PREFIX="csci300-week13-";
+const $=id=>document.getElementById(id);
+function toast(msg){let el=$("toast");el.textContent=msg;el.classList.add("show");clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.classList.remove("show"),2000)}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function updateProgress(){
+ let boxes=[...document.querySelectorAll("input[data-task]")], done=boxes.filter(x=>x.checked).length;
+ let pct=Math.round(done/boxes.length*100);
+ $("progress-bar").style.width=pct+"%";$("progress-number").textContent=pct+"%";
+}
+for(let box of document.querySelectorAll("input[data-task]")){
+ box.checked=localStorage.getItem(PREFIX+box.dataset.task)==="1";
+ box.closest(".step").classList.toggle("done",box.checked);
+ box.addEventListener("change",()=>{localStorage.setItem(PREFIX+box.dataset.task,box.checked?"1":"0");box.closest(".step").classList.toggle("done",box.checked);updateProgress()});
+}
+updateProgress();
+for(let el of document.querySelectorAll("[data-save]")){
+ el.value=localStorage.getItem(PREFIX+el.dataset.save)||"";
+ el.addEventListener("input",()=>localStorage.setItem(PREFIX+el.dataset.save,el.value));
+}
+for(let el of document.querySelectorAll("[data-final]")){
+ el.checked=localStorage.getItem(PREFIX+"final-"+el.dataset.final)==="1";
+ el.addEventListener("change",()=>localStorage.setItem(PREFIX+"final-"+el.dataset.final,el.checked?"1":"0"));
+}
+async function copyText(s){
+ try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(s)}else{let t=document.createElement("textarea");t.value=s;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove()}toast("Copied!")}
+ catch(e){toast("Please select and copy the text manually.")}
+}
+document.addEventListener("click",event=>{
+ let b=event.target.closest("[data-copy]");if(b){copyText(b.dataset.copy);return}
+ b=event.target.closest("[data-copy-script]");if(b){copyText(lessons[Number(b.dataset.copyScript)-1].code);return}
+ b=event.target.closest("[data-answer]");if(b){
+   let wrapper=b.closest("[data-quiz]"),l=lessons[Number(wrapper.dataset.quiz)-1],ans=l.quiz.correct;
+   wrapper.querySelectorAll("[data-answer]").forEach(x=>{x.classList.remove("good","bad");if(Number(x.dataset.answer)===ans)x.classList.add("good")});
+   if(Number(b.dataset.answer)!==ans)b.classList.add("bad");
+   let f=wrapper.querySelector(".feedback");f.textContent=(Number(b.dataset.answer)===ans?"✓ Correct. ":"Try again. ")+l.quiz.explain;f.style.color=Number(b.dataset.answer)===ans?"#087b54":"#ae3642";
+   return;
+ }
+ b=event.target.closest("[data-show]");if(b){let l=lessons[Number(b.dataset.show)-1];$("practice-output-"+l.id).textContent=l.output;return}
+ b=event.target.closest("[data-restore]");if(b){let l=lessons[Number(b.dataset.restore)-1];$("practice-"+l.id).value=l.code;toast("Example script restored.");return}
+});
+for(let input of document.querySelectorAll("[data-shot]")){
+ input.addEventListener("change",()=>{
+   let file=input.files&&input.files[0];if(!file)return;
+   if(!file.type.startsWith("image/")){toast("Choose an image file.");input.value="";return}
+   if(file.size>8*1024*1024){toast("Please use an image smaller than 8 MB.");input.value="";return}
+   let reader=new FileReader();reader.onload=()=>{
+     shots[input.dataset.shot]=reader.result;
+     $("preview-"+input.dataset.shot).innerHTML='<img alt="Attached screenshot" src="'+reader.result+'"><p class="small">✓ '+escapeHTML(file.name)+' attached for this session.</p>';
+     toast("Screenshot attached.");
+   };reader.readAsDataURL(file);
+ });
+}
+$("reset-progress").addEventListener("click",()=>{
+ if(!confirm("Reset the task and submission checkboxes? Student details and current screenshots will stay."))return;
+ document.querySelectorAll("[data-task],[data-final]").forEach(x=>{x.checked=false;localStorage.removeItem(PREFIX+(x.dataset.task||"final-"+x.dataset.final));x.closest(".step")?.classList.remove("done")});
+ updateProgress();toast("Checklists reset.");
+});
+$("download-report").addEventListener("click",()=>{
+ const name=$("student-name").value.trim(),id=$("student-id").value.trim(),section=$("student-section").value.trim(),obs=$("observation").value.trim();
+ const taskSections=lessons.map(l=>'<section class="task"><h2>Task '+l.id+' – '+escapeHTML(l.title)+'</h2><ol>'+l.steps.map((s,i)=>'<li>'+(localStorage.getItem(PREFIX+l.id+"-"+(i+1))==="1"?"☑ ":"☐ ")+s+'</li>').join("")+'</ol><p><b>Required evidence:</b> '+escapeHTML(l.evidence)+'</p>'+(shots[l.id]?'<img alt="Screenshot for Task '+l.id+'" src="'+shots[l.id]+'">':'<p class="missing">No screenshot attached.</p>')+'</section>').join("");
+ const report='<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>CSCI 300 Week 13 Lab Report</title><style>body{font-family:Arial,sans-serif;max-width:900px;margin:25px auto;padding:0 18px;color:#203653;line-height:1.55}h1{color:#0d4c99;border-bottom:4px solid #0d4c99;padding-bottom:10px}h2{color:#155aab}.task{border-bottom:1px solid #cbd8e8;padding:15px 0;break-inside:avoid}.task img{max-width:100%;max-height:650px;object-fit:contain;border:1px solid #bccddd;border-radius:8px}li{margin:7px 0}.missing{color:#a9293b}button{padding:10px 14px;background:#145db1;color:#fff;border:0;border-radius:8px;font-weight:bold}@media print{button{display:none}.task{break-inside:avoid}}</style></head><body><button onclick="window.print()">Print / Save as PDF</button><h1>CSCI 300 – Operating Systems<br>Week 13 Lab – SJF Scheduling Algorithms</h1><p><b>Student Name:</b> '+escapeHTML(name||"Not entered")+'<br><b>Student ID:</b> '+escapeHTML(id||"Not entered")+'<br><b>Section:</b> '+escapeHTML(section||"Not entered")+'<br><b>Date:</b> '+escapeHTML(new Date().toLocaleDateString())+'</p>'+taskSections+'<h2>Task 4 Observation</h2><p>'+escapeHTML(obs||"Not entered")+'</p><p>Complete all C threading programs in Ubuntu Terminal. Review screenshots before submission.</p></body></html>';
+ const blob=new Blob([report],{type:"text/html;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download=(id||"StudentID").replace(/[^a-zA-Z0-9_-]/g,"_")+"_Week13_Lab_Report.html";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);toast("Report downloaded!");
+});
+
+
+// Non-preemptive SJF visualizer: select the shortest currently ready job.
+const sampleSJF=[{at:0,bt:5},{at:1,bt:3},{at:2,bt:1},{at:4,bt:2}];
+const sjfColors=['#1c65b8','#0d986f','#d7850c','#8050c8'];
+function calculateSJF(){
+  const processes=[];
+  for(let i=1;i<=4;i++){
+    const a=$('at'+i).value.trim(),b=$('bt'+i).value.trim();
+    const at=Number(a),bt=Number(b);
+    if(a===''||b===''||!Number.isSafeInteger(at)||!Number.isSafeInteger(bt)||at<0||at>100||bt<1||bt>100){
+      $('sim-message').textContent='Enter whole-number arrivals from 0 to 100 and bursts from 1 to 100.';
+      $('sim-message').classList.add('error');return;
+    }
+    processes.push({id:i,at,bt,done:false});
+  }
+  $('sim-message').textContent='At each decision, choose the shortest ready job. Equal bursts: earlier arrival, then lower process ID. Gray means CPU idle.';
+  $('sim-message').classList.remove('error');
+  let time=0,totalWT=0,totalTAT=0;
+  const segments=[],rows=[];
+  for(let finished=0;finished<processes.length;finished++){
+    let ready=processes.filter(p=>!p.done&&p.at<=time);
+    if(!ready.length){
+      const nextArrival=Math.min(...processes.filter(p=>!p.done).map(p=>p.at));
+      segments.push({label:'Idle',start:time,end:nextArrival,color:'#a9b8ca',idle:true});
+      time=nextArrival;ready=processes.filter(p=>!p.done&&p.at<=time);
+    }
+    ready.sort((a,b)=>a.bt-b.bt||a.at-b.at||a.id-b.id);
+    const p=ready[0],start=time;
+    time+=p.bt;p.done=true;
+    const wt=start-p.at,tat=time-p.at;
+    totalWT+=wt;totalTAT+=tat;
+    segments.push({label:'P'+p.id,start,end:time,color:sjfColors[p.id-1],idle:false});
+    rows.push({id:p.id,at:p.at,bt:p.bt,start,end:time,wt,tat});
+  }
+  const gantt=$('gantt-chart');gantt.replaceChildren();
+  for(const [i,s] of segments.entries()){
+    const block=document.createElement('div');block.className='gantt-block'+(s.idle?' idle':'');
+    block.style.setProperty('--weight',String(s.end-s.start));block.style.setProperty('--color',s.color);
+    const name=document.createElement('span');name.textContent=s.label;
+    const duration=document.createElement('small');duration.textContent=(s.end-s.start)+' unit'+(s.end-s.start===1?'':'s');
+    const left=document.createElement('span');left.className='gantt-start';left.textContent=s.start;
+    block.append(name,duration,left);
+    if(i===segments.length-1){const right=document.createElement('span');right.className='gantt-end';right.textContent=s.end;block.append(right)}
+    gantt.append(block);
+  }
+  const body=$('sjf-table-body');body.replaceChildren();
+  for(const r of rows){const tr=document.createElement('tr');
+    for(const v of ['P'+r.id,r.at,r.bt,r.start,r.end,r.wt,r.tat]){
+      const td=document.createElement('td');td.textContent=v;tr.append(td);
+    }
+    body.append(tr);
+  }
+  $('sim-avg-wt').textContent=(totalWT/4).toFixed(2);
+  $('sim-avg-tat').textContent=(totalTAT/4).toFixed(2);
+  $('sim-end').textContent=time;
+}
+$('sjf-calculate').addEventListener('click',calculateSJF);
+$('sjf-reset').addEventListener('click',()=>{
+  sampleSJF.forEach((p,i)=>{$('at'+(i+1)).value=p.at;$('bt'+(i+1)).value=p.bt});
+  calculateSJF();
+});
+calculateSJF();
+</script></body></html>
