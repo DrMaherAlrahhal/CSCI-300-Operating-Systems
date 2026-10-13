@@ -1,1 +1,473 @@
 
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="light" name="color-scheme"/><title>CSCI 300 – Week 14 Lab | File System Calls in C</title><style>
+:root{--navy:#102e61;--blue:#1b62c4;--ink:#203653;--muted:#64758a;--bg:#f3f7fc;--line:#dce6f3;--green:#0b9365;--shadow:0 9px 26px #173d7710}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font:15px/1.55 system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+button,input,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid #f6b53d;outline-offset:3px}
+code,pre,textarea.code-editor{font-family:Consolas,Monaco,'Courier New',monospace}code{overflow-wrap:anywhere}
+.top{background:linear-gradient(115deg,#0b2756,#145cbd 72%,#1694c7);color:#fff;padding:24px 22px}.top-inner{max-width:1200px;margin:auto;display:flex;align-items:center;gap:17px}.logo{font-size:40px;border-radius:18px;padding:9px 15px;background:#ffffff22}.top h1{font-size:clamp(24px,3.5vw,35px);margin:0;line-height:1.2}.top p{margin:5px 0;color:#dceaff}.pill{margin-left:auto;background:#ffedab;color:#19325e;border-radius:50px;padding:9px 15px;font-weight:800;white-space:nowrap}
+.nav{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 3px 13px #0b346510}.nav-inner{max-width:1200px;margin:auto;padding:10px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.nav a{border-radius:9px;color:#31547f;text-decoration:none;padding:9px 11px;font-weight:750;font-size:13px}.nav a:hover{background:#e9f2ff}.nav button{margin-left:auto;border:1px solid #bcd0e9;border-radius:10px;padding:9px 13px;background:#f4f8ff;color:#164987;font-weight:750}
+main{max-width:1200px;margin:24px auto 64px;padding:0 18px}.hero,.lesson,.report,.progress{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:20px}
+.hero{padding:28px 32px;background:linear-gradient(125deg,#fff 65%,#eaf4ff)}.eyebrow{font-size:12px;color:#1b63c4;text-transform:uppercase;letter-spacing:.8px;font-weight:850}.hero h2{font-size:clamp(28px,4vw,43px);letter-spacing:-1px;line-height:1.17;margin:8px 0}.hero p{max-width:800px;color:#536985;font-size:16px;margin:0}.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.tags span{border-radius:10px;background:#e9f3ff;color:#1554a3;padding:7px 11px;font-size:12px;font-weight:800}
+.section-title{font-size:23px;letter-spacing:-.5px;margin:28px 0 15px}.roadmap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.roadmap a{text-decoration:none;color:inherit;background:white;border:1px solid var(--line);border-radius:15px;padding:18px;box-shadow:var(--shadow)}.roadmap b{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--accent);color:white;font-size:20px}.roadmap h3{font-size:15px;line-height:1.35;margin:10px 0 5px}.roadmap p{font-size:12px;color:#667b92;margin:0}
+.progress{display:grid;grid-template-columns:1fr auto;gap:15px;padding:18px 22px;margin-top:20px;align-items:center}.progress h3{margin:0 0 2px;font-size:17px}.progress p{margin:0;color:#66788e;font-size:12px}.bar{height:11px;background:#e8eff8;border-radius:50px;overflow:hidden;margin-top:10px}.bar div{height:100%;width:0;background:linear-gradient(90deg,#11a475,#1fc49d);transition:width .2s}.percent{font-size:27px;color:#0d9466;font-weight:900}
+.lesson{margin-top:20px;overflow:hidden;scroll-margin-top:85px}.lesson-head{background:linear-gradient(100deg,var(--soft),#fff);border-bottom:1px solid var(--line);padding:20px 23px;display:flex;align-items:center;gap:14px}.lesson-num{display:grid;place-items:center;background:var(--accent);border-radius:14px;color:white;font-size:23px;font-weight:900;min-width:53px;height:53px}.lesson-head h3{font-size:22px;line-height:1.24;margin:0}.lesson-head p{margin:4px 0 0;font-size:13px;color:#5d718b}.lesson-body{padding:21px 23px}.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}.explanation,.student{min-width:0}.explanation h4,.student h4{margin:0 0 10px;font-size:17px}.explanation>p{color:#4b617c;margin:0 0 14px}.point{display:flex;gap:10px;align-items:flex-start;background:#f8fbff;border:1px solid #e2eaf5;border-radius:10px;padding:9px 11px;margin:7px 0;font-size:13px}.point strong{min-width:112px;color:#1c568d}
+.commands{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0}.cmd{display:inline-flex;align-items:center;gap:6px;background:#eaf3ff;border-radius:9px;padding:7px 9px;color:#134f98;font-weight:800;font-size:12px}.cmd button{border:0;background:#fff;border-radius:6px;padding:3px 6px;color:#135caa;font-size:11px;font-weight:850}
+.codebox{background:#0e1a2c;border:1px solid #273e5e;border-radius:12px;overflow:hidden;margin-top:12px}.codehead{display:flex;gap:5px;align-items:center;background:#1e2c42;padding:8px 11px;color:#a8c2de;font-size:11px}.dot{width:9px;height:9px;background:#f5666a;border-radius:50%}.dot:nth-child(2){background:#f3c14d}.dot:nth-child(3){background:#35c47c}.codehead span{margin-left:9px}.codebox pre{white-space:pre-wrap;overflow-wrap:anywhere;color:#e5f4ff;padding:15px;margin:0;font-size:12px;line-height:1.65}
+.student{border:2px solid #13a775;background:#f3fcf7;border-radius:16px;padding:17px}.student h4{color:#087b54}.badge{background:#0c9865;color:white;border-radius:7px;padding:4px 9px;font-size:11px;margin-right:7px}.task-intro{font-size:13px;color:#547063}.steps{display:grid;gap:8px;margin-top:12px}.step{background:white;border:1px solid #d0e9db;border-radius:10px;padding:10px;display:flex;align-items:flex-start;gap:9px;font-size:13px}.step input{accent-color:#0a9666;width:17px;height:17px;margin-top:3px;flex-shrink:0}.step.done span{text-decoration:line-through;color:#768f83}
+.evidence{border-top:1px dashed #afdcc8;margin-top:15px;padding-top:12px}.evidence label{display:block;font-weight:800;color:#0b8058;font-size:13px;margin-bottom:7px}.evidence input{font-size:12px;width:100%}.evidence img{display:block;max-width:100%;max-height:250px;object-fit:contain;border:1px solid #b8d4c6;border-radius:10px;margin-top:9px}.result{background:#e3f6ea;border-radius:10px;color:#13663f;font-size:13px;font-weight:750;padding:11px;margin-top:13px}.tip{background:#fff7df;border-left:4px solid #e9ad2a;padding:11px 13px;border-radius:8px;margin-top:13px;color:#765921;font-size:13px}
+.quiz{margin-top:17px;background:#f6f9fe;border:1px solid #dae6f6;border-radius:13px;padding:14px}.quiz strong{display:block;font-size:14px;margin-bottom:9px}.choices{display:flex;flex-wrap:wrap;gap:8px}.choices button{background:#fff;border:1px solid #bed2ea;border-radius:8px;padding:8px 11px;color:#22507f;font-size:13px;font-weight:750}.choices button.good{background:#dff7eb;border-color:#17a76c;color:#0b6f48}.choices button.bad{background:#ffe8ec;border-color:#ef6373;color:#9d2735}.feedback{font-size:13px;margin-top:7px;min-height:19px;font-weight:700}
+.practice{margin-top:17px;border:1px solid #d6e2f1;border-radius:13px;background:#f9fbff;padding:14px}.practice summary{font-weight:800;color:#1a4e91;cursor:pointer}.practice p{font-size:13px;color:#536b85}.practice textarea{display:block;width:100%;min-height:220px;background:#10213b;color:#e8f4ff;border:1px solid #304565;border-radius:10px;padding:12px;font:12px/1.5 Consolas,monospace;resize:vertical}.practice-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.practice-actions button{border:0;background:#155db3;color:#fff;border-radius:8px;padding:9px 12px;font-weight:800;font-size:12px}.practice-actions button.secondary{background:#e7f1ff;color:#17569e}.practice-output{background:#eaf3ff;border-radius:9px;margin-top:9px;padding:11px;white-space:pre-wrap;font:12px/1.5 Consolas,monospace}
+.reference{background:white;border:1px solid var(--line);border-radius:15px;overflow:hidden}table{width:100%;border-collapse:collapse}th{text-align:left;background:#114c96;color:white;padding:11px}td{padding:9px 11px;border-bottom:1px solid #e5edf7;font-size:13px}tr:nth-child(even) td{background:#f6faff}
+.workflow{background:#e8f3ff;border:1px solid #c7dff8;border-radius:16px;padding:17px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;color:#0d4d96;font-weight:800}.workflow span{background:white;padding:8px 11px;border-radius:9px}.workflow b{font-size:21px}
+.report{padding:23px;margin-top:24px}.report h3{margin:0 0 5px;font-size:22px}.report p{color:#5c7189;font-size:13px}.fields{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}.field{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:800;color:#34567e}.field input,.field textarea{border:1px solid #c5d7ed;border-radius:9px;background:#fcfdff;padding:11px;color:#203653;width:100%}.field textarea{min-height:85px;resize:vertical}.checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.checklist label{border:1px solid #dbe6f3;border-radius:10px;background:#fafcff;padding:11px;font-size:13px;font-weight:750}.checklist input{accent-color:#0c9568}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.actions button{border:0;background:#125bb0;color:white;border-radius:10px;padding:11px 15px;font-weight:850}.actions button.green{background:#0b9568}.actions button.secondary{background:#e7f2ff;color:#175599}.small{font-size:12px;color:#71849b}.toast{position:fixed;bottom:20px;right:20px;background:#153b6d;color:#fff;padding:12px 16px;border-radius:10px;box-shadow:0 10px 25px #0003;opacity:0;transform:translateY(12px);transition:.2s;pointer-events:none;z-index:99}.toast.show{opacity:1;transform:translateY(0)}footer{text-align:center;padding:22px;color:#6e8196;font-size:12px}
+@media(max-width:920px){.roadmap{grid-template-columns:repeat(2,1fr)}.cols{grid-template-columns:1fr}.fields{grid-template-columns:1fr}}
+@media(max-width:580px){.top-inner{align-items:flex-start}.pill{display:none}main{padding:0 11px}.hero{padding:22px 18px}.lesson-head{padding:16px}.lesson-body{padding:14px}.lesson-head h3{font-size:18px}.roadmap{grid-template-columns:repeat(2,1fr)}.checklist{grid-template-columns:1fr}.nav-inner{padding:8px}.nav a{padding:6px;font-size:11px}}
+@media print{body{background:white}.top,.nav,.actions,.evidence input,.practice,.toast,footer{display:none!important}main{max-width:none;padding:0}.hero,.lesson,.report{box-shadow:none;break-inside:avoid}.lesson{border:1px solid #999}.cols{grid-template-columns:1fr 1fr}.student{border:1px solid #555}.codebox{print-color-adjust:exact}}
+</style></head>
+<body><header class="top"><div class="top-inner"><div aria-hidden="true" class="logo">🐧</div><div><h1>CSCI 300 – Operating Systems</h1><p>Interactive Linux Labs · Explanation → Example → Student Task</p></div><span class="pill">Ubuntu + Bash</span></div></header>
+<nav class="nav"><div class="nav-inner"><a href="#overview">Overview</a><a href="#lesson-1">Task 1</a><a href="#lesson-2">Task 2</a><a href="#lesson-3">Task 3</a><a href="#lesson-4">Task 4</a><a href="#lab-report">Submission</a><button onclick="window.print()" type="button">🖨 Print</button></div></nav>
+<main><section class="hero" id="overview"><span class="eyebrow">Week 14 Lab · File System Calls in C</span><h2>Explore Files, Directories, and Permissions in C</h2><p>Learn how C programs inspect files, list directories, rename files, and copy data securely. Study each example, then complete the <strong>Student Task</strong> using Ubuntu Terminal.</p><div class="tags"><span>4 lessons</span><span>4 required student tasks</span><span>4 screenshot sections</span><span>Quizzes + code practice</span><span>Downloadable lab report</span></div></section>
+<h2 class="section-title">🗺️ Week 7 Learning Journey</h2><div class="roadmap"><a href="#lesson-1" style="--accent:#2266c8"><b>1</b><h3>How Can C Find Information About a File?</h3><p>Use stat() to check file size and type.</p></a><a href="#lesson-2" style="--accent:#0d996c"><b>2</b><h3>How Can a C Program List a Directory?</h3><p>Use opendir(), readdir(), and closedir().</p></a><a href="#lesson-3" style="--accent:#d7850c"><b>3</b><h3>How Can C Create, Rename, and Remove Files?</h3><p>Use mkdir(), open(), rename(), unlink(), and rmdir().</p></a><a href="#lesson-4" style="--accent:#8050c8"><b>4</b><h3>How Can C Copy a File and Control Permissions?</h3><p>Use open(), read(), write(), close(), and fchmod().</p></a></div>
+<section class="progress"><div><h3>🎯 Your Task Progress</h3><p>Check off each step after completing it in Ubuntu. Checklist progress and student details are saved in this browser.</p><div class="bar"><div id="progress-bar"></div></div></div><strong class="percent" id="progress-number">0%</strong></section>
+<article class="lesson" id="lesson-1" style="--accent:#2266c8;--soft:#eaf3ff">
+<div class="lesson-head"><div class="lesson-num">1</div><div><h3>Lesson 1 – How Can C Find Information About a File?</h3><p>Use stat() to check file size and type.</p></div></div>
+<div class="lesson-body"><div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>The operating system stores information about files, such as their size and type. A C program can request this information using stat(). First, create a sample file in Ubuntu, then let the program inspect it.</p><div class="point"><strong>stat("sample.txt", &amp;info)</strong><span>Read information about sample.txt.</span></div><div class="point"><strong>struct stat</strong><span>Store information returned by stat().</span></div><div class="point"><strong>info.st_size</strong><span>Find the file size in bytes.</span></div><div class="point"><strong>S_ISREG(info.st_mode)</strong><span>Check whether the path is a regular file.</span></div>
+<div class="commands"><span class="cmd"><code>nano file_info.c</code><button data-copy="nano file_info.c" type="button">Copy</button></span><span class="cmd"><code>gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra file_info.c -o file_info</code><button data-copy="gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra file_info.c -o file_info" type="button">Copy</button></span><span class="cmd"><code>./file_info</code><button data-copy="./file_info" type="button">Copy</button></span><span class="cmd"><button data-copy-script="1" type="button">Copy full C program</button></span></div>
+<div class="commands"><span class="cmd"><code>printf 'Hello Linux\n' &gt; sample.txt</code><button data-copy="printf 'Hello Linux\n' &gt; sample.txt" type="button">Copy setup command</button></span></div><div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>file_info.c — example C program</span></div><pre>#include &lt;stdio.h&gt;
+#include &lt;sys/stat.h&gt;
+
+int main(void) {
+    struct stat info;
+
+    if (stat("sample.txt", &amp;info) == -1) {
+        perror("stat");
+        return 1;
+    }
+
+    printf("File: sample.txt\n");
+    printf("Size: %lld bytes\n", (long long)info.st_size);
+
+    if (S_ISREG(info.st_mode)) {
+        printf("Type: regular file\n");
+    } else if (S_ISDIR(info.st_mode)) {
+        printf("Type: directory\n");
+    } else {
+        printf("Type: another file type\n");
+    }
+    return 0;
+}</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Ubuntu Terminal output</span></div><pre>File: sample.txt
+Size: 12 bytes
+Type: regular file</pre></div>
+<div class="tip">💡 The file must exist in the same working folder as the program. Use pwd and ls to check your location.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 1</span> Your turn</h4><p class="task-intro">Write, compile, and run the program in your real Ubuntu Terminal. Tick each step after completing it.</p><div class="steps"><label class="step"><input data-task="1-1" type="checkbox"/><span><b>1.</b> In Ubuntu, create the example file using <code>printf 'Hello Linux\n' &gt; sample.txt</code>.</span></label><label class="step"><input data-task="1-2" type="checkbox"/><span><b>2.</b> Create <code>file_info.c</code>, copy the C example, and compile it using GCC.</span></label><label class="step"><input data-task="1-3" type="checkbox"/><span><b>3.</b> Run <code>./file_info</code> and confirm that it reports a size of <code>12 bytes</code>.</span></label><label class="step"><input data-task="1-4" type="checkbox"/><span><b>4.</b> Change the contents of <code>sample.txt</code> to <code>Operating Systems Lab</code> followed by a newline, run the program again, and compare the file sizes.</span></label></div><div class="evidence"><label for="shot-1">📸 Attach Screenshot 1</label><input accept="image/*" data-shot="1" id="shot-1" type="file"/><div id="preview-1"></div></div><div class="result">Required result: A screenshot showing the file information after changing the sample text.</div></section>
+</div><div class="quiz" data-quiz="1"><strong>🧠 Quick Check: Which field stores the file size returned by stat()?</strong><div class="choices"><button data-answer="0" type="button">st_size</button><button data-answer="1" type="button">st_name</button><button data-answer="2" type="button">st_pid</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the C Program</summary><p>Use this area to review or edit the C code. It does <b>not</b> compile or run C. To see real results, compile with GCC and run in Ubuntu.</p><textarea class="code-editor" id="practice-1" spellcheck="false">#include &lt;stdio.h&gt;
+#include &lt;sys/stat.h&gt;
+
+int main(void) {
+    struct stat info;
+
+    if (stat("sample.txt", &amp;info) == -1) {
+        perror("stat");
+        return 1;
+    }
+
+    printf("File: sample.txt\n");
+    printf("Size: %lld bytes\n", (long long)info.st_size);
+
+    if (S_ISREG(info.st_mode)) {
+        printf("Type: regular file\n");
+    } else if (S_ISDIR(info.st_mode)) {
+        printf("Type: directory\n");
+    } else {
+        printf("Type: another file type\n");
+    }
+    return 0;
+}</textarea><div class="practice-actions"><button data-show="1" type="button">Show example output</button><button class="secondary" data-restore="1" type="button">Restore example program</button></div><div class="practice-output" id="practice-output-1">Choose “Show example output” to see a sample result.</div></details>
+</div></article>
+<article class="lesson" id="lesson-2" style="--accent:#0d996c;--soft:#e8f9f0">
+<div class="lesson-head"><div class="lesson-num">2</div><div><h3>Lesson 2 – How Can a C Program List a Directory?</h3><p>Use opendir(), readdir(), and closedir().</p></div></div>
+<div class="lesson-body"><div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>A directory stores entries for files and subdirectories. C can open a directory and read its entries one at a time. In this example, you will create a small folder containing two files and display their names.</p><div class="point"><strong>opendir("lab14")</strong><span>Open the lab14 directory.</span></div><div class="point"><strong>readdir(dir)</strong><span>Read the next directory entry.</span></div><div class="point"><strong>entry-&gt;d_name</strong><span>Get the entry name.</span></div><div class="point"><strong>closedir(dir)</strong><span>Close the directory when finished.</span></div>
+<div class="commands"><span class="cmd"><code>nano list_files.c</code><button data-copy="nano list_files.c" type="button">Copy</button></span><span class="cmd"><code>gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra list_files.c -o list_files</code><button data-copy="gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra list_files.c -o list_files" type="button">Copy</button></span><span class="cmd"><code>./list_files</code><button data-copy="./list_files" type="button">Copy</button></span><span class="cmd"><button data-copy-script="2" type="button">Copy full C program</button></span></div>
+<div class="commands"><span class="cmd"><code>mkdir -p lab14 &amp;&amp; touch lab14/alpha.txt lab14/beta.txt</code><button data-copy="mkdir -p lab14 &amp;&amp; touch lab14/alpha.txt lab14/beta.txt" type="button">Copy setup command</button></span></div><div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>list_files.c — example C program</span></div><pre>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;dirent.h&gt;
+
+int main(void) {
+    DIR *dir = opendir("lab14");
+    if (dir == NULL) {
+        perror("opendir");
+        return 1;
+    }
+
+    struct dirent *entry;
+    int count = 0;
+    while ((entry = readdir(dir)) != NULL) {
+        if (strcmp(entry-&gt;d_name, ".") == 0 ||
+            strcmp(entry-&gt;d_name, "..") == 0) {
+            continue;
+        }
+        printf("Found: %s\n", entry-&gt;d_name);
+        count++;
+    }
+
+    if (closedir(dir) == -1) {
+        perror("closedir");
+        return 1;
+    }
+    printf("Total entries: %d\n", count);
+    return 0;
+}</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Ubuntu Terminal output</span></div><pre>Found: alpha.txt
+Found: beta.txt
+Total entries: 2</pre></div>
+<div class="tip">💡 The order of file names returned by readdir() is not guaranteed. The total number of entries is the important result.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 2</span> Your turn</h4><p class="task-intro">Write, compile, and run the program in your real Ubuntu Terminal. Tick each step after completing it.</p><div class="steps"><label class="step"><input data-task="2-1" type="checkbox"/><span><b>1.</b> Create the practice folder and two files using <code>mkdir -p lab14</code> and <code>touch lab14/alpha.txt lab14/beta.txt</code>.</span></label><label class="step"><input data-task="2-2" type="checkbox"/><span><b>2.</b> Create and compile <code>list_files.c</code>, then run <code>./list_files</code>.</span></label><label class="step"><input data-task="2-3" type="checkbox"/><span><b>3.</b> Add a third file using <code>touch lab14/gamma.txt</code>.</span></label><label class="step"><input data-task="2-4" type="checkbox"/><span><b>4.</b> Run the program again and confirm that the total number of entries changes from <code>2</code> to <code>3</code>.</span></label></div><div class="evidence"><label for="shot-2">📸 Attach Screenshot 2</label><input accept="image/*" data-shot="2" id="shot-2" type="file"/><div id="preview-2"></div></div><div class="result">Required result: A screenshot showing the three file names and Total entries: 3.</div></section>
+</div><div class="quiz" data-quiz="2"><strong>🧠 Quick Check: Which function returns the next entry from an open directory?</strong><div class="choices"><button data-answer="0" type="button">readdir()</button><button data-answer="1" type="button">readfile()</button><button data-answer="2" type="button">getpid()</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the C Program</summary><p>Use this area to review or edit the C code. It does <b>not</b> compile or run C. To see real results, compile with GCC and run in Ubuntu.</p><textarea class="code-editor" id="practice-2" spellcheck="false">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;dirent.h&gt;
+
+int main(void) {
+    DIR *dir = opendir("lab14");
+    if (dir == NULL) {
+        perror("opendir");
+        return 1;
+    }
+
+    struct dirent *entry;
+    int count = 0;
+    while ((entry = readdir(dir)) != NULL) {
+        if (strcmp(entry-&gt;d_name, ".") == 0 ||
+            strcmp(entry-&gt;d_name, "..") == 0) {
+            continue;
+        }
+        printf("Found: %s\n", entry-&gt;d_name);
+        count++;
+    }
+
+    if (closedir(dir) == -1) {
+        perror("closedir");
+        return 1;
+    }
+    printf("Total entries: %d\n", count);
+    return 0;
+}</textarea><div class="practice-actions"><button data-show="2" type="button">Show example output</button><button class="secondary" data-restore="2" type="button">Restore example program</button></div><div class="practice-output" id="practice-output-2">Choose “Show example output” to see a sample result.</div></details>
+</div></article>
+<article class="lesson" id="lesson-3" style="--accent:#d7850c;--soft:#fff6e6">
+<div class="lesson-head"><div class="lesson-num">3</div><div><h3>Lesson 3 – How Can C Create, Rename, and Remove Files?</h3><p>Use mkdir(), open(), rename(), unlink(), and rmdir().</p></div></div>
+<div class="lesson-body"><div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>File system operations let a program organize its own working files. This example creates a temporary practice folder, creates a file inside it, renames the file, and removes both. It works only with the specially named lab folder.</p><div class="point"><strong>mkdir(path, 0700)</strong><span>Create a directory.</span></div><div class="point"><strong>open(path, O_CREAT | O_EXCL, 0600)</strong><span>Create a new file only if it does not exist.</span></div><div class="point"><strong>rename(old, new)</strong><span>Rename the created file.</span></div><div class="point"><strong>unlink(path) / rmdir(path)</strong><span>Remove the file, then the empty directory.</span></div>
+<div class="commands"><span class="cmd"><code>nano manage_files.c</code><button data-copy="nano manage_files.c" type="button">Copy</button></span><span class="cmd"><code>gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra manage_files.c -o manage_files</code><button data-copy="gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra manage_files.c -o manage_files" type="button">Copy</button></span><span class="cmd"><code>./manage_files</code><button data-copy="./manage_files" type="button">Copy</button></span><span class="cmd"><button data-copy-script="3" type="button">Copy full C program</button></span></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>manage_files.c — example C program</span></div><pre>#include &lt;stdio.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/stat.h&gt;
+
+int main(void) {
+    const char *folder = "lab14_work";
+    const char *old_name = "lab14_work/notes.txt";
+    const char *new_name = "lab14_work/report.txt";
+
+    if (mkdir(folder, 0700) == -1) {
+        perror("mkdir");
+        return 1;
+    }
+    printf("Created directory: %s\n", folder);
+
+    int fd = open(old_name, O_WRONLY | O_CREAT | O_EXCL, 0600);
+    if (fd == -1) {
+        perror("open");
+        return 1;
+    }
+    if (close(fd) == -1) {
+        perror("close");
+        return 1;
+    }
+    printf("Created file: notes.txt\n");
+
+    if (rename(old_name, new_name) == -1) {
+        perror("rename");
+        return 1;
+    }
+    printf("Renamed file: report.txt\n");
+
+    if (unlink(new_name) == -1) {
+        perror("unlink");
+        return 1;
+    }
+    printf("Removed file: report.txt\n");
+
+    if (rmdir(folder) == -1) {
+        perror("rmdir");
+        return 1;
+    }
+    printf("Removed empty directory: %s\n", folder);
+    return 0;
+}</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Ubuntu Terminal output</span></div><pre>Created directory: lab14_work
+Created file: notes.txt
+Renamed file: report.txt
+Removed file: report.txt
+Removed empty directory: lab14_work</pre></div>
+<div class="tip">💡 The example creates and deletes only its own lab14_work folder. Do not change the paths to personal or system folders. If lab14_work already exists, the program stops instead of modifying it.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 3</span> Your turn</h4><p class="task-intro">Write, compile, and run the program in your real Ubuntu Terminal. Tick each step after completing it.</p><div class="steps"><label class="step"><input data-task="3-1" type="checkbox"/><span><b>1.</b> Create <code>manage_files.c</code>, compile it, and run it once in your practice folder.</span></label><label class="step"><input data-task="3-2" type="checkbox"/><span><b>2.</b> Observe the messages for creating, renaming, and removing the file and folder.</span></label><label class="step"><input data-task="3-3" type="checkbox"/><span><b>3.</b> Change <code>notes.txt</code> to <code>draft.txt</code> and <code>report.txt</code> to <code>final.txt</code> everywhere in the program.</span></label><label class="step"><input data-task="3-4" type="checkbox"/><span><b>4.</b> Recompile and run the modified program. Use <code>ls</code> to check that the temporary folder was removed.</span></label></div><div class="evidence"><label for="shot-3">📸 Attach Screenshot 3</label><input accept="image/*" data-shot="3" id="shot-3" type="file"/><div id="preview-3"></div></div><div class="result">Required result: A screenshot showing the modified create, rename, and remove messages and the final ls result.</div></section>
+</div><div class="quiz" data-quiz="3"><strong>🧠 Quick Check: Which function removes a file name from a directory?</strong><div class="choices"><button data-answer="0" type="button">unlink()</button><button data-answer="1" type="button">pthread_join()</button><button data-answer="2" type="button">getuid()</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the C Program</summary><p>Use this area to review or edit the C code. It does <b>not</b> compile or run C. To see real results, compile with GCC and run in Ubuntu.</p><textarea class="code-editor" id="practice-3" spellcheck="false">#include &lt;stdio.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/stat.h&gt;
+
+int main(void) {
+    const char *folder = "lab14_work";
+    const char *old_name = "lab14_work/notes.txt";
+    const char *new_name = "lab14_work/report.txt";
+
+    if (mkdir(folder, 0700) == -1) {
+        perror("mkdir");
+        return 1;
+    }
+    printf("Created directory: %s\n", folder);
+
+    int fd = open(old_name, O_WRONLY | O_CREAT | O_EXCL, 0600);
+    if (fd == -1) {
+        perror("open");
+        return 1;
+    }
+    if (close(fd) == -1) {
+        perror("close");
+        return 1;
+    }
+    printf("Created file: notes.txt\n");
+
+    if (rename(old_name, new_name) == -1) {
+        perror("rename");
+        return 1;
+    }
+    printf("Renamed file: report.txt\n");
+
+    if (unlink(new_name) == -1) {
+        perror("unlink");
+        return 1;
+    }
+    printf("Removed file: report.txt\n");
+
+    if (rmdir(folder) == -1) {
+        perror("rmdir");
+        return 1;
+    }
+    printf("Removed empty directory: %s\n", folder);
+    return 0;
+}</textarea><div class="practice-actions"><button data-show="3" type="button">Show example output</button><button class="secondary" data-restore="3" type="button">Restore example program</button></div><div class="practice-output" id="practice-output-3">Choose “Show example output” to see a sample result.</div></details>
+</div></article>
+<article class="lesson" id="lesson-4" style="--accent:#8050c8;--soft:#f4edff">
+<div class="lesson-head"><div class="lesson-num">4</div><div><h3>Lesson 4 – How Can C Copy a File and Control Permissions?</h3><p>Use open(), read(), write(), close(), and fchmod().</p></div></div>
+<div class="lesson-body"><div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>File copying combines several file system calls. A program opens a source file, reads its bytes, writes them to a new file, and sets permissions. This example refuses to overwrite an existing destination and reports the total bytes copied.</p><div class="point"><strong>open()</strong><span>Open a source file or create a new destination.</span></div><div class="point"><strong>read() / write()</strong><span>Read bytes and write them to the destination.</span></div><div class="point"><strong>fchmod(fd, 0600)</strong><span>Give the owner read and write permission only.</span></div><div class="point"><strong>O_EXCL</strong><span>Refuse to overwrite an existing destination file.</span></div>
+<div class="commands"><span class="cmd"><code>nano copy_file.c</code><button data-copy="nano copy_file.c" type="button">Copy</button></span><span class="cmd"><code>gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra copy_file.c -o copy_file</code><button data-copy="gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra copy_file.c -o copy_file" type="button">Copy</button></span><span class="cmd"><code>./copy_file</code><button data-copy="./copy_file" type="button">Copy</button></span><span class="cmd"><button data-copy-script="4" type="button">Copy full C program</button></span></div>
+<div class="commands"><span class="cmd"><code>printf 'CSCI 300 Week 14\nFile systems in C\n' &gt; source.txt</code><button data-copy="printf 'CSCI 300 Week 14\nFile systems in C\n' &gt; source.txt" type="button">Copy setup command</button></span></div><div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>copy_file.c — example C program</span></div><pre>#include &lt;stdio.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;errno.h&gt;
+
+int main(void) {
+    int src = open("source.txt", O_RDONLY);
+    if (src == -1) {
+        perror("open source");
+        return 1;
+    }
+
+    int dst = open("copy.txt", O_WRONLY | O_CREAT | O_EXCL, 0600);
+    if (dst == -1) {
+        perror("open destination");
+        close(src);
+        return 1;
+    }
+
+    char buffer[256];
+    ssize_t n;
+    long long total = 0;
+    while ((n = read(src, buffer, sizeof(buffer))) &gt; 0) {
+        ssize_t written = 0;
+        while (written &lt; n) {
+            ssize_t m = write(dst, buffer + written, (size_t)(n - written));
+            if (m == -1 &amp;&amp; errno == EINTR) continue;
+            if (m &lt;= 0) {
+                perror("write");
+                close(src);
+                close(dst);
+                return 1;
+            }
+            written += m;
+        }
+        total += n;
+    }
+    if (n == -1) {
+        perror("read");
+        close(src);
+        close(dst);
+        return 1;
+    }
+    if (fchmod(dst, 0600) == -1) {
+        perror("fchmod");
+        close(src);
+        close(dst);
+        return 1;
+    }
+    if (close(src) == -1 || close(dst) == -1) {
+        perror("close");
+        return 1;
+    }
+    printf("Copy completed: %lld bytes.\n", total);
+    printf("Destination permissions: 600\n");
+    return 0;
+}</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Ubuntu Terminal output</span></div><pre>Copy completed: 35 bytes.
+Destination permissions: 600</pre></div>
+<div class="tip">💡 The output size depends on the source text. The program uses 0600 permissions: only the file owner can read and write. It will refuse to overwrite copy.txt or backup.txt if either already exists.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 4</span> Your turn</h4><p class="task-intro">Write, compile, and run the program in your real Ubuntu Terminal. Tick each step after completing it.</p><div class="steps"><label class="step"><input data-task="4-1" type="checkbox"/><span><b>1.</b> Create <code>source.txt</code> using the setup command shown on the left, then compile <code>copy_file.c</code>.</span></label><label class="step"><input data-task="4-2" type="checkbox"/><span><b>2.</b> Run <code>./copy_file</code> and check the output. Use <code>cat copy.txt</code> and <code>ls -l copy.txt</code> to inspect the result.</span></label><label class="step"><input data-task="4-3" type="checkbox"/><span><b>3.</b> Change the destination filename in the C code from <code>copy.txt</code> to <code>backup.txt</code>.</span></label><label class="step"><input data-task="4-4" type="checkbox"/><span><b>4.</b> Add a new line to <code>source.txt</code>, recompile, and run the modified program. Check the content and permissions of <code>backup.txt</code>.</span></label></div><div class="evidence"><label for="shot-4">📸 Attach Screenshot 4</label><input accept="image/*" data-shot="4" id="shot-4" type="file"/><div id="preview-4"></div></div><div class="result">Required result: One or two screenshots showing the updated byte count, the copied content, and owner-only read/write permissions for backup.txt.</div></section>
+</div><div class="quiz" data-quiz="4"><strong>🧠 Quick Check: Why does the example use O_EXCL when creating the destination file?</strong><div class="choices"><button data-answer="0" type="button">To run two threads</button><button data-answer="1" type="button">To avoid overwriting an existing file</button><button data-answer="2" type="button">To increase CPU speed</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the C Program</summary><p>Use this area to review or edit the C code. It does <b>not</b> compile or run C. To see real results, compile with GCC and run in Ubuntu.</p><textarea class="code-editor" id="practice-4" spellcheck="false">#include &lt;stdio.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;errno.h&gt;
+
+int main(void) {
+    int src = open("source.txt", O_RDONLY);
+    if (src == -1) {
+        perror("open source");
+        return 1;
+    }
+
+    int dst = open("copy.txt", O_WRONLY | O_CREAT | O_EXCL, 0600);
+    if (dst == -1) {
+        perror("open destination");
+        close(src);
+        return 1;
+    }
+
+    char buffer[256];
+    ssize_t n;
+    long long total = 0;
+    while ((n = read(src, buffer, sizeof(buffer))) &gt; 0) {
+        ssize_t written = 0;
+        while (written &lt; n) {
+            ssize_t m = write(dst, buffer + written, (size_t)(n - written));
+            if (m == -1 &amp;&amp; errno == EINTR) continue;
+            if (m &lt;= 0) {
+                perror("write");
+                close(src);
+                close(dst);
+                return 1;
+            }
+            written += m;
+        }
+        total += n;
+    }
+    if (n == -1) {
+        perror("read");
+        close(src);
+        close(dst);
+        return 1;
+    }
+    if (fchmod(dst, 0600) == -1) {
+        perror("fchmod");
+        close(src);
+        close(dst);
+        return 1;
+    }
+    if (close(src) == -1 || close(dst) == -1) {
+        perror("close");
+        return 1;
+    }
+    printf("Copy completed: %lld bytes.\n", total);
+    printf("Destination permissions: 600\n");
+    return 0;
+}</textarea><div class="practice-actions"><button data-show="4" type="button">Show example output</button><button class="secondary" data-restore="4" type="button">Restore example program</button></div><div class="practice-output" id="practice-output-4">Choose “Show example output” to see a sample result.</div></details>
+</div></article>
+<h2 class="section-title">📘 Quick Bash Reference</h2><div class="reference"><table><thead><tr><th>Syntax / Command</th><th>Purpose</th><th>Example</th></tr></thead><tbody><tr><td><code>stat()</code></td><td>Get file information</td><td><code>stat("sample.txt", &amp;info)</code></td></tr><tr><td><code>st_size</code></td><td>File size in bytes</td><td><code>info.st_size</code></td></tr><tr><td><code>S_ISREG()</code></td><td>Check for a regular file</td><td><code>S_ISREG(info.st_mode)</code></td></tr><tr><td><code>opendir()</code></td><td>Open a directory</td><td><code>opendir("lab14")</code></td></tr><tr><td><code>readdir()</code></td><td>Read directory entries</td><td><code>readdir(dir)</code></td></tr><tr><td><code>closedir()</code></td><td>Close a directory</td><td><code>closedir(dir)</code></td></tr><tr><td><code>mkdir()</code></td><td>Create a directory</td><td><code>mkdir("lab14_work", 0700)</code></td></tr><tr><td><code>rename()</code></td><td>Rename a file</td><td><code>rename(old_name, new_name)</code></td></tr><tr><td><code>unlink()</code></td><td>Remove a file entry</td><td><code>unlink(new_name)</code></td></tr><tr><td><code>rmdir()</code></td><td>Remove an empty directory</td><td><code>rmdir(folder)</code></td></tr><tr><td><code>read() / write()</code></td><td>Transfer file data</td><td><code>read(src, buffer, sizeof(buffer))</code></td></tr><tr><td><code>fchmod()</code></td><td>Change permissions of an open file</td><td><code>fchmod(dst, 0600)</code></td></tr><tr><td><code>O_EXCL</code></td><td>Avoid overwriting existing files</td><td><code>O_CREAT | O_EXCL</code></td></tr></tbody></table></div>
+<h2 class="section-title">🔄 Complete Week 7 Flow</h2><div class="workflow"><span>Prepare lab files</span><b>→</b><span>Write C program</span><b>→</b><span>Compile with GCC</span><b>→</b><span>Run file system calls</span><b>→</b><span>Inspect results</span></div>
+<section class="report" id="lab-report"><h3>📝 Student Information &amp; Submission</h3><p>Complete the four file system programs in Ubuntu Terminal, attach your screenshots, and download your report.</p><div class="fields"><label class="field">Student Name<input data-save="name" id="student-name" placeholder="Your full name"/></label><label class="field">Student ID<input data-save="id" id="student-id" placeholder="Your university ID"/></label><label class="field">Section<input data-save="section" id="student-section" placeholder="Your section"/></label></div>
+<label class="field">Task 4 observation: What changed in the number of bytes copied after editing source.txt, and what does permission 600 mean?<textarea data-save="observation" id="observation" placeholder="Write your observation here..."></textarea></label>
+<h4>Final submission checklist</h4><div class="checklist"><label><input data-final="0" type="checkbox"/> Task 1 screenshot attached</label><label><input data-final="1" type="checkbox"/> Task 2 screenshot attached</label><label><input data-final="2" type="checkbox"/> Task 3 screenshot attached</label><label><input data-final="3" type="checkbox"/> Task 4 screenshot attached</label><label><input data-final="4" type="checkbox"/> Student name and ID entered</label><label><input data-final="5" type="checkbox"/> All four C programs compiled and tested in Ubuntu</label></div>
+<div class="actions"><button class="green" id="download-report" type="button">⬇ Download Completed Lab Report</button><button class="secondary" onclick="window.print()" type="button">🖨 Print / Save as PDF</button><button class="secondary" id="reset-progress" type="button">↺ Reset Checklists</button></div><p class="small">The report downloads as an HTML file with the screenshots currently attached. Open it to print or save as PDF. Screenshots are kept only while this page is open; no work is submitted automatically. The practice area shows example output and does not execute C code.</p></section></main>
+<footer>CSCI 300 – Operating Systems · Week 14 Lab – File System Calls in C</footer><div aria-live="polite" class="toast" id="toast" role="status"></div><script>
+const lessons = [{"id": 1, "icon": "📄", "title": "How Can C Find Information About a File?", "subtitle": "Use stat() to check file size and type.", "why": "The operating system stores information about files, such as their size and type. A C program can request this information using stat(). First, create a sample file in Ubuntu, then let the program inspect it.", "concepts": [["stat(\"sample.txt\", &info)", "Read information about sample.txt."], ["struct stat", "Store information returned by stat()."], ["info.st_size", "Find the file size in bytes."], ["S_ISREG(info.st_mode)", "Check whether the path is a regular file."]], "filename": "file_info.c", "program": "file_info", "setup": "printf 'Hello Linux\\n' > sample.txt", "code": "#include <stdio.h>\n#include <sys/stat.h>\n\nint main(void) {\n    struct stat info;\n\n    if (stat(\"sample.txt\", &info) == -1) {\n        perror(\"stat\");\n        return 1;\n    }\n\n    printf(\"File: sample.txt\\n\");\n    printf(\"Size: %lld bytes\\n\", (long long)info.st_size);\n\n    if (S_ISREG(info.st_mode)) {\n        printf(\"Type: regular file\\n\");\n    } else if (S_ISDIR(info.st_mode)) {\n        printf(\"Type: directory\\n\");\n    } else {\n        printf(\"Type: another file type\\n\");\n    }\n    return 0;\n}", "output": "File: sample.txt\nSize: 12 bytes\nType: regular file", "steps": ["In Ubuntu, create the example file using <code>printf 'Hello Linux\\n' &gt; sample.txt<\/code>.", "Create <code>file_info.c<\/code>, copy the C example, and compile it using GCC.", "Run <code>./file_info<\/code> and confirm that it reports a size of <code>12 bytes<\/code>.", "Change the contents of <code>sample.txt<\/code> to <code>Operating Systems Lab<\/code> followed by a newline, run the program again, and compare the file sizes."], "evidence": "A screenshot showing the file information after changing the sample text.", "quiz": {"q": "Which field stores the file size returned by stat()?", "options": ["st_size", "st_name", "st_pid"], "correct": 0, "explain": "The st_size field stores the size of a regular file in bytes."}, "tip": "The file must exist in the same working folder as the program. Use pwd and ls to check your location.", "accent": "#2266c8", "soft": "#eaf3ff"}, {"id": 2, "icon": "📂", "title": "How Can a C Program List a Directory?", "subtitle": "Use opendir(), readdir(), and closedir().", "why": "A directory stores entries for files and subdirectories. C can open a directory and read its entries one at a time. In this example, you will create a small folder containing two files and display their names.", "concepts": [["opendir(\"lab14\")", "Open the lab14 directory."], ["readdir(dir)", "Read the next directory entry."], ["entry->d_name", "Get the entry name."], ["closedir(dir)", "Close the directory when finished."]], "filename": "list_files.c", "program": "list_files", "setup": "mkdir -p lab14 && touch lab14/alpha.txt lab14/beta.txt", "code": "#include <stdio.h>\n#include <string.h>\n#include <dirent.h>\n\nint main(void) {\n    DIR *dir = opendir(\"lab14\");\n    if (dir == NULL) {\n        perror(\"opendir\");\n        return 1;\n    }\n\n    struct dirent *entry;\n    int count = 0;\n    while ((entry = readdir(dir)) != NULL) {\n        if (strcmp(entry->d_name, \".\") == 0 ||\n            strcmp(entry->d_name, \"..\") == 0) {\n            continue;\n        }\n        printf(\"Found: %s\\n\", entry->d_name);\n        count++;\n    }\n\n    if (closedir(dir) == -1) {\n        perror(\"closedir\");\n        return 1;\n    }\n    printf(\"Total entries: %d\\n\", count);\n    return 0;\n}", "output": "Found: alpha.txt\nFound: beta.txt\nTotal entries: 2", "steps": ["Create the practice folder and two files using <code>mkdir -p lab14<\/code> and <code>touch lab14/alpha.txt lab14/beta.txt<\/code>.", "Create and compile <code>list_files.c<\/code>, then run <code>./list_files<\/code>.", "Add a third file using <code>touch lab14/gamma.txt<\/code>.", "Run the program again and confirm that the total number of entries changes from <code>2<\/code> to <code>3<\/code>."], "evidence": "A screenshot showing the three file names and Total entries: 3.", "quiz": {"q": "Which function returns the next entry from an open directory?", "options": ["readdir()", "readfile()", "getpid()"], "correct": 0, "explain": "readdir() returns one directory entry at a time until no entries remain."}, "tip": "The order of file names returned by readdir() is not guaranteed. The total number of entries is the important result.", "accent": "#0d996c", "soft": "#e8f9f0"}, {"id": 3, "icon": "🗂️", "title": "How Can C Create, Rename, and Remove Files?", "subtitle": "Use mkdir(), open(), rename(), unlink(), and rmdir().", "why": "File system operations let a program organize its own working files. This example creates a temporary practice folder, creates a file inside it, renames the file, and removes both. It works only with the specially named lab folder.", "concepts": [["mkdir(path, 0700)", "Create a directory."], ["open(path, O_CREAT | O_EXCL, 0600)", "Create a new file only if it does not exist."], ["rename(old, new)", "Rename the created file."], ["unlink(path) / rmdir(path)", "Remove the file, then the empty directory."]], "filename": "manage_files.c", "program": "manage_files", "setup": "", "code": "#include <stdio.h>\n#include <fcntl.h>\n#include <unistd.h>\n#include <sys/stat.h>\n\nint main(void) {\n    const char *folder = \"lab14_work\";\n    const char *old_name = \"lab14_work/notes.txt\";\n    const char *new_name = \"lab14_work/report.txt\";\n\n    if (mkdir(folder, 0700) == -1) {\n        perror(\"mkdir\");\n        return 1;\n    }\n    printf(\"Created directory: %s\\n\", folder);\n\n    int fd = open(old_name, O_WRONLY | O_CREAT | O_EXCL, 0600);\n    if (fd == -1) {\n        perror(\"open\");\n        return 1;\n    }\n    if (close(fd) == -1) {\n        perror(\"close\");\n        return 1;\n    }\n    printf(\"Created file: notes.txt\\n\");\n\n    if (rename(old_name, new_name) == -1) {\n        perror(\"rename\");\n        return 1;\n    }\n    printf(\"Renamed file: report.txt\\n\");\n\n    if (unlink(new_name) == -1) {\n        perror(\"unlink\");\n        return 1;\n    }\n    printf(\"Removed file: report.txt\\n\");\n\n    if (rmdir(folder) == -1) {\n        perror(\"rmdir\");\n        return 1;\n    }\n    printf(\"Removed empty directory: %s\\n\", folder);\n    return 0;\n}", "output": "Created directory: lab14_work\nCreated file: notes.txt\nRenamed file: report.txt\nRemoved file: report.txt\nRemoved empty directory: lab14_work", "steps": ["Create <code>manage_files.c<\/code>, compile it, and run it once in your practice folder.", "Observe the messages for creating, renaming, and removing the file and folder.", "Change <code>notes.txt<\/code> to <code>draft.txt<\/code> and <code>report.txt<\/code> to <code>final.txt<\/code> everywhere in the program.", "Recompile and run the modified program. Use <code>ls<\/code> to check that the temporary folder was removed."], "evidence": "A screenshot showing the modified create, rename, and remove messages and the final ls result.", "quiz": {"q": "Which function removes a file name from a directory?", "options": ["unlink()", "pthread_join()", "getuid()"], "correct": 0, "explain": "unlink() removes a directory entry for a file. rmdir() removes an empty directory."}, "tip": "The example creates and deletes only its own lab14_work folder. Do not change the paths to personal or system folders. If lab14_work already exists, the program stops instead of modifying it.", "accent": "#d7850c", "soft": "#fff6e6"}, {"id": 4, "icon": "🔐", "title": "How Can C Copy a File and Control Permissions?", "subtitle": "Use open(), read(), write(), close(), and fchmod().", "why": "File copying combines several file system calls. A program opens a source file, reads its bytes, writes them to a new file, and sets permissions. This example refuses to overwrite an existing destination and reports the total bytes copied.", "concepts": [["open()", "Open a source file or create a new destination."], ["read() / write()", "Read bytes and write them to the destination."], ["fchmod(fd, 0600)", "Give the owner read and write permission only."], ["O_EXCL", "Refuse to overwrite an existing destination file."]], "filename": "copy_file.c", "program": "copy_file", "setup": "printf 'CSCI 300 Week 14\\nFile systems in C\\n' > source.txt", "code": "#include <stdio.h>\n#include <fcntl.h>\n#include <unistd.h>\n#include <sys/stat.h>\n#include <errno.h>\n\nint main(void) {\n    int src = open(\"source.txt\", O_RDONLY);\n    if (src == -1) {\n        perror(\"open source\");\n        return 1;\n    }\n\n    int dst = open(\"copy.txt\", O_WRONLY | O_CREAT | O_EXCL, 0600);\n    if (dst == -1) {\n        perror(\"open destination\");\n        close(src);\n        return 1;\n    }\n\n    char buffer[256];\n    ssize_t n;\n    long long total = 0;\n    while ((n = read(src, buffer, sizeof(buffer))) > 0) {\n        ssize_t written = 0;\n        while (written < n) {\n            ssize_t m = write(dst, buffer + written, (size_t)(n - written));\n            if (m == -1 && errno == EINTR) continue;\n            if (m <= 0) {\n                perror(\"write\");\n                close(src);\n                close(dst);\n                return 1;\n            }\n            written += m;\n        }\n        total += n;\n    }\n    if (n == -1) {\n        perror(\"read\");\n        close(src);\n        close(dst);\n        return 1;\n    }\n    if (fchmod(dst, 0600) == -1) {\n        perror(\"fchmod\");\n        close(src);\n        close(dst);\n        return 1;\n    }\n    if (close(src) == -1 || close(dst) == -1) {\n        perror(\"close\");\n        return 1;\n    }\n    printf(\"Copy completed: %lld bytes.\\n\", total);\n    printf(\"Destination permissions: 600\\n\");\n    return 0;\n}", "output": "Copy completed: 35 bytes.\nDestination permissions: 600", "steps": ["Create <code>source.txt<\/code> using the setup command shown on the left, then compile <code>copy_file.c<\/code>.", "Run <code>./copy_file<\/code> and check the output. Use <code>cat copy.txt<\/code> and <code>ls -l copy.txt<\/code> to inspect the result.", "Change the destination filename in the C code from <code>copy.txt<\/code> to <code>backup.txt<\/code>.", "Add a new line to <code>source.txt<\/code>, recompile, and run the modified program. Check the content and permissions of <code>backup.txt<\/code>."], "evidence": "One or two screenshots showing the updated byte count, the copied content, and owner-only read/write permissions for backup.txt.", "quiz": {"q": "Why does the example use O_EXCL when creating the destination file?", "options": ["To run two threads", "To avoid overwriting an existing file", "To increase CPU speed"], "correct": 1, "explain": "With O_CREAT, O_EXCL causes open() to fail if the destination already exists."}, "tip": "The output size depends on the source text. The program uses 0600 permissions: only the file owner can read and write. It will refuse to overwrite copy.txt or backup.txt if either already exists.", "accent": "#8050c8", "soft": "#f4edff"}];
+const shots = {};
+const PREFIX="csci300-week14-";
+const $=id=>document.getElementById(id);
+function toast(msg){let el=$("toast");el.textContent=msg;el.classList.add("show");clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.classList.remove("show"),2000)}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function updateProgress(){
+ let boxes=[...document.querySelectorAll("input[data-task]")], done=boxes.filter(x=>x.checked).length;
+ let pct=Math.round(done/boxes.length*100);
+ $("progress-bar").style.width=pct+"%";$("progress-number").textContent=pct+"%";
+}
+for(let box of document.querySelectorAll("input[data-task]")){
+ box.checked=localStorage.getItem(PREFIX+box.dataset.task)==="1";
+ box.closest(".step").classList.toggle("done",box.checked);
+ box.addEventListener("change",()=>{localStorage.setItem(PREFIX+box.dataset.task,box.checked?"1":"0");box.closest(".step").classList.toggle("done",box.checked);updateProgress()});
+}
+updateProgress();
+for(let el of document.querySelectorAll("[data-save]")){
+ el.value=localStorage.getItem(PREFIX+el.dataset.save)||"";
+ el.addEventListener("input",()=>localStorage.setItem(PREFIX+el.dataset.save,el.value));
+}
+for(let el of document.querySelectorAll("[data-final]")){
+ el.checked=localStorage.getItem(PREFIX+"final-"+el.dataset.final)==="1";
+ el.addEventListener("change",()=>localStorage.setItem(PREFIX+"final-"+el.dataset.final,el.checked?"1":"0"));
+}
+async function copyText(s){
+ try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(s)}else{let t=document.createElement("textarea");t.value=s;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove()}toast("Copied!")}
+ catch(e){toast("Please select and copy the text manually.")}
+}
+document.addEventListener("click",event=>{
+ let b=event.target.closest("[data-copy]");if(b){copyText(b.dataset.copy);return}
+ b=event.target.closest("[data-copy-script]");if(b){copyText(lessons[Number(b.dataset.copyScript)-1].code);return}
+ b=event.target.closest("[data-answer]");if(b){
+   let wrapper=b.closest("[data-quiz]"),l=lessons[Number(wrapper.dataset.quiz)-1],ans=l.quiz.correct;
+   wrapper.querySelectorAll("[data-answer]").forEach(x=>{x.classList.remove("good","bad");if(Number(x.dataset.answer)===ans)x.classList.add("good")});
+   if(Number(b.dataset.answer)!==ans)b.classList.add("bad");
+   let f=wrapper.querySelector(".feedback");f.textContent=(Number(b.dataset.answer)===ans?"✓ Correct. ":"Try again. ")+l.quiz.explain;f.style.color=Number(b.dataset.answer)===ans?"#087b54":"#ae3642";
+   return;
+ }
+ b=event.target.closest("[data-show]");if(b){let l=lessons[Number(b.dataset.show)-1];$("practice-output-"+l.id).textContent=l.output;return}
+ b=event.target.closest("[data-restore]");if(b){let l=lessons[Number(b.dataset.restore)-1];$("practice-"+l.id).value=l.code;toast("Example script restored.");return}
+});
+for(let input of document.querySelectorAll("[data-shot]")){
+ input.addEventListener("change",()=>{
+   let file=input.files&&input.files[0];if(!file)return;
+   if(!file.type.startsWith("image/")){toast("Choose an image file.");input.value="";return}
+   if(file.size>8*1024*1024){toast("Please use an image smaller than 8 MB.");input.value="";return}
+   let reader=new FileReader();reader.onload=()=>{
+     shots[input.dataset.shot]=reader.result;
+     $("preview-"+input.dataset.shot).innerHTML='<img alt="Attached screenshot" src="'+reader.result+'"><p class="small">✓ '+escapeHTML(file.name)+' attached for this session.</p>';
+     toast("Screenshot attached.");
+   };reader.readAsDataURL(file);
+ });
+}
+$("reset-progress").addEventListener("click",()=>{
+ if(!confirm("Reset the task and submission checkboxes? Student details and current screenshots will stay."))return;
+ document.querySelectorAll("[data-task],[data-final]").forEach(x=>{x.checked=false;localStorage.removeItem(PREFIX+(x.dataset.task||"final-"+x.dataset.final));x.closest(".step")?.classList.remove("done")});
+ updateProgress();toast("Checklists reset.");
+});
+$("download-report").addEventListener("click",()=>{
+ const name=$("student-name").value.trim(),id=$("student-id").value.trim(),section=$("student-section").value.trim(),obs=$("observation").value.trim();
+ const taskSections=lessons.map(l=>'<section class="task"><h2>Task '+l.id+' – '+escapeHTML(l.title)+'</h2><ol>'+l.steps.map((s,i)=>'<li>'+(localStorage.getItem(PREFIX+l.id+"-"+(i+1))==="1"?"☑ ":"☐ ")+s+'</li>').join("")+'</ol><p><b>Required evidence:</b> '+escapeHTML(l.evidence)+'</p>'+(shots[l.id]?'<img alt="Screenshot for Task '+l.id+'" src="'+shots[l.id]+'">':'<p class="missing">No screenshot attached.</p>')+'</section>').join("");
+ const report='<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>CSCI 300 Week 14 Lab Report</title><style>body{font-family:Arial,sans-serif;max-width:900px;margin:25px auto;padding:0 18px;color:#203653;line-height:1.55}h1{color:#0d4c99;border-bottom:4px solid #0d4c99;padding-bottom:10px}h2{color:#155aab}.task{border-bottom:1px solid #cbd8e8;padding:15px 0;break-inside:avoid}.task img{max-width:100%;max-height:650px;object-fit:contain;border:1px solid #bccddd;border-radius:8px}li{margin:7px 0}.missing{color:#a9293b}button{padding:10px 14px;background:#145db1;color:#fff;border:0;border-radius:8px;font-weight:bold}@media print{button{display:none}.task{break-inside:avoid}}</style></head><body><button onclick="window.print()">Print / Save as PDF</button><h1>CSCI 300 – Operating Systems<br>Week 14 Lab – File System Calls in C</h1><p><b>Student Name:</b> '+escapeHTML(name||"Not entered")+'<br><b>Student ID:</b> '+escapeHTML(id||"Not entered")+'<br><b>Section:</b> '+escapeHTML(section||"Not entered")+'<br><b>Date:</b> '+escapeHTML(new Date().toLocaleDateString())+'</p>'+taskSections+'<h2>Task 4 Observation</h2><p>'+escapeHTML(obs||"Not entered")+'</p><p>Complete all C file system programs in Ubuntu Terminal. Review screenshots before submission.</p></body></html>';
+ const blob=new Blob([report],{type:"text/html;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download=(id||"StudentID").replace(/[^a-zA-Z0-9_-]/g,"_")+"_Week14_Lab_Report.html";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);toast("Report downloaded!");
+});
+</script></body></html>
