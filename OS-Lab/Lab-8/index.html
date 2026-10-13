@@ -1,1 +1,286 @@
 
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="light" name="color-scheme"/><title>CSCI 300 – Week 8 Lab | Functions Using Shell Programming</title><style>
+:root{--navy:#102e61;--blue:#1b62c4;--ink:#203653;--muted:#64758a;--bg:#f3f7fc;--line:#dce6f3;--green:#0b9365;--shadow:0 9px 26px #173d7710}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font:15px/1.55 system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+button,input,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid #f6b53d;outline-offset:3px}
+code,pre,textarea.code-editor{font-family:Consolas,Monaco,'Courier New',monospace}code{overflow-wrap:anywhere}
+.top{background:linear-gradient(115deg,#0b2756,#145cbd 72%,#1694c7);color:#fff;padding:24px 22px}.top-inner{max-width:1200px;margin:auto;display:flex;align-items:center;gap:17px}.logo{font-size:40px;border-radius:18px;padding:9px 15px;background:#ffffff22}.top h1{font-size:clamp(24px,3.5vw,35px);margin:0;line-height:1.2}.top p{margin:5px 0;color:#dceaff}.pill{margin-left:auto;background:#ffedab;color:#19325e;border-radius:50px;padding:9px 15px;font-weight:800;white-space:nowrap}
+.nav{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 3px 13px #0b346510}.nav-inner{max-width:1200px;margin:auto;padding:10px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.nav a{border-radius:9px;color:#31547f;text-decoration:none;padding:9px 11px;font-weight:750;font-size:13px}.nav a:hover{background:#e9f2ff}.nav button{margin-left:auto;border:1px solid #bcd0e9;border-radius:10px;padding:9px 13px;background:#f4f8ff;color:#164987;font-weight:750}
+main{max-width:1200px;margin:24px auto 64px;padding:0 18px}.hero,.lesson,.report,.progress{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:20px}
+.hero{padding:28px 32px;background:linear-gradient(125deg,#fff 65%,#eaf4ff)}.eyebrow{font-size:12px;color:#1b63c4;text-transform:uppercase;letter-spacing:.8px;font-weight:850}.hero h2{font-size:clamp(28px,4vw,43px);letter-spacing:-1px;line-height:1.17;margin:8px 0}.hero p{max-width:800px;color:#536985;font-size:16px;margin:0}.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.tags span{border-radius:10px;background:#e9f3ff;color:#1554a3;padding:7px 11px;font-size:12px;font-weight:800}
+.section-title{font-size:23px;letter-spacing:-.5px;margin:28px 0 15px}.roadmap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.roadmap a{text-decoration:none;color:inherit;background:white;border:1px solid var(--line);border-radius:15px;padding:18px;box-shadow:var(--shadow)}.roadmap b{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--accent);color:white;font-size:20px}.roadmap h3{font-size:15px;line-height:1.35;margin:10px 0 5px}.roadmap p{font-size:12px;color:#667b92;margin:0}
+.progress{display:grid;grid-template-columns:1fr auto;gap:15px;padding:18px 22px;margin-top:20px;align-items:center}.progress h3{margin:0 0 2px;font-size:17px}.progress p{margin:0;color:#66788e;font-size:12px}.bar{height:11px;background:#e8eff8;border-radius:50px;overflow:hidden;margin-top:10px}.bar div{height:100%;width:0;background:linear-gradient(90deg,#11a475,#1fc49d);transition:width .2s}.percent{font-size:27px;color:#0d9466;font-weight:900}
+.lesson{margin-top:20px;overflow:hidden;scroll-margin-top:85px}.lesson-head{background:linear-gradient(100deg,var(--soft),#fff);border-bottom:1px solid var(--line);padding:20px 23px;display:flex;align-items:center;gap:14px}.lesson-num{display:grid;place-items:center;background:var(--accent);border-radius:14px;color:white;font-size:23px;font-weight:900;min-width:53px;height:53px}.lesson-head h3{font-size:22px;line-height:1.24;margin:0}.lesson-head p{margin:4px 0 0;font-size:13px;color:#5d718b}.lesson-body{padding:21px 23px}.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}.explanation,.student{min-width:0}.explanation h4,.student h4{margin:0 0 10px;font-size:17px}.explanation>p{color:#4b617c;margin:0 0 14px}.point{display:flex;gap:10px;align-items:flex-start;background:#f8fbff;border:1px solid #e2eaf5;border-radius:10px;padding:9px 11px;margin:7px 0;font-size:13px}.point strong{min-width:112px;color:#1c568d}
+.commands{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0}.cmd{display:inline-flex;align-items:center;gap:6px;background:#eaf3ff;border-radius:9px;padding:7px 9px;color:#134f98;font-weight:800;font-size:12px}.cmd button{border:0;background:#fff;border-radius:6px;padding:3px 6px;color:#135caa;font-size:11px;font-weight:850}
+.codebox{background:#0e1a2c;border:1px solid #273e5e;border-radius:12px;overflow:hidden;margin-top:12px}.codehead{display:flex;gap:5px;align-items:center;background:#1e2c42;padding:8px 11px;color:#a8c2de;font-size:11px}.dot{width:9px;height:9px;background:#f5666a;border-radius:50%}.dot:nth-child(2){background:#f3c14d}.dot:nth-child(3){background:#35c47c}.codehead span{margin-left:9px}.codebox pre{white-space:pre-wrap;overflow-wrap:anywhere;color:#e5f4ff;padding:15px;margin:0;font-size:12px;line-height:1.65}
+.student{border:2px solid #13a775;background:#f3fcf7;border-radius:16px;padding:17px}.student h4{color:#087b54}.badge{background:#0c9865;color:white;border-radius:7px;padding:4px 9px;font-size:11px;margin-right:7px}.task-intro{font-size:13px;color:#547063}.steps{display:grid;gap:8px;margin-top:12px}.step{background:white;border:1px solid #d0e9db;border-radius:10px;padding:10px;display:flex;align-items:flex-start;gap:9px;font-size:13px}.step input{accent-color:#0a9666;width:17px;height:17px;margin-top:3px;flex-shrink:0}.step.done span{text-decoration:line-through;color:#768f83}
+.evidence{border-top:1px dashed #afdcc8;margin-top:15px;padding-top:12px}.evidence label{display:block;font-weight:800;color:#0b8058;font-size:13px;margin-bottom:7px}.evidence input{font-size:12px;width:100%}.evidence img{display:block;max-width:100%;max-height:250px;object-fit:contain;border:1px solid #b8d4c6;border-radius:10px;margin-top:9px}.result{background:#e3f6ea;border-radius:10px;color:#13663f;font-size:13px;font-weight:750;padding:11px;margin-top:13px}.tip{background:#fff7df;border-left:4px solid #e9ad2a;padding:11px 13px;border-radius:8px;margin-top:13px;color:#765921;font-size:13px}
+.quiz{margin-top:17px;background:#f6f9fe;border:1px solid #dae6f6;border-radius:13px;padding:14px}.quiz strong{display:block;font-size:14px;margin-bottom:9px}.choices{display:flex;flex-wrap:wrap;gap:8px}.choices button{background:#fff;border:1px solid #bed2ea;border-radius:8px;padding:8px 11px;color:#22507f;font-size:13px;font-weight:750}.choices button.good{background:#dff7eb;border-color:#17a76c;color:#0b6f48}.choices button.bad{background:#ffe8ec;border-color:#ef6373;color:#9d2735}.feedback{font-size:13px;margin-top:7px;min-height:19px;font-weight:700}
+.practice{margin-top:17px;border:1px solid #d6e2f1;border-radius:13px;background:#f9fbff;padding:14px}.practice summary{font-weight:800;color:#1a4e91;cursor:pointer}.practice p{font-size:13px;color:#536b85}.practice textarea{display:block;width:100%;min-height:220px;background:#10213b;color:#e8f4ff;border:1px solid #304565;border-radius:10px;padding:12px;font:12px/1.5 Consolas,monospace;resize:vertical}.practice-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.practice-actions button{border:0;background:#155db3;color:#fff;border-radius:8px;padding:9px 12px;font-weight:800;font-size:12px}.practice-actions button.secondary{background:#e7f1ff;color:#17569e}.practice-output{background:#eaf3ff;border-radius:9px;margin-top:9px;padding:11px;white-space:pre-wrap;font:12px/1.5 Consolas,monospace}
+.reference{background:white;border:1px solid var(--line);border-radius:15px;overflow:hidden}table{width:100%;border-collapse:collapse}th{text-align:left;background:#114c96;color:white;padding:11px}td{padding:9px 11px;border-bottom:1px solid #e5edf7;font-size:13px}tr:nth-child(even) td{background:#f6faff}
+.workflow{background:#e8f3ff;border:1px solid #c7dff8;border-radius:16px;padding:17px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;color:#0d4d96;font-weight:800}.workflow span{background:white;padding:8px 11px;border-radius:9px}.workflow b{font-size:21px}
+.report{padding:23px;margin-top:24px}.report h3{margin:0 0 5px;font-size:22px}.report p{color:#5c7189;font-size:13px}.fields{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}.field{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:800;color:#34567e}.field input,.field textarea{border:1px solid #c5d7ed;border-radius:9px;background:#fcfdff;padding:11px;color:#203653;width:100%}.field textarea{min-height:85px;resize:vertical}.checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.checklist label{border:1px solid #dbe6f3;border-radius:10px;background:#fafcff;padding:11px;font-size:13px;font-weight:750}.checklist input{accent-color:#0c9568}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.actions button{border:0;background:#125bb0;color:white;border-radius:10px;padding:11px 15px;font-weight:850}.actions button.green{background:#0b9568}.actions button.secondary{background:#e7f2ff;color:#175599}.small{font-size:12px;color:#71849b}.toast{position:fixed;bottom:20px;right:20px;background:#153b6d;color:#fff;padding:12px 16px;border-radius:10px;box-shadow:0 10px 25px #0003;opacity:0;transform:translateY(12px);transition:.2s;pointer-events:none;z-index:99}.toast.show{opacity:1;transform:translateY(0)}footer{text-align:center;padding:22px;color:#6e8196;font-size:12px}
+@media(max-width:920px){.roadmap{grid-template-columns:repeat(2,1fr)}.cols{grid-template-columns:1fr}.fields{grid-template-columns:1fr}}
+@media(max-width:580px){.top-inner{align-items:flex-start}.pill{display:none}main{padding:0 11px}.hero{padding:22px 18px}.lesson-head{padding:16px}.lesson-body{padding:14px}.lesson-head h3{font-size:18px}.roadmap{grid-template-columns:repeat(2,1fr)}.checklist{grid-template-columns:1fr}.nav-inner{padding:8px}.nav a{padding:6px;font-size:11px}}
+@media print{body{background:white}.top,.nav,.actions,.evidence input,.practice,.toast,footer{display:none!important}main{max-width:none;padding:0}.hero,.lesson,.report{box-shadow:none;break-inside:avoid}.lesson{border:1px solid #999}.cols{grid-template-columns:1fr 1fr}.student{border:1px solid #555}.codebox{print-color-adjust:exact}}
+</style></head>
+<body><header class="top"><div class="top-inner"><div aria-hidden="true" class="logo">🐧</div><div><h1>CSCI 300 – Operating Systems</h1><p>Interactive Linux Labs · Explanation → Example → Student Task</p></div><span class="pill">Ubuntu + Bash</span></div></header>
+<nav class="nav"><div class="nav-inner"><a href="#overview">Overview</a><a href="#lesson-1">Task 1</a><a href="#lesson-2">Task 2</a><a href="#lesson-3">Task 3</a><a href="#lesson-4">Task 4</a><a href="#lab-report">Submission</a><button onclick="window.print()" type="button">🖨 Print</button></div></nav>
+<main><section class="hero" id="overview"><span class="eyebrow">Week 8 Lab · Functions Using Shell Programming</span><h2>Build Reusable Programs with Bash Functions</h2><p>Learn how to define, call, and reuse shell functions. Read the explanation first, review the Bash example, then complete the clearly marked <strong>Student Task</strong> in Ubuntu Terminal.</p><div class="tags"><span>4 lessons</span><span>4 required student tasks</span><span>4 screenshot sections</span><span>Quizzes + code practice</span><span>Downloadable lab report</span></div></section>
+<h2 class="section-title">🗺️ Week 7 Learning Journey</h2><div class="roadmap"><a href="#lesson-1" style="--accent:#2266c8"><b>1</b><h3>How Can We Create and Call a Shell Function?</h3><p>Define a function and run it by name.</p></a><a href="#lesson-2" style="--accent:#0d996c"><b>2</b><h3>How Can We Send Information to a Function?</h3><p>Use function parameters such as $1.</p></a><a href="#lesson-3" style="--accent:#d7850c"><b>3</b><h3>How Can a Function Make a Decision?</h3><p>Pass marks to a function that checks the result.</p></a><a href="#lesson-4" style="--accent:#8050c8"><b>4</b><h3>How Can Functions Process Several Numbers?</h3><p>Combine a function, a loop, and arithmetic.</p></a></div>
+<section class="progress"><div><h3>🎯 Your Task Progress</h3><p>Check off each step after completing it in Ubuntu. Checklist progress and student details are saved in this browser.</p><div class="bar"><div id="progress-bar"></div></div></div><strong class="percent" id="progress-number">0%</strong></section>
+<article class="lesson" id="lesson-1" style="--accent:#2266c8;--soft:#eaf3ff">
+<div class="lesson-head"><div class="lesson-num">1</div><div><h3>Lesson 1 – How Can We Create and Call a Shell Function?</h3><p>Define a function and run it by name.</p></div></div>
+<div class="lesson-body">
+<div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>A function is a named group of commands. Instead of writing the same commands many times, we define them once and call the function whenever needed.</p><div class="point"><strong>greet() { ... }</strong><span>Define a function named greet.</span></div><div class="point"><strong>echo</strong><span>Display a message in Terminal.</span></div><div class="point"><strong>greet</strong><span>Call the function to run its commands.</span></div><div class="point"><strong>}</strong><span>End the function definition.</span></div>
+<div class="commands"><span class="cmd"><code>nano greeting.sh</code><button data-copy="nano greeting.sh" type="button">Copy</button></span><span class="cmd"><code>bash greeting.sh</code><button data-copy="bash greeting.sh" type="button">Copy</button></span><span class="cmd"><button data-copy-script="1" type="button">Copy full script</button></span></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>greeting.sh — example Bash script</span></div><pre>#!/bin/bash
+greet() {
+    echo "Welcome to CSCI 300!"
+    echo "We are learning shell functions."
+}
+
+echo "Starting the program..."
+greet
+echo "Program finished."</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Terminal result</span></div><pre>Starting the program...
+Welcome to CSCI 300!
+We are learning shell functions.
+Program finished.</pre></div>
+<div class="tip">💡 Define the function before calling it. Bash uses the function name without parentheses when calling it.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 1</span> Your turn</h4>
+<p class="task-intro">Run the script in your real Ubuntu Terminal. Tick each step after completing it.</p>
+<div class="steps"><label class="step"><input data-task="1-1" type="checkbox"/><span><b>1.</b> Create <code>greeting.sh</code> using <code>nano greeting.sh</code>.</span></label><label class="step"><input data-task="1-2" type="checkbox"/><span><b>2.</b> Type the example script, save it, and exit nano.</span></label><label class="step"><input data-task="1-3" type="checkbox"/><span><b>3.</b> Run the script using <code>bash greeting.sh</code>.</span></label><label class="step"><input data-task="1-4" type="checkbox"/><span><b>4.</b> Change the second message to <code>I can call a shell function.</code> and run the script again.</span></label></div>
+<div class="evidence"><label for="shot-1">📸 Attach Screenshot 1</label><input accept="image/*" data-shot="1" id="shot-1" type="file"/><div id="preview-1"></div></div>
+<div class="result">Required result: One screenshot showing the updated greeting messages in Ubuntu Terminal.</div>
+</section>
+</div>
+<div class="quiz" data-quiz="1"><strong>🧠 Quick Check: How do you call a function named greet?</strong><div class="choices"><button data-answer="0" type="button">run greet()</button><button data-answer="1" type="button">greet</button><button data-answer="2" type="button">echo function</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the Bash Script</summary><p>Use this area to review or edit the script. It does <b>not</b> execute Bash. To see real output, run the code in Ubuntu.</p><textarea class="code-editor" id="practice-1" spellcheck="false">#!/bin/bash
+greet() {
+    echo "Welcome to CSCI 300!"
+    echo "We are learning shell functions."
+}
+
+echo "Starting the program..."
+greet
+echo "Program finished."</textarea><div class="practice-actions"><button data-show="1" type="button">Show example output</button><button class="secondary" data-restore="1" type="button">Restore example script</button></div><div class="practice-output" id="practice-output-1">Choose “Show example output” to see the expected result.</div></details>
+</div>
+</article>
+<article class="lesson" id="lesson-2" style="--accent:#0d996c;--soft:#e8f9f0">
+<div class="lesson-head"><div class="lesson-num">2</div><div><h3>Lesson 2 – How Can We Send Information to a Function?</h3><p>Use function parameters such as $1.</p></div></div>
+<div class="lesson-body">
+<div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>Functions become more useful when they accept information. Inside a function, $1 represents the first argument passed to it. We can use read to ask the student for a name and pass that name to a function.</p><div class="point"><strong>read -r -p</strong><span>Ask the user to enter a value.</span></div><div class="point"><strong>welcome_student "$name"</strong><span>Call the function with one argument.</span></div><div class="point"><strong>$1</strong><span>Access the first function argument.</span></div><div class="point"><strong>"$name"</strong><span>Keep the student's full name together as one argument.</span></div>
+<div class="commands"><span class="cmd"><code>nano student_welcome.sh</code><button data-copy="nano student_welcome.sh" type="button">Copy</button></span><span class="cmd"><code>bash student_welcome.sh</code><button data-copy="bash student_welcome.sh" type="button">Copy</button></span><span class="cmd"><button data-copy-script="2" type="button">Copy full script</button></span></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>student_welcome.sh — example Bash script</span></div><pre>#!/bin/bash
+welcome_student() {
+    echo "Hello, $1!"
+    echo "Welcome to the Operating Systems lab."
+}
+
+read -r -p "Enter your name: " name
+welcome_student "$name"</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Terminal result</span></div><pre>Enter your name: Sara Ahmed
+Hello, Sara Ahmed!
+Welcome to the Operating Systems lab.</pre></div>
+<div class="tip">💡 For the last two steps, you can add read -r -p "Enter your ID: " student_id and call welcome_student "$name" "$student_id". Inside the function, print $2.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 2</span> Your turn</h4>
+<p class="task-intro">Run the script in your real Ubuntu Terminal. Tick each step after completing it.</p>
+<div class="steps"><label class="step"><input data-task="2-1" type="checkbox"/><span><b>1.</b> Create <code>student_welcome.sh</code> and enter the example script.</span></label><label class="step"><input data-task="2-2" type="checkbox"/><span><b>2.</b> Run <code>bash student_welcome.sh</code> and enter your full name.</span></label><label class="step"><input data-task="2-3" type="checkbox"/><span><b>3.</b> Add a second function argument for your student ID and display it using <code>$2</code>.</span></label><label class="step"><input data-task="2-4" type="checkbox"/><span><b>4.</b> Run the modified script and confirm that it displays both your name and student ID.</span></label></div>
+<div class="evidence"><label for="shot-2">📸 Attach Screenshot 2</label><input accept="image/*" data-shot="2" id="shot-2" type="file"/><div id="preview-2"></div></div>
+<div class="result">Required result: One screenshot showing your full name and student ID printed by the function.</div>
+</section>
+</div>
+<div class="quiz" data-quiz="2"><strong>🧠 Quick Check: Inside a function, what does $2 refer to?</strong><div class="choices"><button data-answer="0" type="button">The second argument</button><button data-answer="1" type="button">The second script file</button><button data-answer="2" type="button">Two repetitions</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the Bash Script</summary><p>Use this area to review or edit the script. It does <b>not</b> execute Bash. To see real output, run the code in Ubuntu.</p><textarea class="code-editor" id="practice-2" spellcheck="false">#!/bin/bash
+welcome_student() {
+    echo "Hello, $1!"
+    echo "Welcome to the Operating Systems lab."
+}
+
+read -r -p "Enter your name: " name
+welcome_student "$name"</textarea><div class="practice-actions"><button data-show="2" type="button">Show example output</button><button class="secondary" data-restore="2" type="button">Restore example script</button></div><div class="practice-output" id="practice-output-2">Choose “Show example output” to see the expected result.</div></details>
+</div>
+</article>
+<article class="lesson" id="lesson-3" style="--accent:#d7850c;--soft:#fff6e6">
+<div class="lesson-head"><div class="lesson-num">3</div><div><h3>Lesson 3 – How Can a Function Make a Decision?</h3><p>Pass marks to a function that checks the result.</p></div></div>
+<div class="lesson-body">
+<div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>We can combine functions with decision making. The function receives a mark, checks it using if and else, and displays Pass or Needs Improvement. We can reuse the same function for different marks.</p><div class="point"><strong>local mark="$1"</strong><span>Store the function argument in a local variable.</span></div><div class="point"><strong>if (( mark &gt;= 50 ))</strong><span>Check the passing threshold.</span></div><div class="point"><strong>else</strong><span>Choose the alternative result.</span></div><div class="point"><strong>check_result 75</strong><span>Call the function with a particular mark.</span></div>
+<div class="commands"><span class="cmd"><code>nano check_result.sh</code><button data-copy="nano check_result.sh" type="button">Copy</button></span><span class="cmd"><code>bash check_result.sh</code><button data-copy="bash check_result.sh" type="button">Copy</button></span><span class="cmd"><button data-copy-script="3" type="button">Copy full script</button></span></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>check_result.sh — example Bash script</span></div><pre>#!/bin/bash
+check_result() {
+    local mark="$1"
+
+    if (( mark &gt;= 50 )); then
+        echo "Mark $mark: Pass"
+    else
+        echo "Mark $mark: Needs Improvement"
+    fi
+}
+
+check_result 75
+check_result 40</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Terminal result</span></div><pre>Mark 75: Pass
+Mark 40: Needs Improvement</pre></div>
+<div class="tip">💡 Check the Excellent condition (mark &gt;= 85) first, then Pass (mark &gt;= 50), then the else case.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 3</span> Your turn</h4>
+<p class="task-intro">Run the script in your real Ubuntu Terminal. Tick each step after completing it.</p>
+<div class="steps"><label class="step"><input data-task="3-1" type="checkbox"/><span><b>1.</b> Create <code>check_result.sh</code> and enter the example script.</span></label><label class="step"><input data-task="3-2" type="checkbox"/><span><b>2.</b> Run <code>bash check_result.sh</code> and check the results for 75 and 40.</span></label><label class="step"><input data-task="3-3" type="checkbox"/><span><b>3.</b> Change the function calls to test marks <code>90</code>, <code>49</code>, and <code>50</code>.</span></label><label class="step"><input data-task="3-4" type="checkbox"/><span><b>4.</b> Add another result for marks of <code>85</code> or above: display <code>Excellent</code> before checking for Pass.</span></label></div>
+<div class="evidence"><label for="shot-3">📸 Attach Screenshot 3</label><input accept="image/*" data-shot="3" id="shot-3" type="file"/><div id="preview-3"></div></div>
+<div class="result">Required result: One or two screenshots showing Excellent, Pass, and Needs Improvement for the modified script.</div>
+</section>
+</div>
+<div class="quiz" data-quiz="3"><strong>🧠 Quick Check: Why do we use local mark="$1" inside the function?</strong><div class="choices"><button data-answer="0" type="button">To create a folder</button><button data-answer="1" type="button">To keep mark local to this function</button><button data-answer="2" type="button">To end the function</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the Bash Script</summary><p>Use this area to review or edit the script. It does <b>not</b> execute Bash. To see real output, run the code in Ubuntu.</p><textarea class="code-editor" id="practice-3" spellcheck="false">#!/bin/bash
+check_result() {
+    local mark="$1"
+
+    if (( mark &gt;= 50 )); then
+        echo "Mark $mark: Pass"
+    else
+        echo "Mark $mark: Needs Improvement"
+    fi
+}
+
+check_result 75
+check_result 40</textarea><div class="practice-actions"><button data-show="3" type="button">Show example output</button><button class="secondary" data-restore="3" type="button">Restore example script</button></div><div class="practice-output" id="practice-output-3">Choose “Show example output” to see the expected result.</div></details>
+</div>
+</article>
+<article class="lesson" id="lesson-4" style="--accent:#8050c8;--soft:#f4edff">
+<div class="lesson-head"><div class="lesson-num">4</div><div><h3>Lesson 4 – How Can Functions Process Several Numbers?</h3><p>Combine a function, a loop, and arithmetic.</p></div></div>
+<div class="lesson-body">
+<div class="cols">
+<section class="explanation"><h4>📖 First: Explanation and Example</h4><p>A function can process several values. The special parameter "$@" represents all arguments. A for loop can visit each number, add them, and calculate an average. The local keyword keeps variables inside the function.</p><div class="point"><strong>"$@"</strong><span>Access all arguments given to the function.</span></div><div class="point"><strong>for number in "$@"</strong><span>Process each argument in turn.</span></div><div class="point"><strong>local total=0</strong><span>Create a total variable inside the function.</span></div><div class="point"><strong>$(( total / count ))</strong><span>Calculate an integer average.</span></div>
+<div class="commands"><span class="cmd"><code>nano calculate_average.sh</code><button data-copy="nano calculate_average.sh" type="button">Copy</button></span><span class="cmd"><code>bash calculate_average.sh</code><button data-copy="bash calculate_average.sh" type="button">Copy</button></span><span class="cmd"><button data-copy-script="4" type="button">Copy full script</button></span></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>calculate_average.sh — example Bash script</span></div><pre>#!/bin/bash
+calculate_average() {
+    local total=0
+    local count=$#
+    local number
+
+    for number in "$@"
+    do
+        total=$((total + number))
+    done
+
+    echo "Sum: $total"
+    echo "Average: $((total / count))"
+}
+
+echo "Results for 5, 10, 15:"
+calculate_average 5 10 15</pre></div>
+<div class="codebox"><div class="codehead"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>Example Terminal result</span></div><pre>Results for 5, 10, 15:
+Sum: 30
+Average: 10</pre></div>
+<div class="tip">💡 This example uses integer division. For 8, 12, 16, and 20, the sum is 56 and the average is 14. Do not call the function without numbers because that would divide by zero.</div>
+</section>
+<section class="student"><h4><span class="badge">STUDENT TASK 4</span> Your turn</h4>
+<p class="task-intro">Run the script in your real Ubuntu Terminal. Tick each step after completing it.</p>
+<div class="steps"><label class="step"><input data-task="4-1" type="checkbox"/><span><b>1.</b> Create <code>calculate_average.sh</code>, enter the example script, and run it.</span></label><label class="step"><input data-task="4-2" type="checkbox"/><span><b>2.</b> Check that the numbers <code>5 10 15</code> produce a sum of <code>30</code> and average of <code>10</code>.</span></label><label class="step"><input data-task="4-3" type="checkbox"/><span><b>3.</b> Add a second function call with <code>8 12 16 20</code> and check the new sum and average.</span></label><label class="step"><input data-task="4-4" type="checkbox"/><span><b>4.</b> Modify the script to display the number of values processed using <code>$#</code> inside the function.</span></label></div>
+<div class="evidence"><label for="shot-4">📸 Attach Screenshot 4</label><input accept="image/*" data-shot="4" id="shot-4" type="file"/><div id="preview-4"></div></div>
+<div class="result">Required result: One or two screenshots showing both calculations, including the number of values processed.</div>
+</section>
+</div>
+<div class="quiz" data-quiz="4"><strong>🧠 Quick Check: Inside a function, what does "$@" represent?</strong><div class="choices"><button data-answer="0" type="button">Only the first argument</button><button data-answer="1" type="button">All function arguments</button><button data-answer="2" type="button">The current folder</button></div><div aria-live="polite" class="feedback"></div></div>
+<details class="practice"><summary>⌨️ Practice Area – Review or Edit the Bash Script</summary><p>Use this area to review or edit the script. It does <b>not</b> execute Bash. To see real output, run the code in Ubuntu.</p><textarea class="code-editor" id="practice-4" spellcheck="false">#!/bin/bash
+calculate_average() {
+    local total=0
+    local count=$#
+    local number
+
+    for number in "$@"
+    do
+        total=$((total + number))
+    done
+
+    echo "Sum: $total"
+    echo "Average: $((total / count))"
+}
+
+echo "Results for 5, 10, 15:"
+calculate_average 5 10 15</textarea><div class="practice-actions"><button data-show="4" type="button">Show example output</button><button class="secondary" data-restore="4" type="button">Restore example script</button></div><div class="practice-output" id="practice-output-4">Choose “Show example output” to see the expected result.</div></details>
+</div>
+</article>
+<h2 class="section-title">📘 Quick Bash Reference</h2><div class="reference"><table><thead><tr><th>Syntax / Command</th><th>Purpose</th><th>Example</th></tr></thead><tbody><tr><td><code>function_name() { ... }</code></td><td>Define a shell function</td><td><code>greet() { echo Hello; }</code></td></tr><tr><td><code>function_name</code></td><td>Call a function</td><td><code>greet</code></td></tr><tr><td><code>$1, $2</code></td><td>Access the first and second function arguments</td><td><code>echo "$1 $2"</code></td></tr><tr><td><code>read -r -p</code></td><td>Read a value from the user</td><td><code>read -r -p "Name: " name</code></td></tr><tr><td><code>local</code></td><td>Declare a function-local variable</td><td><code>local mark="$1"</code></td></tr><tr><td><code>if / elif / else / fi</code></td><td>Choose different actions</td><td><code>if (( mark &gt;= 50 )); then</code></td></tr><tr><td><code>for / do / done</code></td><td>Repeat commands in a function</td><td><code>for number in "$@"</code></td></tr><tr><td><code>"$@"</code></td><td>All arguments as separate values</td><td><code>for number in "$@"</code></td></tr><tr><td><code>$#</code></td><td>Number of arguments</td><td><code>local count=$#</code></td></tr><tr><td><code>$(( ... ))</code></td><td>Perform integer arithmetic</td><td><code>total=$((total + number))</code></td></tr><tr><td><code>bash script.sh</code></td><td>Run a Bash script</td><td><code>bash greeting.sh</code></td></tr></tbody></table></div>
+<h2 class="section-title">🔄 Complete Week 7 Flow</h2><div class="workflow"><span>Define function</span><b>→</b><span>Call function</span><b>→</b><span>Pass arguments</span><b>→</b><span>Use decisions + loops</span><b>→</b><span>Check output</span></div>
+<section class="report" id="lab-report"><h3>📝 Student Information &amp; Submission</h3><p>Complete the four functions in Ubuntu Terminal, attach your screenshots, and download your report.</p><div class="fields"><label class="field">Student Name<input data-save="name" id="student-name" placeholder="Your full name"/></label><label class="field">Student ID<input data-save="id" id="student-id" placeholder="Your university ID"/></label><label class="field">Section<input data-save="section" id="student-section" placeholder="Your section"/></label></div>
+<label class="field">Task 4 observation: What are the sums, averages, and number of values processed in both tests?<textarea data-save="observation" id="observation" placeholder="Write your observation here..."></textarea></label>
+<h4>Final submission checklist</h4><div class="checklist"><label><input data-final="0" type="checkbox"/> Task 1 screenshot attached</label><label><input data-final="1" type="checkbox"/> Task 2 screenshot attached</label><label><input data-final="2" type="checkbox"/> Task 3 screenshot attached</label><label><input data-final="3" type="checkbox"/> Task 4 screenshot attached</label><label><input data-final="4" type="checkbox"/> Student name and ID entered</label><label><input data-final="5" type="checkbox"/> All four scripts tested in Ubuntu</label></div>
+<div class="actions"><button class="green" id="download-report" type="button">⬇ Download Completed Lab Report</button><button class="secondary" onclick="window.print()" type="button">🖨 Print / Save as PDF</button><button class="secondary" id="reset-progress" type="button">↺ Reset Checklists</button></div><p class="small">The report downloads as an HTML file with the screenshots currently attached. Open it to print or save as PDF. Screenshots are kept only while this page is open; no work is submitted automatically. The practice area displays example output and does not execute Bash.</p></section></main>
+<footer>CSCI 300 – Operating Systems · Week 8 Lab – Functions Using Shell Programming</footer><div aria-live="polite" class="toast" id="toast" role="status"></div><script>
+const lessons = [{"id": 1, "icon": "👋", "title": "How Can We Create and Call a Shell Function?", "subtitle": "Define a function and run it by name.", "why": "A function is a named group of commands. Instead of writing the same commands many times, we define them once and call the function whenever needed.", "concepts": [["greet() { ... }", "Define a function named greet."], ["echo", "Display a message in Terminal."], ["greet", "Call the function to run its commands."], ["}", "End the function definition."]], "filename": "greeting.sh", "code": "#!/bin/bash\ngreet() {\n    echo \"Welcome to CSCI 300!\"\n    echo \"We are learning shell functions.\"\n}\n\necho \"Starting the program...\"\ngreet\necho \"Program finished.\"", "output": "Starting the program...\nWelcome to CSCI 300!\nWe are learning shell functions.\nProgram finished.", "steps": ["Create <code>greeting.sh<\/code> using <code>nano greeting.sh<\/code>.", "Type the example script, save it, and exit nano.", "Run the script using <code>bash greeting.sh<\/code>.", "Change the second message to <code>I can call a shell function.<\/code> and run the script again."], "evidence": "One screenshot showing the updated greeting messages in Ubuntu Terminal.", "quiz": {"q": "How do you call a function named greet?", "options": ["run greet()", "greet", "echo function"], "correct": 1, "explain": "Write the function name, greet, to execute its commands."}, "tip": "Define the function before calling it. Bash uses the function name without parentheses when calling it.", "accent": "#2266c8", "soft": "#eaf3ff"}, {"id": 2, "icon": "💬", "title": "How Can We Send Information to a Function?", "subtitle": "Use function parameters such as $1.", "why": "Functions become more useful when they accept information. Inside a function, $1 represents the first argument passed to it. We can use read to ask the student for a name and pass that name to a function.", "concepts": [["read -r -p", "Ask the user to enter a value."], ["welcome_student \"$name\"", "Call the function with one argument."], ["$1", "Access the first function argument."], ["\"$name\"", "Keep the student's full name together as one argument."]], "filename": "student_welcome.sh", "code": "#!/bin/bash\nwelcome_student() {\n    echo \"Hello, $1!\"\n    echo \"Welcome to the Operating Systems lab.\"\n}\n\nread -r -p \"Enter your name: \" name\nwelcome_student \"$name\"", "output": "Enter your name: Sara Ahmed\nHello, Sara Ahmed!\nWelcome to the Operating Systems lab.", "steps": ["Create <code>student_welcome.sh<\/code> and enter the example script.", "Run <code>bash student_welcome.sh<\/code> and enter your full name.", "Add a second function argument for your student ID and display it using <code>$2<\/code>.", "Run the modified script and confirm that it displays both your name and student ID."], "evidence": "One screenshot showing your full name and student ID printed by the function.", "quiz": {"q": "Inside a function, what does $2 refer to?", "options": ["The second argument", "The second script file", "Two repetitions"], "correct": 0, "explain": "$2 is the second argument passed to the function."}, "tip": "For the last two steps, you can add read -r -p \"Enter your ID: \" student_id and call welcome_student \"$name\" \"$student_id\". Inside the function, print $2.", "accent": "#0d996c", "soft": "#e8f9f0"}, {"id": 3, "icon": "🎓", "title": "How Can a Function Make a Decision?", "subtitle": "Pass marks to a function that checks the result.", "why": "We can combine functions with decision making. The function receives a mark, checks it using if and else, and displays Pass or Needs Improvement. We can reuse the same function for different marks.", "concepts": [["local mark=\"$1\"", "Store the function argument in a local variable."], ["if (( mark >= 50 ))", "Check the passing threshold."], ["else", "Choose the alternative result."], ["check_result 75", "Call the function with a particular mark."]], "filename": "check_result.sh", "code": "#!/bin/bash\ncheck_result() {\n    local mark=\"$1\"\n\n    if (( mark >= 50 )); then\n        echo \"Mark $mark: Pass\"\n    else\n        echo \"Mark $mark: Needs Improvement\"\n    fi\n}\n\ncheck_result 75\ncheck_result 40", "output": "Mark 75: Pass\nMark 40: Needs Improvement", "steps": ["Create <code>check_result.sh<\/code> and enter the example script.", "Run <code>bash check_result.sh<\/code> and check the results for 75 and 40.", "Change the function calls to test marks <code>90<\/code>, <code>49<\/code>, and <code>50<\/code>.", "Add another result for marks of <code>85<\/code> or above: display <code>Excellent<\/code> before checking for Pass."], "evidence": "One or two screenshots showing Excellent, Pass, and Needs Improvement for the modified script.", "quiz": {"q": "Why do we use local mark=\"$1\" inside the function?", "options": ["To create a folder", "To keep mark local to this function", "To end the function"], "correct": 1, "explain": "local creates a variable scoped to the function."}, "tip": "Check the Excellent condition (mark >= 85) first, then Pass (mark >= 50), then the else case.", "accent": "#d7850c", "soft": "#fff6e6"}, {"id": 4, "icon": "🧮", "title": "How Can Functions Process Several Numbers?", "subtitle": "Combine a function, a loop, and arithmetic.", "why": "A function can process several values. The special parameter \"$@\" represents all arguments. A for loop can visit each number, add them, and calculate an average. The local keyword keeps variables inside the function.", "concepts": [["\"$@\"", "Access all arguments given to the function."], ["for number in \"$@\"", "Process each argument in turn."], ["local total=0", "Create a total variable inside the function."], ["$(( total / count ))", "Calculate an integer average."]], "filename": "calculate_average.sh", "code": "#!/bin/bash\ncalculate_average() {\n    local total=0\n    local count=$#\n    local number\n\n    for number in \"$@\"\n    do\n        total=$((total + number))\n    done\n\n    echo \"Sum: $total\"\n    echo \"Average: $((total / count))\"\n}\n\necho \"Results for 5, 10, 15:\"\ncalculate_average 5 10 15", "output": "Results for 5, 10, 15:\nSum: 30\nAverage: 10", "steps": ["Create <code>calculate_average.sh<\/code>, enter the example script, and run it.", "Check that the numbers <code>5 10 15<\/code> produce a sum of <code>30<\/code> and average of <code>10<\/code>.", "Add a second function call with <code>8 12 16 20<\/code> and check the new sum and average.", "Modify the script to display the number of values processed using <code>$#<\/code> inside the function."], "evidence": "One or two screenshots showing both calculations, including the number of values processed.", "quiz": {"q": "Inside a function, what does \"$@\" represent?", "options": ["Only the first argument", "All function arguments", "The current folder"], "correct": 1, "explain": "\"$@\" represents all arguments, preserving each as a separate value."}, "tip": "This example uses integer division. For 8, 12, 16, and 20, the sum is 56 and the average is 14. Do not call the function without numbers because that would divide by zero.", "accent": "#8050c8", "soft": "#f4edff"}];
+const shots = {};
+const PREFIX="csci300-week8-";
+const $=id=>document.getElementById(id);
+function toast(msg){let el=$("toast");el.textContent=msg;el.classList.add("show");clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.classList.remove("show"),2000)}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function updateProgress(){
+ let boxes=[...document.querySelectorAll("input[data-task]")], done=boxes.filter(x=>x.checked).length;
+ let pct=Math.round(done/boxes.length*100);
+ $("progress-bar").style.width=pct+"%";$("progress-number").textContent=pct+"%";
+}
+for(let box of document.querySelectorAll("input[data-task]")){
+ box.checked=localStorage.getItem(PREFIX+box.dataset.task)==="1";
+ box.closest(".step").classList.toggle("done",box.checked);
+ box.addEventListener("change",()=>{localStorage.setItem(PREFIX+box.dataset.task,box.checked?"1":"0");box.closest(".step").classList.toggle("done",box.checked);updateProgress()});
+}
+updateProgress();
+for(let el of document.querySelectorAll("[data-save]")){
+ el.value=localStorage.getItem(PREFIX+el.dataset.save)||"";
+ el.addEventListener("input",()=>localStorage.setItem(PREFIX+el.dataset.save,el.value));
+}
+for(let el of document.querySelectorAll("[data-final]")){
+ el.checked=localStorage.getItem(PREFIX+"final-"+el.dataset.final)==="1";
+ el.addEventListener("change",()=>localStorage.setItem(PREFIX+"final-"+el.dataset.final,el.checked?"1":"0"));
+}
+async function copyText(s){
+ try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(s)}else{let t=document.createElement("textarea");t.value=s;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove()}toast("Copied!")}
+ catch(e){toast("Please select and copy the text manually.")}
+}
+document.addEventListener("click",event=>{
+ let b=event.target.closest("[data-copy]");if(b){copyText(b.dataset.copy);return}
+ b=event.target.closest("[data-copy-script]");if(b){copyText(lessons[Number(b.dataset.copyScript)-1].code);return}
+ b=event.target.closest("[data-answer]");if(b){
+   let wrapper=b.closest("[data-quiz]"),l=lessons[Number(wrapper.dataset.quiz)-1],ans=l.quiz.correct;
+   wrapper.querySelectorAll("[data-answer]").forEach(x=>{x.classList.remove("good","bad");if(Number(x.dataset.answer)===ans)x.classList.add("good")});
+   if(Number(b.dataset.answer)!==ans)b.classList.add("bad");
+   let f=wrapper.querySelector(".feedback");f.textContent=(Number(b.dataset.answer)===ans?"✓ Correct. ":"Try again. ")+l.quiz.explain;f.style.color=Number(b.dataset.answer)===ans?"#087b54":"#ae3642";
+   return;
+ }
+ b=event.target.closest("[data-show]");if(b){let l=lessons[Number(b.dataset.show)-1];$("practice-output-"+l.id).textContent=l.output;return}
+ b=event.target.closest("[data-restore]");if(b){let l=lessons[Number(b.dataset.restore)-1];$("practice-"+l.id).value=l.code;toast("Example script restored.");return}
+});
+for(let input of document.querySelectorAll("[data-shot]")){
+ input.addEventListener("change",()=>{
+   let file=input.files&&input.files[0];if(!file)return;
+   if(!file.type.startsWith("image/")){toast("Choose an image file.");input.value="";return}
+   if(file.size>8*1024*1024){toast("Please use an image smaller than 8 MB.");input.value="";return}
+   let reader=new FileReader();reader.onload=()=>{
+     shots[input.dataset.shot]=reader.result;
+     $("preview-"+input.dataset.shot).innerHTML='<img alt="Attached screenshot" src="'+reader.result+'"><p class="small">✓ '+escapeHTML(file.name)+' attached for this session.</p>';
+     toast("Screenshot attached.");
+   };reader.readAsDataURL(file);
+ });
+}
+$("reset-progress").addEventListener("click",()=>{
+ if(!confirm("Reset the task and submission checkboxes? Student details and current screenshots will stay."))return;
+ document.querySelectorAll("[data-task],[data-final]").forEach(x=>{x.checked=false;localStorage.removeItem(PREFIX+(x.dataset.task||"final-"+x.dataset.final));x.closest(".step")?.classList.remove("done")});
+ updateProgress();toast("Checklists reset.");
+});
+$("download-report").addEventListener("click",()=>{
+ const name=$("student-name").value.trim(),id=$("student-id").value.trim(),section=$("student-section").value.trim(),obs=$("observation").value.trim();
+ const taskSections=lessons.map(l=>'<section class="task"><h2>Task '+l.id+' – '+escapeHTML(l.title)+'</h2><ol>'+l.steps.map((s,i)=>'<li>'+(localStorage.getItem(PREFIX+l.id+"-"+(i+1))==="1"?"☑ ":"☐ ")+s+'</li>').join("")+'</ol><p><b>Required evidence:</b> '+escapeHTML(l.evidence)+'</p>'+(shots[l.id]?'<img alt="Screenshot for Task '+l.id+'" src="'+shots[l.id]+'">':'<p class="missing">No screenshot attached.</p>')+'</section>').join("");
+ const report='<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>CSCI 300 Week 8 Lab Report</title><style>body{font-family:Arial,sans-serif;max-width:900px;margin:25px auto;padding:0 18px;color:#203653;line-height:1.55}h1{color:#0d4c99;border-bottom:4px solid #0d4c99;padding-bottom:10px}h2{color:#155aab}.task{border-bottom:1px solid #cbd8e8;padding:15px 0;break-inside:avoid}.task img{max-width:100%;max-height:650px;object-fit:contain;border:1px solid #bccddd;border-radius:8px}li{margin:7px 0}.missing{color:#a9293b}button{padding:10px 14px;background:#145db1;color:#fff;border:0;border-radius:8px;font-weight:bold}@media print{button{display:none}.task{break-inside:avoid}}</style></head><body><button onclick="window.print()">Print / Save as PDF</button><h1>CSCI 300 – Operating Systems<br>Week 8 Lab – Functions Using Shell Programming</h1><p><b>Student Name:</b> '+escapeHTML(name||"Not entered")+'<br><b>Student ID:</b> '+escapeHTML(id||"Not entered")+'<br><b>Section:</b> '+escapeHTML(section||"Not entered")+'<br><b>Date:</b> '+escapeHTML(new Date().toLocaleDateString())+'</p>'+taskSections+'<h2>Task 4 Observation</h2><p>'+escapeHTML(obs||"Not entered")+'</p><p>Complete all tasks in Ubuntu Terminal. Review screenshots before submission.</p></body></html>';
+ const blob=new Blob([report],{type:"text/html;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download=(id||"StudentID").replace(/[^a-zA-Z0-9_-]/g,"_")+"_Week8_Lab_Report.html";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);toast("Report downloaded!");
+});
+</script></body></html>
