@@ -1,96 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CSCI 300 - Operating Systems</title>
-  <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: Arial, sans-serif; background: #f2f5fa; color: #142c4c; }
-    header { background: #1c3d70; color: white; text-align: center; padding: 45px 20px; }
-    header h1 { margin: 0 0 18px; }
-    main { max-width: 1100px; margin: 35px auto; padding: 0 20px; }
-    .lab-section { background: white; border: 1px solid #dbe5f1; border-radius: 14px; padding: 28px; margin-bottom: 35px; box-shadow: 0 3px 12px #00000012; }
-    .lab-section h2 { margin-top: 0; }
-    .lab-section p { color: #52647b; line-height: 1.6; }
-    .revision-section { background: #eef7ff; border: 2px solid #8bc4ee; }
-    .revision-button { background: #1c3d70; }
-    .revision-button:hover { background: #11294f; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-    .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 3px 12px #00000012; }
-    .card h2 { margin-top: 0; }
-    .button { display: inline-block; background: #1769aa; color: white; padding: 12px 18px; border-radius: 7px; text-decoration: none; font-weight: bold; }
-    .button:hover { background: #125489; }
-    .lab-button { background: #087e8b; }
-    .lab-button:hover { background: #06636d; }
-    footer { text-align: center; padding: 30px; color: #667; }
-  </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSCI 300 – Operating Systems | Amity University Dubai</title>
+<style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f2f5fa;color:#142c4c;line-height:1.55}header{background:linear-gradient(120deg,#17365f,#24558a);color:#fff;text-align:center;padding:43px 18px}header h1{font-size:clamp(27px,4vw,42px);margin:0 0 8px}header p{margin:5px 0}main{max-width:1160px;margin:34px auto;padding:0 20px}h2{font-size:26px;margin:0 0 20px}section{margin-bottom:42px}.feature{background:#eef7ff;border:2px solid #8bc4ee;border-radius:15px;padding:26px 30px;box-shadow:0 5px 15px #0000000b}.feature p{color:#52647b;margin:10px 0 20px}.feature h2{margin-bottom:8px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:22px}.card{background:white;border-radius:15px;padding:27px 28px;box-shadow:0 5px 14px #142c4c14;border-top:4px solid var(--accent,#1769aa);display:flex;flex-direction:column;min-height:255px}.card h3{font-size:22px;line-height:1.25;margin:0 0 15px}.card p{color:#52647b;margin:0 0 22px;flex:1}.button{display:inline-block;align-self:flex-start;border-radius:8px;padding:12px 18px;color:#fff;background:#1769aa;text-decoration:none;font-weight:700;line-height:1.3}.button:hover,.button:focus-visible{background:#104f83}.button:focus-visible{outline:3px solid #f2b84a;outline-offset:3px}.lab-btn{background:#087e8b}.lab-btn:hover{background:#06636d}.section-note{color:#52647b;margin:-8px 0 22px}.week-card{min-height:195px;padding:23px}.week-card h3{font-size:20px}.week-card p{font-size:15px}.week-card .button{font-size:14px}footer{text-align:center;padding:26px;color:#66758b;border-top:1px solid #dce4ee}@media(max-width:600px){main{padding:0 14px}.feature{padding:22px}.grid{grid-template-columns:1fr}.card{min-height:auto}}
+.lab-wide{background:#fff;border:1px solid #dbe5f1;border-radius:15px;padding:30px 32px;box-shadow:0 5px 14px #142c4c14}.lab-wide h2{margin:0 0 16px}.lab-wide p{color:#52647b;margin:0 0 18px;line-height:1.65}@media(max-width:600px){.lab-wide{padding:24px}}
+</style>
 </head>
 <body>
-  <header>
-    <h1>CSCI 300 - Operating Systems</h1>
-    <p>Interactive Learning Labs</p>
-    <p>Dr. Maher Alrahhal</p>
-  </header>
-  <main>
-    <!-- NEW: Revision section for Weeks 1–7 -->
-    <section class="lab-section revision-section">
-      <h2>📚 Revision – Weeks 1–7</h2>
-      <p>Prepare for your exam with 7 easy writing questions, complete model answers,
-         and 21 interactive multiple-choice questions. Every important term is explained
-         in simple English, with familiar examples and answer feedback.</p>
-      <a class="button revision-button" href="./Revision-Week-1-7/index.html">Open Revision – Weeks 1–7</a>
-    </section>
-
-    <!-- Existing OS Laboratory Section -->
-    <section class="lab-section">
-      <h2>OS Laboratory</h2>
-      <p>Explore 14 weeks of practical Operating Systems laboratory activities,
-         including Linux commands, shell programming, C programming, threads,
-         system calls, and CPU scheduling.</p>
-      <a class="button lab-button" href="./OS-Lab/index.html">Open OS Laboratory - 14 Weeks</a>
-    </section>
-
-    <!-- Existing Weekly Learning Activities -->
-    <h2>Weekly Learning Activities</h2>
-    <div class="grid" id="weeks"></div>
-  </main>
-  <footer>CSCI 300 | Operating Systems</footer>
-  <script>
-    const weeks = [
-      { title: "Week 1", description: "Introduction to Operating Systems", url: "./Week-1/index.html" },
-      { title: "Week 2", url: "./Week-2/index.html" },
-      { title: "Week 3", url: "./Week-3/index.html" },
-      { title: "Week 4", url: "./Week-4/index.html" },
-      { title: "Week 5", url: "./Week-5/index.html" },
-      { title: "Week 6", url: "./Week-6/index.html" },
-      { title: "Week 7", url: "./Week-7/index.html" },
-      { title: "Week 8", url: "./Week-8/index.html" },
-      { title: "Week 9", url: "./Week-9/index.html" },
-      { title: "Week 10", url: "./Week-10/index.html" },
-      { title: "Week 11", url: "./Week-11/index.html" },
-      { title: "Week 12", url: "./Week-12/index.html" },
-      { title: "Week 13", url: "./Week-13/index.html" },
-      { title: "Week 14", url: "./Week-14/index.html" },
-      { title: "Week 15", url: "./Week-15/index.html" }
-    ];
-    const container = document.getElementById("weeks");
-    weeks.forEach(week => {
-      const card = document.createElement("div");
-      card.className = "card";
-      const title = document.createElement("h2");
-      title.textContent = week.title;
-      card.appendChild(title);
-      const description = document.createElement("p");
-      description.textContent = week.description || "Interactive Learning Lab";
-      card.appendChild(description);
-      const link = document.createElement("a");
-      link.className = "button";
-      link.href = week.url;
-      link.textContent = "Open Learning Lab";
-      card.appendChild(link);
-      container.appendChild(card);
-    });
-  </script>
-</body>
-</html>
+<header id="top"><h1>CSCI 300 – Operating Systems</h1><p>Amity University Dubai · Interactive Learning Labs</p><p>Instructor: Dr. Maher Alrahhal</p></header>
+<main>
+<section aria-labelledby="assess-title"><h2 id="assess-title">Revision, Project &amp; Assessments</h2><p class="section-note">Course assessment and preparation materials, organized in one place.</p><div class="grid">
+<article class="card" style="--accent:#15947f"><h3>Revision for Midterm</h3><p>Review Weeks 1–7 with written questions, model answers, and interactive MCQs.</p><a class="button" href="./Revision-Week-1-7/index.html">Open Midterm Revision</a></article>
+<article class="card" style="--accent:#8656be"><h3>Assignment</h3><p>Access assignment instructions and learning activities for Operating Systems.</p><a class="button" href="./Assignment/index.html">Open Assignment</a></article>
+<article class="card" style="--accent:#cb7b17"><h3>Case Discussion &amp; Presentation</h3><p>Explore case studies and prepare your discussion and presentation.</p><a class="button" href="./Case-Discussion/index.html">Open Case Discussion</a></article>
+<article class="card" style="--accent:#078f9a"><h3>Lab Report &amp; Viva</h3><p>Access laboratory reports, practical activities, and viva preparation materials.</p><a class="button lab-btn" href="https://drive.google.com/drive/u/0/folders/167DInjGDLhJHGIpmOqUfE4hkyhS4OI-m" target="_blank" rel="noopener noreferrer">Open Lab Report &amp; Viva</a></article>
+<article class="card" style="--accent:#bd4f89"><h3>Final Lab Exam</h3><p>Review laboratory skills, Linux commands, shell programming, and practical tasks.</p><a class="button" href="./Final-Lab-Exam/index.html">Open Final Lab Exam</a></article>
+<article class="card" style="--accent:#1e779b"><h3>Final Exam</h3><p>Prepare for the final examination with revision materials and practice questions.</p><a class="button" href="./Revision-Final/index.html">Open Final Exam Revision</a></article>
+</div><p class="section-note" style="margin:18px 0 0">Note: The assignment, case discussion, final lab exam, and final exam buttons use suggested local folder paths. Add the corresponding files to your GitHub repository or adjust these links to your actual materials.</p></section>
+<section class="lab-wide" aria-labelledby="lab-title"><h2 id="lab-title">OS Laboratory</h2><p>Explore 14 weeks of practical Operating Systems laboratory activities, including Linux commands, shell programming, C programming, threads, system calls, and CPU scheduling.</p><a class="button lab-btn" href="https://drive.google.com/drive/u/0/folders/167DInjGDLhJHGIpmOqUfE4hkyhS4OI-m" target="_blank" rel="noopener noreferrer">Open OS Laboratory - 14 Weeks</a></section>
+<section aria-labelledby="weekly-title"><h2 id="weekly-title">Weekly Learning Activities</h2><p class="section-note">Select a week to open its interactive learning material.</p><div class="grid" id="weeks"></div></section>
+</main><footer>CSCI 300 · Operating Systems · Amity University Dubai</footer>
+<script>
+const topics=['Introduction to Operating Systems','OS Services and Structure','Processes','Threads and Concurrency','CPU Scheduling','Advanced CPU Scheduling','Process Synchronization','Deadlocks','Memory Management','Advanced Memory Management','Storage Management','I/O Management','File System','Security and Protection','Additional Learning Activities'];
+const container=document.getElementById('weeks');topics.forEach((topic,i)=>{const week=i+1;const card=document.createElement('article');card.className='card week-card';const title=document.createElement('h3');title.textContent='Week '+week;const description=document.createElement('p');description.textContent=topic;const link=document.createElement('a');link.className='button';link.href='./Week-'+week+'/index.html';link.textContent='Open Learning Lab';card.append(title,description,link);container.appendChild(card)});
+</script>
+</body></html>
