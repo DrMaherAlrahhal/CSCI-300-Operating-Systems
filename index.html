@@ -1,31 +1,416 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CSCI 300 – Operating Systems | Amity University Dubai</title>
+
 <style>
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f2f5fa;color:#142c4c;line-height:1.55}header{background:linear-gradient(120deg,#17365f,#24558a);color:#fff;text-align:center;padding:43px 18px}header h1{font-size:clamp(27px,4vw,42px);margin:0 0 8px}header p{margin:5px 0}main{max-width:1160px;margin:34px auto;padding:0 20px}h2{font-size:26px;margin:0 0 20px}section{margin-bottom:42px}.feature{background:#eef7ff;border:2px solid #8bc4ee;border-radius:15px;padding:26px 30px;box-shadow:0 5px 15px #0000000b}.feature p{color:#52647b;margin:10px 0 20px}.feature h2{margin-bottom:8px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:22px}.card{background:white;border-radius:15px;padding:27px 28px;box-shadow:0 5px 14px #142c4c14;border-top:4px solid var(--accent,#1769aa);display:flex;flex-direction:column;min-height:255px}.card h3{font-size:22px;line-height:1.25;margin:0 0 15px}.card p{color:#52647b;margin:0 0 22px;flex:1}.button{display:inline-block;align-self:flex-start;border-radius:8px;padding:12px 18px;color:#fff;background:#1769aa;text-decoration:none;font-weight:700;line-height:1.3}.button:hover,.button:focus-visible{background:#104f83}.button:focus-visible{outline:3px solid #f2b84a;outline-offset:3px}.lab-btn{background:#087e8b}.lab-btn:hover{background:#06636d}.section-note{color:#52647b;margin:-8px 0 22px}.week-card{min-height:195px;padding:23px}.week-card h3{font-size:20px}.week-card p{font-size:15px}.week-card .button{font-size:14px}footer{text-align:center;padding:26px;color:#66758b;border-top:1px solid #dce4ee}@media(max-width:600px){main{padding:0 14px}.feature{padding:22px}.grid{grid-template-columns:1fr}.card{min-height:auto}}
-.lab-wide{background:#fff;border:1px solid #dbe5f1;border-radius:15px;padding:30px 32px;box-shadow:0 5px 14px #142c4c14}.lab-wide h2{margin:0 0 16px}.lab-wide p{color:#52647b;margin:0 0 18px;line-height:1.65}@media(max-width:600px){.lab-wide{padding:24px}}
-/* Submission dates: colored and clearly separated from buttons */
-.deadline{display:flex;align-items:flex-start;gap:9px;padding:11px 12px;margin:0 0 15px;border-radius:9px;border:1px solid;font-size:13px;font-weight:700;line-height:1.5}.deadline .deadline-icon{font-size:18px;line-height:1.2}.deadline strong{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.035em}.deadline time{display:block;font-size:14px}.deadline.assignment{background:#e9f3ff;border-color:#a9cffa;color:#164d86}.deadline.case{background:#fff0d9;border-color:#f4c178;color:#8b4806}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f2f5fa;
+  color:#142c4c;
+  line-height:1.55;
+}
+
+header{
+  background:linear-gradient(120deg,#17365f,#24558a);
+  color:#fff;
+  text-align:center;
+  padding:43px 18px;
+}
+
+header h1{
+  font-size:clamp(27px,4vw,42px);
+  margin:0 0 8px;
+}
+
+header p{margin:5px 0}
+
+main{
+  max-width:1160px;
+  margin:34px auto;
+  padding:0 20px;
+}
+
+h2{
+  font-size:26px;
+  margin:0 0 20px;
+}
+
+section{margin-bottom:42px}
+
+.feature{
+  background:#eef7ff;
+  border:2px solid #8bc4ee;
+  border-radius:15px;
+  padding:26px 30px;
+  box-shadow:0 5px 15px #0000000b;
+}
+
+.feature p{
+  color:#52647b;
+  margin:10px 0 20px;
+}
+
+.feature h2{margin-bottom:8px}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(235px,1fr));
+  gap:22px;
+}
+
+.card{
+  background:white;
+  border-radius:15px;
+  padding:27px 28px;
+  box-shadow:0 5px 14px #142c4c14;
+  border-top:4px solid var(--accent,#1769aa);
+  display:flex;
+  flex-direction:column;
+  min-height:255px;
+}
+
+.card h3{
+  font-size:22px;
+  line-height:1.25;
+  margin:0 0 15px;
+}
+
+.card p{
+  color:#52647b;
+  margin:0 0 22px;
+  flex:1;
+}
+
+.button{
+  display:inline-block;
+  align-self:flex-start;
+  border-radius:8px;
+  padding:12px 18px;
+  color:#fff;
+  background:#1769aa;
+  text-decoration:none;
+  font-weight:700;
+  line-height:1.3;
+}
+
+.button:hover,
+.button:focus-visible{
+  background:#104f83;
+}
+
+.button:focus-visible{
+  outline:3px solid #f2b84a;
+  outline-offset:3px;
+}
+
+.lab-btn{background:#087e8b}
+.lab-btn:hover{background:#06636d}
+
+.section-note{
+  color:#52647b;
+  margin:-8px 0 22px;
+}
+
+.week-card{
+  min-height:195px;
+  padding:23px;
+}
+
+.week-card h3{font-size:20px}
+.week-card p{font-size:15px}
+.week-card .button{font-size:14px}
+
+footer{
+  text-align:center;
+  padding:26px;
+  color:#66758b;
+  border-top:1px solid #dce4ee;
+}
+
+.lab-wide{
+  background:#fff;
+  border:1px solid #dbe5f1;
+  border-radius:15px;
+  padding:30px 32px;
+  box-shadow:0 5px 14px #142c4c14;
+}
+
+.lab-wide h2{margin:0 0 16px}
+
+.lab-wide p{
+  color:#52647b;
+  margin:0 0 18px;
+  line-height:1.65;
+}
+
+/* Submission date badges */
+
+.deadline{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:12px 14px;
+  margin:0 0 14px;
+  border-radius:9px;
+  font-size:13px;
+  line-height:1.45;
+  font-weight:600;
+}
+
+.deadline-icon{
+  font-size:19px;
+  line-height:1.2;
+}
+
+.deadline strong{
+  font-size:12px;
+  letter-spacing:.6px;
+}
+
+.assignment-deadline{
+  background:#e8f2ff;
+  border:1px solid #a6cbff;
+  color:#164d86;
+}
+
+.case-deadline{
+  background:#fff0d9;
+  border:1px solid #f1c47a;
+  color:#8b4806;
+}
+
+@media(max-width:600px){
+  main{padding:0 14px}
+  .feature{padding:22px}
+  .grid{grid-template-columns:1fr}
+  .card{min-height:auto}
+  .lab-wide{padding:24px}
+}
 </style>
 </head>
+
 <body>
-<header id="top"><h1>CSCI 300 – Operating Systems</h1><p>Amity University Dubai · Interactive Learning Labs</p><p>Instructor: Dr. Maher Alrahhal</p></header>
+
+<header id="top">
+  <h1>CSCI 300 – Operating Systems</h1>
+  <p>Amity University Dubai · Interactive Learning Labs</p>
+  <p>Instructor: Dr. Maher Alrahhal</p>
+</header>
+
 <main>
-<section aria-labelledby="assess-title"><h2 id="assess-title">Revision, Project &amp; Assessments</h2><p class="section-note">Course assessment and preparation materials, organized in one place.</p><div class="grid">
-<article class="card" style="--accent:#15947f"><h3>Revision for Midterm</h3><p>Review Weeks 1–7 with written questions, model answers, and interactive MCQs.</p><a class="button" href="./Revision-Week-1-7/index.html">Open Midterm Revision</a></article>
-<article class="card" style="--accent:#8656be"><h3>Assignment</h3><p>Access assignment instructions and learning activities for Operating Systems.</p><div class="deadline assignment"><span class="deadline-icon" aria-hidden="true">📅</span><div><strong>Submission date</strong><time datetime="2026-12-15T19:00:00+04:00">15 December 2026</time><span>7:00–9:00 PM (UAE)</span></div></div><a class="button" href="./Assignment/index.html">Open Assignment</a></article>
-<article class="card" style="--accent:#cb7b17"><h3>Case Discussion &amp; Presentation</h3><p>Follow the step-by-step project guide, develop your application, and prepare your presentation.</p><div class="deadline case"><span class="deadline-icon" aria-hidden="true">⏰</span><div><strong>Submission date</strong><time datetime="2026-12-15T19:00:00+04:00">15 December 2026</time><span>7:00–9:00 PM (UAE)</span></div></div><a class="button" href="./Case-Discussion/index.html">Open Case Discussion</a></article>
-<article class="card" style="--accent:#078f9a"><h3>Lab Report &amp; Viva</h3><p>Access laboratory reports, practical activities, and viva preparation materials.</p><a class="button lab-btn" href="https://drive.google.com/drive/u/0/folders/167DInjGDLhJHGIpmOqUfE4hkyhS4OI-m" target="_blank" rel="noopener noreferrer">Open Lab Report &amp; Viva</a></article>
-<article class="card" style="--accent:#bd4f89"><h3>Final Lab Exam</h3><p>Review laboratory skills, Linux commands, shell programming, and practical tasks.</p><a class="button" href="./Final-Lab-Exam/index.html">Open Final Lab Exam</a></article>
-<article class="card" style="--accent:#1e779b"><h3>Final Exam</h3><p>Prepare for the final examination with revision materials and practice questions.</p><a class="button" href="./Revision-Final/index.html">Open Final Exam Revision</a></article>
-</div><p class="section-note" style="margin:18px 0 0">Note: The assignment, case discussion, final lab exam, and final exam buttons use local folder paths. Add the corresponding files to your GitHub repository or adjust these links to your actual materials.</p></section>
-<section class="lab-wide" aria-labelledby="lab-title"><h2 id="lab-title">OS Laboratory</h2><p>Explore 14 weeks of practical Operating Systems laboratory activities, including Linux commands, shell programming, C programming, threads, system calls, and CPU scheduling.</p><a class="button lab-btn" href="./OS-Lab/index.html">Open OS Laboratory - 14 Weeks</a></section>
-<section aria-labelledby="weekly-title"><h2 id="weekly-title">Weekly Learning Activities</h2><p class="section-note">Select a week to open its interactive learning material.</p><div class="grid" id="weeks"></div></section>
-</main><footer>CSCI 300 · Operating Systems · Amity University Dubai</footer>
+
+<section aria-labelledby="assess-title">
+
+<h2 id="assess-title">Revision, Project &amp; Assessments</h2>
+
+<p class="section-note">
+  Course assessment and preparation materials, organized in one place.
+</p>
+
+<div class="grid">
+
+<!-- MIDTERM REVISION -->
+<article class="card" style="--accent:#15947f">
+  <h3>Revision for Midterm</h3>
+  <p>
+    Review Weeks 1–7 with written questions,
+    model answers, and interactive MCQs.
+  </p>
+  <a class="button" href="./Revision-Week-1-7/index.html">
+    Open Midterm Revision
+  </a>
+</article>
+
+<!-- ASSIGNMENT -->
+<article class="card" style="--accent:#8656be">
+  <h3>Assignment</h3>
+
+  <p>
+    Access assignment instructions and learning
+    activities for Operating Systems.
+  </p>
+
+  <div class="deadline assignment-deadline">
+    <span class="deadline-icon">🗓️</span>
+    <div>
+      <strong>SUBMISSION DATE</strong><br>
+      1 December 2026<br>
+      7:00–9:00 PM (UAE)
+    </div>
+  </div>
+
+  <a class="button" href="./Assignment/index.html">
+    Open Assignment
+  </a>
+</article>
+
+<!-- CASE DISCUSSION -->
+<article class="card" style="--accent:#cb7b17">
+  <h3>Case Discussion &amp; Presentation</h3>
+
+  <p>
+    Develop an interactive Operating Systems application
+    using AI-assisted coding, test the algorithms,
+    publish your project, and prepare your presentation.
+  </p>
+
+  <div class="deadline case-deadline">
+    <span class="deadline-icon">🗓️</span>
+    <div>
+      <strong>SUBMISSION DATE</strong><br>
+      15 December 2026<br>
+      7:00–9:00 PM (UAE)
+    </div>
+  </div>
+
+  <a class="button" href="./Case-Discussion/index.html">
+    Open Case Discussion
+  </a>
+</article>
+
+<!-- LAB REPORT -->
+<article class="card" style="--accent:#078f9a">
+  <h3>Lab Report &amp; Viva</h3>
+
+  <p>
+    Access laboratory reports, practical activities,
+    and viva preparation materials.
+  </p>
+
+  <a
+    class="button lab-btn"
+    href="https://drive.google.com/drive/u/0/folders/167DInjGDLhJHGIpmOqUfE4hkyhS4OI-m"
+    target="_blank"
+    rel="noopener noreferrer">
+    Open Lab Report &amp; Viva
+  </a>
+</article>
+
+<!-- FINAL LAB EXAM -->
+<article class="card" style="--accent:#bd4f89">
+  <h3>Final Lab Exam</h3>
+
+  <p>
+    Review laboratory skills, Linux commands,
+    shell programming, and practical tasks.
+  </p>
+
+  <a class="button" href="./Final-Lab-Exam/index.html">
+    Open Final Lab Exam
+  </a>
+</article>
+
+<!-- FINAL EXAM -->
+<article class="card" style="--accent:#1e779b">
+  <h3>Final Exam</h3>
+
+  <p>
+    Prepare for the final examination with
+    revision materials and practice questions.
+  </p>
+
+  <a class="button" href="./Revision-Final/index.html">
+    Open Final Exam Revision
+  </a>
+</article>
+
+</div>
+
+<p class="section-note" style="margin:18px 0 0">
+  Note: The assignment, case discussion, final lab exam,
+  and final exam buttons use local folder paths.
+  Ensure the corresponding files are available
+  in your GitHub repository.
+</p>
+
+</section>
+
+<!-- OS LABORATORY -->
+<section class="lab-wide" aria-labelledby="lab-title">
+
+<h2 id="lab-title">OS Laboratory</h2>
+
+<p>
+  Explore 14 weeks of practical Operating Systems laboratory
+  activities, including Linux commands, shell programming,
+  C programming, threads, system calls, and CPU scheduling.
+</p>
+
+<a class="button lab-btn" href="./OS-Lab/index.html">
+  Open OS Laboratory - 14 Weeks
+</a>
+
+</section>
+
+<!-- WEEKLY LEARNING -->
+<section aria-labelledby="weekly-title">
+
+<h2 id="weekly-title">Weekly Learning Activities</h2>
+
+<p class="section-note">
+  Select a week to open its interactive learning material.
+</p>
+
+<div class="grid" id="weeks"></div>
+
+</section>
+
+</main>
+
+<footer>
+  CSCI 300 · Operating Systems · Amity University Dubai
+</footer>
+
 <script>
-const topics=['Introduction to Operating Systems','OS Services and Structure','Processes','Threads and Concurrency','CPU Scheduling','Advanced CPU Scheduling','Process Synchronization','Deadlocks','Memory Management','Advanced Memory Management','Storage Management','I/O Management','File System','Security and Protection','Additional Learning Activities'];
-const container=document.getElementById('weeks');topics.forEach((topic,i)=>{const week=i+1;const card=document.createElement('article');card.className='card week-card';const title=document.createElement('h3');title.textContent='Week '+week;const description=document.createElement('p');description.textContent=topic;const link=document.createElement('a');link.className='button';link.href='./Week-'+week+'/index.html';link.textContent='Open Learning Lab';card.append(title,description,link);container.appendChild(card)});
+const topics = [
+  'Introduction to Operating Systems',
+  'OS Services and Structure',
+  'Processes',
+  'Threads and Concurrency',
+  'CPU Scheduling',
+  'Advanced CPU Scheduling',
+  'Process Synchronization',
+  'Deadlocks',
+  'Memory Management',
+  'Advanced Memory Management',
+  'Storage Management',
+  'I/O Management',
+  'File System',
+  'Security and Protection',
+  'Additional Learning Activities'
+];
+
+const container = document.getElementById('weeks');
+
+topics.forEach((topic, i) => {
+  const week = i + 1;
+
+  const card = document.createElement('article');
+  card.className = 'card week-card';
+
+  const title = document.createElement('h3');
+  title.textContent = 'Week ' + week;
+
+  const description = document.createElement('p');
+  description.textContent = topic;
+
+  const link = document.createElement('a');
+  link.className = 'button';
+  link.href = './Week-' + week + '/index.html';
+  link.textContent = 'Open Learning Lab';
+
+  card.append(title, description, link);
+  container.appendChild(card);
+});
 </script>
-</body></html>
+
+</body>
+</html>
